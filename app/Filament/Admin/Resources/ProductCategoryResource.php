@@ -23,11 +23,21 @@ class ProductCategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
     
-    protected static ?string $navigationGroup = 'Sản Phẩm';
+    protected static ?string $navigationGroup = 'Quản lý sản phẩm';
     
     protected static ?string $navigationLabel = 'Danh mục sản phẩm';
     
     protected static ?int $navigationSort = 10;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
     
     public static function form(Form $form): Form
     {
@@ -139,4 +149,6 @@ class ProductCategoryResource extends Resource
             'edit' => Pages\EditProductCategory::route('/{record}/edit'),
         ];
     }
+
+    
 }

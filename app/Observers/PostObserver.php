@@ -8,6 +8,7 @@ use App\Services\ImageService;
 class PostObserver
 {
     protected $imageService;
+    protected $oldThumbnails = []; // Array to store old thumbnails by post ID
 
     public function __construct(ImageService $imageService)
     {
@@ -28,8 +29,8 @@ class PostObserver
     public function updating(Post $post): void
     {
         if ($post->isDirty('thumbnail') && $post->getOriginal('thumbnail')) {
-            // Lưu đường dẫn hình ảnh cũ vào thuộc tính tạm thời để xóa sau
-            $post->old_thumbnail = $post->getOriginal('thumbnail');
+            // Lưu đường dẫn hình ảnh cũ vào mảng tạm thời để xóa sau
+            $this->oldThumbnails[$post->id] = $post->getOriginal('thumbnail');
         }
     }
 
@@ -39,9 +40,9 @@ class PostObserver
     public function updated(Post $post): void
     {
         // Nếu có hình ảnh cũ cần xóa
-        if (isset($post->old_thumbnail)) {
-            $this->imageService->deleteImage($post->old_thumbnail);
-            unset($post->old_thumbnail);
+        if (isset($this->oldThumbnails[$post->id])) {
+            $this->imageService->deleteImage($this->oldThumbnails[$post->id]);
+            unset($this->oldThumbnails[$post->id]);
         }
     }
 

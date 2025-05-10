@@ -26,7 +26,7 @@ class PostResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
     
-    protected static ?string $navigationGroup = 'Tin Tức';
+    protected static ?string $navigationGroup = 'Quản lý nội dung';
     
     protected static ?string $navigationLabel = 'Bài viết';
     
@@ -74,14 +74,14 @@ class PostResource extends Resource
                             ->image()
                             ->directory('posts')
                             ->visibility('public')
-                            ->maxSize(1024)
+                            // ->maxSize(1024)
                             ->imageEditor()
                             ->imageResizeMode('cover')
                             ->imageResizeTargetWidth(1200)
                             ->imageResizeTargetHeight(630)
                             ->nullable()
-                            // Sử dụng saveUploadedFileUsing để xử lý file với ImageService
-                            ->saveUploadedFileUsing(function ($file, $get) {
+                            // Sửa lại phương thức xử lý upload file để tương thích với Livewire
+                            ->saveUploadedFileUsing(function ($file) {
                                 $imageService = app(ImageService::class);
                                 return $imageService->saveImage(
                                     $file, 
@@ -190,5 +190,15 @@ class PostResource extends Resource
             'create' => Pages\CreatePost::route('/create'),
             'edit' => Pages\EditPost::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
     }
 }

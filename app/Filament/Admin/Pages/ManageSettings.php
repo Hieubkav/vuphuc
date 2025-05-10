@@ -63,9 +63,10 @@ class ManageSettings extends Page implements HasForms
                             ->image()
                             ->directory('settings')
                             ->imageResizeMode('cover')
-                            ->imageCropAspectRatio('16:9')
-                            ->imageResizeTargetWidth('1280')
-                            ->imageResizeTargetHeight('720'),
+                            // ->imageCropAspectRatio('16:9')
+                            // ->imageResizeTargetWidth('1280')
+                            // ->imageResizeTargetHeight('720')
+                            ,
                     ])
                     ->columns(2),
 

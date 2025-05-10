@@ -30,7 +30,7 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     
-    protected static ?string $navigationGroup = 'Sản Phẩm';
+    protected static ?string $navigationGroup = 'Quản lý sản phẩm';
     
     protected static ?string $navigationLabel = 'Sản phẩm';
     
@@ -64,7 +64,6 @@ class ProductResource extends Resource
                             
                         TextInput::make('sku')
                             ->label('Mã sản phẩm (SKU)')
-                            ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(50),
                     ])->columns(2),
@@ -73,7 +72,7 @@ class ProductResource extends Resource
                     ->schema([
                         TextInput::make('price')
                             ->label('Giá bán')
-                            ->required()
+                            // ->required()
                             ->numeric()
                             ->prefix('VNĐ'),
                             
@@ -95,7 +94,7 @@ class ProductResource extends Resource
                     ->schema([
                         RichEditor::make('description')
                             ->label('Mô tả')
-                            ->required()
+                            // ->required()
                             ->fileAttachmentsDisk('public')
                             ->fileAttachmentsDirectory('products')
                             ->columnSpanFull(),
@@ -216,5 +215,15 @@ class ProductResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->with(['productCategory', 'productImages']);
+    }
+    
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
     }
 }

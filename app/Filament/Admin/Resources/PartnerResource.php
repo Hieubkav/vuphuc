@@ -24,7 +24,7 @@ class PartnerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
     
-    protected static ?string $navigationGroup = 'Đối Tác';
+    protected static ?string $navigationGroup = 'Quản lý nội dung';
     
     protected static ?string $navigationLabel = 'Quản lý đối tác';
     
@@ -106,7 +106,7 @@ class PartnerResource extends Resource
                     
                 TextColumn::make('website')
                     ->label('Website')
-                    ->url(fn (Partner $record): string => $record->website)
+                    // ->url(fn (Partner $record): string => $record->website)
                     ->searchable(),
                     
                 TextColumn::make('description')
@@ -153,4 +153,14 @@ class PartnerResource extends Resource
             'edit' => Pages\EditPartner::route('/{record}/edit'),
         ];
     }    
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
 }

@@ -24,7 +24,7 @@ class DeliveryRouteResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
     
-    protected static ?string $navigationGroup = 'Vận Chuyển';
+    protected static ?string $navigationGroup = 'Quản lý sản phẩm';
     
     protected static ?string $navigationLabel = 'Tuyến giao hàng';
     
@@ -147,4 +147,14 @@ class DeliveryRouteResource extends Resource
             'edit' => Pages\EditDeliveryRoute::route('/{record}/edit'),
         ];
     }    
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
 }

@@ -22,7 +22,7 @@ class CustomerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
     
-    protected static ?string $navigationGroup = 'Khách Hàng';
+    protected static ?string $navigationGroup = 'Hệ Thống';
     
     protected static ?string $navigationLabel = 'Quản lý khách hàng';
     
@@ -145,4 +145,14 @@ class CustomerResource extends Resource
             'edit' => Pages\EditCustomer::route('/{record}/edit'),
         ];
     }    
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
 }

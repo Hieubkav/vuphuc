@@ -22,7 +22,7 @@ class PostCategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     
-    protected static ?string $navigationGroup = 'Bài Viết';
+    protected static ?string $navigationGroup = 'Quản lý nội dung';
     
     protected static ?string $navigationLabel = 'Danh mục bài viết';
     
@@ -130,4 +130,14 @@ class PostCategoryResource extends Resource
             'edit' => Pages\EditPostCategory::route('/{record}/edit'),
         ];
     }    
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
 }

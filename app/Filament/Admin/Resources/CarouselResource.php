@@ -23,7 +23,7 @@ class CarouselResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-photo';
     
-    protected static ?string $navigationGroup = 'Giao Diện';
+    protected static ?string $navigationGroup = 'Quản lý nội dung';
     
     protected static ?string $navigationLabel = 'Băng chuyền hình ảnh';
     
@@ -123,4 +123,14 @@ class CarouselResource extends Resource
             'edit' => Pages\EditCarousel::route('/{record}/edit'),
         ];
     }    
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
 }
