@@ -23,40 +23,42 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ProductImagesRelationManager extends RelationManager
 {
     protected static string $relationship = 'productImages';
-    
+
     protected static ?string $title = 'Hình ảnh sản phẩm';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                FileUpload::make('image')
+                FileUpload::make('image_link')
                     ->label('Hình ảnh')
                     ->required()
                     ->image()
-                    ->directory('products')
+                    ->directory('products/gallery')
                     ->visibility('public')
                     ->maxSize(4048)
                     ->imageEditor()
                     ->imageResizeMode('cover')
                     ->imageResizeTargetWidth(1200)
                     ->imageResizeTargetHeight(800)
-                    ->saveUploadedFileUsing(function ($file) {
+                    ->saveUploadedFileUsing(function ($file, $get, $livewire) {
                         $imageService = app(ImageService::class);
+                        $productName = $livewire->ownerRecord->name ?? 'san-pham';
                         return $imageService->saveImage(
-                            $file, 
-                            'products', 
+                            $file,
+                            'products/gallery',
                             1200,  // width
                             800,   // height
-                            100     // quality
+                            100,   // quality
+                            "gallery-{$productName}" // SEO-friendly name
                         );
                     }),
-                    
+
                 TextInput::make('order')
                     ->label('Thứ tự hiển thị')
                     ->integer()
                     ->default(0),
-                    
+
                 Toggle::make('status')
                     ->label('Hiển thị')
                     ->default(true)
@@ -72,11 +74,11 @@ class ProductImagesRelationManager extends RelationManager
                 TextColumn::make('order')
                     ->label('Thứ tự')
                     ->sortable(),
-                    
-                ImageColumn::make('image')
+
+                ImageColumn::make('image_link')
                     ->label('Hình ảnh')
                     ->height(100),
-                    
+
                 ToggleColumn::make('status')
                     ->label('Hiển thị')
                     ->sortable(),

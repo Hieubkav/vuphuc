@@ -4,24 +4,37 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\ClearsViewCache;
 
 class Setting extends Model
 {
-    use HasFactory;
+    use HasFactory, ClearsViewCache;
 
     protected $fillable = [
-        'company_name',
+        'site_name',
+        'logo_link',
+        'favicon_link',
+        'seo_title',
+        'seo_description',
+        'og_image_link',
+        'placeholder_image',
+        'hotline',
+        'address',
         'email',
-        'phone',
-        'youtube_url',
-        'zalo_url',
-        'facebook_url',
-        'logo_url',
-        'meta_description',
-        'address1',
-        'address2',
-        'address3',
-        'address4',
-        'address5',
+        'slogan',
+        'facebook_link',
+        'zalo_link',
+        'youtube_link',
+        'tiktok_link',
+        'messenger_link',
+        'working_hours',
+        'footer_description',
+        'order',
+        'status',
+    ];
+
+    protected $casts = [
+        'status' => 'string',
+        'order' => 'integer',
     ];
 }

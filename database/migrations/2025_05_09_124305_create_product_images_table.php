@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('product_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->string('image');
+            $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
+            $table->string('image_link');
+            $table->string('alt_text')->nullable();
+            $table->boolean('is_main')->default(false);
             $table->integer('order')->default(0);
-            $table->boolean('status')->default(true);
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

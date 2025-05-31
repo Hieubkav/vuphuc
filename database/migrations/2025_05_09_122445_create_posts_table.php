@@ -14,13 +14,17 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->text('content');
+            $table->string('seo_title')->nullable();
+            $table->text('seo_description')->nullable();
+            $table->string('og_image_link')->nullable();
             $table->string('slug')->unique();
-            $table->text('content')->nullable();
             $table->string('thumbnail')->nullable();
-            $table->foreignId('post_category_id')->nullable()->constrained()->nullOnDelete();
-            $table->boolean('featured')->default(false);
+            $table->boolean('is_featured')->default(false);
+            $table->enum('type', ['normal', 'news', 'service', 'course'])->default('normal');
             $table->integer('order')->default(0);
-            $table->boolean('status')->default(true);
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->foreignId('category_id')->nullable()->constrained('cat_posts')->nullOnDelete();
             $table->timestamps();
         });
     }

@@ -11,14 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_categories', function (Blueprint $table) {
+        Schema::create('cat_posts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->string('seo_title')->nullable();
+            $table->text('seo_description')->nullable();
+            $table->string('og_image_link')->nullable();
+            $table->string('image')->nullable();
             $table->text('description')->nullable();
-            $table->foreignId('parent_id')->nullable()->constrained('post_categories')->nullOnDelete();
-            $table->boolean('is_active')->default(true);
+            $table->foreignId('parent_id')->nullable()->constrained('cat_posts')->nullOnDelete();
             $table->integer('order')->default(0);
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('post_categories');
+        Schema::dropIfExists('cat_posts');
     }
 };

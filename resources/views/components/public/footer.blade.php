@@ -1,66 +1,111 @@
-@php
-    $settings = \App\Models\Setting::first();
-@endphp
-
 <footer class="bg-gray-50 border-t border-gray-100">
     <div class="container mx-auto px-4 py-12">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- Thông tin công ty -->
             <div>
-                @if($settings && $settings->logo_url)
+                @if(isset($globalSettings) && !empty($globalSettings->logo_link))
                     <div class="h-16 mb-6 flex items-center">
-                        <img src="{{ asset('storage/' . $settings->logo_url) }}" 
-                            alt="{{ $settings->company_name ?? 'Vũ Phúc Baking' }}" 
+                        <img src="{{ asset('storage/' . $globalSettings->logo_link) }}"
+                            alt="{{ $globalSettings->site_name ?? 'Vũ Phúc Baking' }}"
                             class="h-auto max-h-full object-contain"
                             onerror="this.src='{{ asset('images/logo.png') }}'; this.onerror=null;">
                     </div>
                 @else
                     <div class="h-16 mb-6 flex items-center">
-                        <img src="{{ asset('images/logo.png') }}" 
-                            alt="Vũ Phúc Baking" 
+                        <img src="{{ asset('images/logo.png') }}"
+                            alt="{{ isset($globalSettings) && !empty($globalSettings->site_name) ? $globalSettings->site_name : 'Vũ Phúc Baking' }}"
                             class="h-auto max-h-full object-contain">
                     </div>
                 @endif
-                <h3 class="text-lg font-semibold text-red-700 mb-3">CÔNG TY TNHH SX TM DV VŨ PHÚC</h3>
+
+                <h3 class="text-lg font-semibold text-red-700 mb-3">
+                    {{ isset($globalSettings) && !empty($globalSettings->site_name) ? $globalSettings->site_name : 'CÔNG TY TNHH SX TM DV VŨ PHÚC' }}
+                </h3>
                 <p class="text-gray-600 mb-2 font-bold">VUPHUC BAKING®</p>
                 <p class="text-gray-600 mb-3">Giấy phép kinh doanh số 1800935879 cấp ngày 29/4/2009</p>
                 <p class="text-gray-600 mb-3">Chịu trách nhiệm nội dung: Trần Uy Vũ - Tổng Giám đốc</p>
-                <div class="mt-6 flex space-x-4">
-                    <a href="#" class="text-red-600 hover:text-red-800 transition-colors">
-                        <span class="sr-only">Facebook</span>
-                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                    <a href="#" class="text-red-600 hover:text-red-800 transition-colors">
-                        <span class="sr-only">Instagram</span>
-                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                    <a href="#" class="text-red-600 hover:text-red-800 transition-colors">
-                        <span class="sr-only">YouTube</span>
-                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.417-4.814a2.507 2.507 0 0 1 1.768-1.768C5.744 5 11.998 5 11.998 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                </div>
-                <div class="mt-4 flex flex-wrap gap-3">
-                    <img src="https://cdn.mykiot.vn/2022/05/1652236508d473af1b72efb38cf87d73895f7accbf.png" alt="Thành viên Hiệp hội Doanh nghiệp TP Cần Thơ" class="h-12">
-                    <img src="https://cdn.mykiot.vn/2022/05/1652236508784842dd1dea96681e69f905681a2353.png" alt="Thành viên Hội Nữ doanh nhân TP Cần Thơ" class="h-12">
-                    <img src="https://cdn.mykiot.vn/2022/05/1652236509ca6b08aa331aa9446d9f7d65697ec786.png" alt="Thành viên Mạng lưới Doanh nghiệp thích ứng Đồng Bằng sông cửu long" class="h-12">
-                </div>
+
+                <!-- Social Media Links -->
+                @if((isset($globalSettings->facebook_link) && !empty($globalSettings->facebook_link)) ||
+                    (isset($globalSettings->youtube_link) && !empty($globalSettings->youtube_link)) ||
+                    (isset($globalSettings->messenger_link) && !empty($globalSettings->messenger_link)))
+                    <div class="mt-6 flex space-x-4">
+                        @if(isset($globalSettings->facebook_link) && !empty($globalSettings->facebook_link))
+                            <a href="{{ $globalSettings->facebook_link }}" target="_blank" class="text-red-600 hover:text-red-800 transition-colors">
+                                <span class="sr-only">Facebook</span>
+                                <img src="{{ asset('images/icon_facebook.webp') }}" alt="Facebook" class="h-6 w-6">
+                            </a>
+                        @endif
+
+                        @if(isset($globalSettings->youtube_link) && !empty($globalSettings->youtube_link))
+                            <a href="{{ $globalSettings->youtube_link }}" target="_blank" class="text-red-600 hover:text-red-800 transition-colors">
+                                <span class="sr-only">YouTube</span>
+                                <img src="{{ asset('images/youtube_icon.webp') }}" alt="YouTube" class="h-6 w-6">
+                            </a>
+                        @endif
+
+                        @if(isset($globalSettings->zalo_link) && !empty($globalSettings->zalo_link))
+                            <a href="{{ $globalSettings->zalo_link }}" target="_blank" class="text-red-600 hover:text-red-800 transition-colors">
+                                <span class="sr-only">Zalo</span>
+                                <img src="{{ asset('images/icon_zalo.webp') }}" alt="Zalo" class="h-6 w-6">
+                            </a>
+                        @endif
+
+                        @if(isset($globalSettings->tiktok_link) && !empty($globalSettings->tiktok_link))
+                            <a href="{{ $globalSettings->tiktok_link }}" target="_blank" class="text-red-600 hover:text-red-800 transition-colors">
+                                <span class="sr-only">TikTok</span>
+                                <img src="{{ asset('images/tiktok_icon.webp') }}" alt="TikTok" class="h-6 w-6">
+                            </a>
+                        @endif
+
+                        @if(isset($globalSettings->messenger_link) && !empty($globalSettings->messenger_link))
+                            <a href="{{ $globalSettings->messenger_link }}" target="_blank" class="text-red-600 hover:text-red-800 transition-colors">
+                                <span class="sr-only">Messenger</span>
+                                <img src="{{ asset('images/icon_messenger.webp') }}" alt="Messenger" class="h-6 w-6">
+                            </a>
+                        @endif
+                    </div>
+                @endif
+
+                <!-- Certification Images -->
+                @if(isset($associations) && !empty($associations) && $associations->count() > 0)
+                    <div class="mt-4 flex flex-wrap gap-3">
+                        @foreach($associations as $association)
+                            @if(!empty($association->image_link))
+                                @if(!empty($association->website_link))
+                                    <a href="{{ $association->website_link }}" target="_blank" title="{{ $association->name }}">
+                                        <img src="{{ asset('storage/' . $association->image_link) }}"
+                                             alt="{{ $association->name }}"
+                                             class="h-12 hover:opacity-80 transition-opacity"
+                                             onerror="this.style.display='none'">
+                                    </a>
+                                @else
+                                    <img src="{{ asset('storage/' . $association->image_link) }}"
+                                         alt="{{ $association->name }}"
+                                         class="h-12"
+                                         onerror="this.style.display='none'">
+                                @endif
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
             </div>
-            
+
             <!-- Về chúng tôi -->
             <div>
                 <h3 class="text-lg font-semibold text-red-700 mb-5">Về chúng tôi</h3>
-                <div class="text-gray-600 space-y-4">
-                    <p>Chúng tôi "Vì sự phát triển của khách hàng", do vậy chúng tôi không ngừng nỗ lực tìm kiếm những giải pháp về kỹ thuật, công nghệ và phương thức bán hàng để có thể hỗ trợ công việc kinh doanh của khách hàng một cách tốt nhất.</p>
-                    <p>Bằng việc đầu tư không ngừng vào công nghệ bán hàng, các giải pháp về kỹ thuật bánh và dịch vụ khách hàng, chúng tôi mong muốn biến việc mua hàng của khách hàng trở thành thứ yếu, không cần phải mất nhiều thời gian để dành nhiều thời gian tập trung vào công việc kinh doanh và cho gia đình.</p>
-                </div>
+                @if(isset($globalSettings) && !empty($globalSettings->footer_description))
+                    <div class="text-gray-600 space-y-4">
+                        {!! nl2br(e($globalSettings->footer_description)) !!}
+                    </div>
+                @else
+                    <div class="text-gray-600 space-y-4">
+                        <p>Chúng tôi "Vì sự phát triển của khách hàng", do vậy chúng tôi không ngừng nỗ lực tìm kiếm những giải pháp về kỹ thuật, công nghệ và phương thức bán hàng để có thể hỗ trợ công việc kinh doanh của khách hàng một cách tốt nhất.</p>
+                        <p>Bằng việc đầu tư không ngừng vào công nghệ bán hàng, các giải pháp về kỹ thuật bánh và dịch vụ khách hàng, chúng tôi mong muốn biến việc mua hàng của khách hàng trở thành thứ yếu, không cần phải mất nhiều thời gian để dành nhiều thời gian tập trung vào công việc kinh doanh và cho gia đình.</p>
+                    </div>
+                @endif
             </div>
-            
+
             <!-- Chính sách -->
             <div>
                 <h3 class="text-lg font-semibold text-red-700 mb-5">Chính sách</h3>
@@ -70,47 +115,62 @@
                     <li><a href="#" class="hover:text-red-700 transition-colors">BẢO MẬT & QUYỀN RIÊNG TƯ</a></li>
                 </ul>
             </div>
-            
+
             <!-- Thông tin liên hệ -->
             <div>
                 <h3 class="text-lg font-semibold text-red-700 mb-5">Liên hệ</h3>
                 <div class="space-y-4 text-gray-600">
-                    <p class="flex items-start">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 mt-0.5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span>19-21 đường B17, Khu dân cư Hưng Phú 1, Phường Hưng Phú, Quận Cái Răng, TP Cần Thơ</span>
-                    </p>
-                    <p class="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                        <span>1900 63 63 40</span>
-                    </p>
-                    <p class="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        <span>contact@vuphucbaking.com</span>
-                    </p>
-                    <p class="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>8:00 - 17:30, Thứ 2 - Thứ 7</span>
-                    </p>
+                    @if(isset($globalSettings) && !empty($globalSettings->address))
+                        <p class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 mt-0.5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>{{ $globalSettings->address }}</span>
+                        </p>
+                    @endif
+
+                    @if(isset($globalSettings) && !empty($globalSettings->hotline))
+                        <p class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            <span>{{ $globalSettings->hotline }}</span>
+                        </p>
+                    @endif
+
+                    @if(isset($globalSettings) && !empty($globalSettings->email))
+                        <p class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span>{{ $globalSettings->email }}</span>
+                        </p>
+                    @endif
+
+                    @if(isset($globalSettings) && !empty($globalSettings->working_hours))
+                        <p class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>{{ $globalSettings->working_hours }}</span>
+                        </p>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- Copyright -->
     <div class="bg-red-700 py-4 text-white">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <p class="text-sm">&copy; 2018 Copyright by VUPHUC BAKING® - All Rights Reserved</p>
-                <p class="text-sm mt-2 md:mt-0">Thiết kế bởi <a href="#" class="text-white hover:text-red-200">Phương Việt</a></p>
+                <p class="text-sm">
+                    &copy; {{ date('Y') }} Copyright by
+                    {{ isset($globalSettings) && !empty($globalSettings->site_name) ? $globalSettings->site_name : 'VUPHUC BAKING®' }}
+                    - All Rights Reserved
+                </p>
+                {{-- <p class="text-sm mt-2 md:mt-0">Thiết kế bởi <a href="#" class="text-white hover:text-red-200">Phương Việt</a></p> --}}
             </div>
         </div>
     </div>

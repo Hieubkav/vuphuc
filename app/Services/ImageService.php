@@ -18,9 +18,10 @@ class ImageService
      * @param int $width Chiều rộng (0 để giữ nguyên)
      * @param int $height Chiều cao (0 để giữ nguyên)
      * @param int $quality Chất lượng ảnh (1-100)
+     * @param string|null $customName Tên file tùy chỉnh cho SEO
      * @return string|null Đường dẫn đến ảnh đã lưu
      */
-    public function saveImage($image, string $directory, int $width = 0, int $height = 0, int $quality = 80): ?string
+    public function saveImage($image, string $directory, int $width = 0, int $height = 0, int $quality = 80, ?string $customName = null): ?string
     {
         // Nếu không có ảnh, trả về null
         if (!$image) {
@@ -33,11 +34,11 @@ class ImageService
         // Nếu là UploadedFile (file mới upload)
         if ($image instanceof UploadedFile) {
             // Tạo tên file mới với định dạng webp
-            $filename = Str::random(20) . '.webp';
-            
+            $filename = $this->generateFilename($customName) . '.webp';
+
             // Đọc hình ảnh từ file tạm
             $img = $manager->read($image->getRealPath());
-            
+
             // Resize nếu có kích thước chỉ định
             if ($width > 0 && $height > 0) {
                 $img->resize($width, $height);
@@ -46,23 +47,23 @@ class ImageService
             } elseif ($height > 0) {
                 $img->resize(height: $height);
             }
-            
+
             // Chuyển đổi sang WebP và tối ưu hóa
             $encodedImage = $img->toWebp($quality);
-            
+
             // Lưu vào storage với đường dẫn public/{directory}/{filename}
             $path = 'public/' . $directory . '/' . $filename;
             Storage::put($path, $encodedImage);
-            
+
             // Trả về đường dẫn tương đối trong storage/app/public
             return $directory . '/' . $filename;
         }
-        
+
         // Nếu là đường dẫn chuỗi (đã lưu trước đó)
         elseif (is_string($image) && Storage::exists('public/' . $image)) {
             return $image; // Giữ nguyên nếu đã tồn tại
         }
-        
+
         return null;
     }
 
@@ -84,5 +85,24 @@ class ImageService
         }
 
         return false;
+    }
+
+    /**
+     * Tạo tên file SEO-friendly
+     *
+     * @param string|null $customName Tên tùy chỉnh
+     * @return string
+     */
+    private function generateFilename(?string $customName = null): string
+    {
+        if ($customName) {
+            // Chuyển đổi tên thành slug SEO-friendly
+            $slug = Str::slug($customName, '-');
+            // Thêm timestamp để tránh trùng lặp
+            return $slug . '-' . time();
+        }
+
+        // Fallback về random string nếu không có tên tùy chỉnh
+        return Str::random(20);
     }
 }

@@ -1,64 +1,114 @@
 @php
-    use App\Models\Service;
-    $services = Service::where('status', 1)->orderBy('order')->get();
+    // Sử dụng dữ liệu từ ViewServiceProvider với fallback
+    $servicesData = $services ?? collect();
+
+    // Fallback: nếu không có dữ liệu từ ViewServiceProvider, lấy trực tiếp từ model
+    if ($servicesData->isEmpty()) {
+        try {
+            $servicesData = \App\Models\Post::where('status', 'active')
+                ->where('type', 'service')
+                ->with(['category', 'images'])
+                ->orderBy('order')
+                ->get();
+        } catch (\Exception $e) {
+            $servicesData = collect();
+        }
+    }
 @endphp
 
-<section class="py-16 md:py-20 bg-white" id="services">
-    <div class="container mx-auto px-6 md:px-8 lg:px-16">
-        <div class="text-center mb-12 md:mb-16">
-            <span class="text-xs uppercase tracking-[0.25em] font-medium text-red-600 mb-2 inline-block">Chất lượng hàng đầu</span>
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Dịch vụ của chúng tôi</h2>
-            <div class="w-12 h-0.5 bg-red-600 mx-auto mt-4"></div>
-        </div>
+{{-- Chỉ hiển thị section nếu có dữ liệu services --}}
+@if(isset($servicesData) && !empty($servicesData) && $servicesData->count() > 0)
+<div class="container mx-auto px-4">
+    <!-- Section Header -->
+    <div class="text-center mb-12 md:mb-16">
+        <span class="inline-block py-1 px-3 text-xs font-semibold bg-red-100 text-red-800 rounded-full tracking-wider">DỊCH VỤ</span>
+        <h2 class="mt-4 text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight font-montserrat">
+            Dịch vụ <span class="text-red-700">chuyên nghiệp</span>
+        </h2>
+        <p class="mt-6 text-lg text-gray-600 font-open-sans max-w-3xl mx-auto">
+            Chúng tôi cung cấp đa dạng dịch vụ chất lượng cao để hỗ trợ khách hàng phát triển bền vững
+        </p>
+    </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5 max-w-6xl mx-auto">
-            @foreach($services as $service)
-                <div onclick="window.location.href='#service-{{ $service->id }}'" class="cursor-pointer group bg-white overflow-hidden border-[0.5px] border-gray-100 hover:border-red-50 hover:shadow-[0_5px_20px_rgba(0,0,0,0.06)] transition-all duration-500 flex flex-col h-full transform hover:-translate-y-1">
-                    <div class="relative overflow-hidden rounded-sm">
-                        @if($service->image)
-                            <div class="aspect-[5/3] overflow-hidden">
-                                <img src="{{ asset('storage/' . $service->image) }}" 
-                                    alt="{{ $service->name }}" 
-                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-start p-3">
-                                    <span class="inline-flex items-center text-xs text-white tracking-wider">
-                                        <span class="mr-1.5 w-5 h-[1px] bg-white"></span>
-                                        XEM CHI TIẾT
-                                    </span>
-                                </div>
+    <!-- Services Grid - Responsive layout tự động điều chỉnh theo số lượng -->
+    <div class="grid gap-6 md:gap-8 max-w-7xl mx-auto
+        @if($servicesData->count() == 1) grid-cols-1 max-w-md
+        @elseif($servicesData->count() == 2) grid-cols-1 md:grid-cols-2 max-w-4xl
+        @elseif($servicesData->count() == 3) grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-5xl
+        @elseif($servicesData->count() == 4) grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 max-w-6xl
+        @elseif($servicesData->count() >= 5) grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl
+        @endif">
+
+        @foreach($servicesData as $service)
+            <div class="group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer">
+                <!-- Service Image -->
+                <div class="h-48 relative overflow-hidden">
+                    @if(isset($service->thumbnail) && !empty($service->thumbnail))
+                        <img src="{{ asset('storage/' . $service->thumbnail) }}"
+                             alt="{{ $service->title ?? 'Dịch vụ' }}"
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    @else
+                        <!-- Placeholder với icon bánh tự tạo -->
+                        <div class="w-full h-full bg-gradient-to-br from-red-50 to-red-100 flex flex-col items-center justify-center relative overflow-hidden">
+                            <!-- Background pattern -->
+                            <div class="absolute inset-0 opacity-10">
+                                <div class="absolute top-4 left-4 w-3 h-3 bg-red-200 rounded-full"></div>
+                                <div class="absolute top-8 right-6 w-2 h-2 bg-red-200 rounded-full"></div>
+                                <div class="absolute bottom-6 left-8 w-2 h-2 bg-red-200 rounded-full"></div>
+                                <div class="absolute bottom-4 right-4 w-3 h-3 bg-red-200 rounded-full"></div>
                             </div>
-                        @else
-                            <div class="aspect-[5/3] bg-gray-50 flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+
+                            <!-- Main cake icon -->
+                            <div class="relative z-10 flex flex-col items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-red-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0A1.5 1.5 0 013 15.546V12a9 9 0 0118 0v3.546z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16.5V21m0-4.5c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3s-4.5 4.03-4.5 9 2.015 9 4.5 9z" />
                                 </svg>
+                                <span class="text-xs text-red-400 font-medium">{{ Str::limit($service->title ?? 'Dịch vụ', 20) }}</span>
                             </div>
-                        @endif
-                    </div>
-                    <div class="p-3.5 md:p-4 flex items-center justify-between">
-                        <h3 class="text-base md:text-lg font-medium text-gray-900 group-hover:text-red-600 transition-colors">{{ $service->name }}</h3>
-                        <div class="w-7 h-7 rounded-full flex items-center justify-center border border-gray-200 group-hover:border-red-600 group-hover:bg-red-50 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 group-hover:text-red-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        </div>
+                    @endif
+
+                    <!-- Overlay gradient -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+
+                <!-- Service Content -->
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 font-montserrat group-hover:text-red-700 transition-colors duration-300">
+                        {{ $service->title ?? 'Dịch vụ' }}
+                    </h3>
+
+                    @if(isset($service->content) && !empty($service->content))
+                        <p class="text-gray-600 mb-4 font-open-sans line-clamp-3">
+                            {{ Str::limit(strip_tags($service->content), 120) }}
+                        </p>
+                    @endif
+
+                    <!-- Action Link -->
+                    <div class="pt-2 border-t border-gray-100">
+                        <a href="{{ isset($service->slug) ? route('posts.show', $service->slug) : '#' }}"
+                           class="inline-flex items-center text-red-700 font-medium hover:text-red-800 transition-colors font-open-sans">
+                            <span>Tìm hiểu thêm</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
-                        </div>
+                        </a>
                     </div>
                 </div>
-            @endforeach
-        </div>
-        
-        @if(count($services) > 0)
-        <div class="mt-10 md:mt-14 text-center">
-            <a href="#" class="group inline-flex items-center justify-center">
-                <span class="text-xs tracking-wider uppercase font-medium text-gray-500 group-hover:text-red-600 transition-colors mr-2">Xem tất cả</span>
-                <span class="w-8 h-[1px] bg-red-600 transition-all group-hover:w-12"></span>
-                <span class="w-5 h-5 rounded-full border border-gray-200 flex items-center justify-center ml-2 group-hover:border-red-600 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-2.5 w-2.5 text-gray-400 group-hover:text-red-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </span>
-            </a>
-        </div>
-        @endif
+            </div>
+        @endforeach
     </div>
-</section>
+
+    <!-- View All Services Button -->
+    <div class="mt-12 text-center">
+        <a href="{{ route('posts.services') }}"
+           class="group inline-flex items-center justify-center px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl">
+            <span class="font-montserrat">Xem tất cả dịch vụ</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+        </a>
+    </div>
+</div>
+@endif

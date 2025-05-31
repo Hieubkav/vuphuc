@@ -13,7 +13,13 @@ class ListProductCategories extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Thêm danh mục mới'),
         ];
+    }
+
+    public function getTitle(): string
+    {
+        return 'Quản lý Danh mục Sản phẩm';
     }
 }

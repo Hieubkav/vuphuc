@@ -23,13 +23,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        // Livewire::setScriptRoute(function ($handle) {
-        //     return Route::get('/NhaBepAAA/livewire/livewire.min.js?id=13b7c601', $handle);
-        // });
-
-        // Livewire::setUpdateRoute(function ($handle) {
-        //     return Route::post('/NhaBepAAA/livewire/update', $handle);
-        // });
+    //    Livewire::setScriptRoute(function ($handle) {
+    //         return Route::get('/vuphuc/livewire/livewire.min.js?id=13b7c601', $handle);
+    //     });
+        
+    //     Livewire::setUpdateRoute(function ($handle) {
+    //         return Route::post('/vuphuc/livewire/update', $handle);
+    //     });
 
     }
 }

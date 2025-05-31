@@ -10,15 +10,26 @@ class EditPost extends EditRecord
 {
     protected static string $resource = PostResource::class;
 
+    public function getTitle(): string
+    {
+        return 'Chỉnh sửa Bài viết';
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->label('Xóa'),
         ];
     }
-    
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
+    }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Bài viết đã được cập nhật thành công';
     }
 }

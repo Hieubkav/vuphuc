@@ -19,7 +19,7 @@ class ManageSettings extends Page implements HasForms
     use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
-    
+
     protected static ?string $navigationGroup = 'Hệ Thống';
 
     protected static string $view = 'filament.admin.pages.manage-settings';
@@ -42,10 +42,10 @@ class ManageSettings extends Page implements HasForms
     {
         return $form
             ->schema([
-                Section::make('Thông tin công ty')
+                Section::make('Thông tin website')
                     ->schema([
-                        TextInput::make('company_name')
-                            ->label('Tên công ty')
+                        TextInput::make('site_name')
+                            ->label('Tên website')
                             ->required()
                             ->maxLength(255),
                         TextInput::make('email')
@@ -53,65 +53,150 @@ class ManageSettings extends Page implements HasForms
                             ->email()
                             ->required()
                             ->maxLength(255),
-                        TextInput::make('phone')
-                            ->label('Số điện thoại')
+                        TextInput::make('hotline')
+                            ->label('Hotline')
                             ->required()
                             ->tel()
                             ->maxLength(20),
-                        FileUpload::make('logo_url')
+                        TextInput::make('slogan')
+                            ->label('Slogan')
+                            ->maxLength(255),
+                    ])
+                    ->columns(2),
+
+                Section::make('Logo và Favicon')
+                    ->schema([
+                        FileUpload::make('logo_link')
                             ->label('Logo')
                             ->image()
-                            ->directory('settings')
+                            ->directory('settings/logos')
+                            ->visibility('public')
                             ->imageResizeMode('cover')
-                            // ->imageCropAspectRatio('16:9')
-                            // ->imageResizeTargetWidth('1280')
-                            // ->imageResizeTargetHeight('720')
-                            ,
+                            ->imageResizeTargetWidth(400)
+                            ->imageResizeTargetHeight(200)
+                            ->saveUploadedFileUsing(function ($file, $get) {
+                                $imageService = app(\App\Services\ImageService::class);
+                                $siteName = $get('site_name') ?? 'website';
+                                return $imageService->saveImage(
+                                    $file,
+                                    'settings/logos',
+                                    400,   // width
+                                    200,   // height
+                                    100,   // quality
+                                    "logo-{$siteName}" // SEO-friendly name
+                                );
+                            })
+                            ->columnSpan(1),
+
+                        FileUpload::make('favicon_link')
+                            ->label('Favicon')
+                            ->image()
+                            ->directory('settings/favicons')
+                            ->visibility('public')
+                            ->imageResizeMode('cover')
+                            ->imageResizeTargetWidth(32)
+                            ->imageResizeTargetHeight(32)
+                            ->saveUploadedFileUsing(function ($file, $get) {
+                                $imageService = app(\App\Services\ImageService::class);
+                                $siteName = $get('site_name') ?? 'website';
+                                return $imageService->saveImage(
+                                    $file,
+                                    'settings/favicons',
+                                    32,    // width
+                                    32,    // height
+                                    100,   // quality
+                                    "favicon-{$siteName}" // SEO-friendly name
+                                );
+                            })
+                            ->columnSpan(1),
                     ])
                     ->columns(2),
 
                 Section::make('Liên kết mạng xã hội')
                     ->schema([
-                        TextInput::make('youtube_url')
+                        TextInput::make('youtube_link')
                             ->label('YouTube')
                             ->url()
                             ->maxLength(255),
-                        TextInput::make('zalo_url')
+                        TextInput::make('zalo_link')
                             ->label('Zalo')
                             ->maxLength(255),
-                        TextInput::make('facebook_url')
+                        TextInput::make('facebook_link')
                             ->label('Facebook')
                             ->url()
                             ->maxLength(255),
+                        TextInput::make('tiktok_link')
+                            ->label('TikTok')
+                            ->url()
+                            ->maxLength(255),
+                        TextInput::make('messenger_link')
+                            ->label('Messenger')
+                            ->url()
+                            ->maxLength(255),
                     ])
-                    ->columns(3),
+                    ->columns(2),
 
-                Section::make('Địa chỉ')
+                Section::make('SEO và Thông tin khác')
                     ->schema([
-                        Textarea::make('meta_description')
-                            ->label('Mô tả meta (SEO)')
+                        TextInput::make('seo_title')
+                            ->label('Tiêu đề SEO')
+                            ->maxLength(255),
+                        Textarea::make('seo_description')
+                            ->label('Mô tả SEO')
                             ->rows(3)
                             ->maxLength(255),
-                        Textarea::make('address1')
-                            ->label('Địa chỉ 1')
-                            ->rows(2)
+                        FileUpload::make('og_image_link')
+                            ->label('Hình ảnh OG (Social Media)')
+                            ->image()
+                            ->directory('settings/og-images')
+                            ->visibility('public')
+                            ->imageResizeMode('cover')
+                            ->imageResizeTargetWidth(1200)
+                            ->imageResizeTargetHeight(630)
+                            ->saveUploadedFileUsing(function ($file, $get) {
+                                $imageService = app(\App\Services\ImageService::class);
+                                $siteName = $get('site_name') ?? 'website';
+                                return $imageService->saveImage(
+                                    $file,
+                                    'settings/og-images',
+                                    1200,  // width
+                                    630,   // height
+                                    85,    // quality
+                                    "og-image-{$siteName}" // SEO-friendly name
+                                );
+                            }),
+                        FileUpload::make('placeholder_image')
+                            ->label('Ảnh tạm thời (Placeholder)')
+                            ->helperText('Ảnh hiển thị khi không có ảnh chính cho sản phẩm, bài viết, nhân viên...')
+                            ->image()
+                            ->directory('settings/placeholders')
+                            ->visibility('public')
+                            ->imageResizeMode('cover')
+                            ->imageResizeTargetWidth(400)
+                            ->imageResizeTargetHeight(400)
+                            ->saveUploadedFileUsing(function ($file, $get) {
+                                $imageService = app(\App\Services\ImageService::class);
+                                $siteName = $get('site_name') ?? 'website';
+                                return $imageService->saveImage(
+                                    $file,
+                                    'settings/placeholders',
+                                    400,   // width
+                                    400,   // height
+                                    90,    // quality
+                                    "placeholder-{$siteName}" // SEO-friendly name
+                                );
+                            }),
+                        Textarea::make('address')
+                            ->label('Địa chỉ')
+                            ->rows(3)
+                            ->maxLength(500),
+                        TextInput::make('working_hours')
+                            ->label('Giờ làm việc')
                             ->maxLength(255),
-                        Textarea::make('address2')
-                            ->label('Địa chỉ 2')
-                            ->rows(2)
-                            ->maxLength(255),
-                        Textarea::make('address3')
-                            ->label('Địa chỉ 3')
-                            ->rows(2)
-                            ->maxLength(255),
-                        Textarea::make('address4')
-                            ->label('Địa chỉ 4')
-                            ->rows(2)
-                            ->maxLength(255),
-                        Textarea::make('address5')
-                            ->label('Địa chỉ 5')
-                            ->rows(2)
-                            ->maxLength(255),
+                        Textarea::make('footer_description')
+                            ->label('Mô tả footer')
+                            ->rows(3)
+                            ->maxLength(500),
                     ])
                     ->columns(2),
             ])
@@ -121,9 +206,9 @@ class ManageSettings extends Page implements HasForms
     public function save(): void
     {
         $data = $this->form->getState();
-        
+
         $settings = Setting::first();
-        
+
         if ($settings) {
             $settings->update($data);
         } else {

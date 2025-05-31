@@ -37,8 +37,8 @@ class ProductObserver
     {
         // Xóa tất cả hình ảnh liên quan trong productImages
         foreach ($product->productImages as $productImage) {
-            if ($productImage->image) {
-                $this->imageService->deleteImage($productImage->image);
+            if ($productImage->image_link) {
+                $this->imageService->deleteImage($productImage->image_link);
             }
         }
     }

@@ -11,9 +11,17 @@ class ProductImage extends Model
 
     protected $fillable = [
         'product_id',
-        'image',
+        'image_link',
+        'alt_text',
+        'is_main',
         'order',
         'status',
+    ];
+
+    protected $casts = [
+        'is_main' => 'boolean',
+        'status' => 'string',
+        'order' => 'integer',
     ];
 
     public function product()

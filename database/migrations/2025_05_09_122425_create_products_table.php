@@ -14,16 +14,21 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('slug')->unique();
-            $table->decimal('price', 15, 2)->nullable();
-            $table->decimal('sale_price', 15, 2)->nullable();
-            $table->string('sku')->unique()->nullable();
             $table->text('description')->nullable();
-            $table->foreignId('product_category_id')->nullable()->constrained()->nullOnDelete();
-            $table->boolean('featured')->default(false);
-            $table->boolean('status')->default(true);
+            $table->string('seo_title')->nullable();
+            $table->text('seo_description')->nullable();
+            $table->string('og_image_link')->nullable();
+            $table->string('slug')->unique();
+            $table->decimal('price', 10, 2);
+            $table->decimal('compare_price', 10, 2)->nullable();
+            $table->string('brand')->nullable();
+            $table->string('sku')->unique()->nullable();
             $table->integer('stock')->default(0);
+            $table->string('unit')->nullable();
+            $table->boolean('is_hot')->default(false);
             $table->integer('order')->default(0);
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->foreignId('category_id')->nullable()->constrained('cat_products')->nullOnDelete();
             $table->timestamps();
         });
     }

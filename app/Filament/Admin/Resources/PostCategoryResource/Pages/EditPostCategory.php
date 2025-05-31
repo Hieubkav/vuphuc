@@ -13,12 +13,23 @@ class EditPostCategory extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->label('Xóa'),
         ];
     }
-    
+
+    public function getTitle(): string
+    {
+        return 'Chỉnh sửa Danh mục Bài viết';
+    }
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
+    }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Danh mục bài viết đã được cập nhật thành công';
     }
 }

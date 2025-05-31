@@ -2,22 +2,29 @@
 
 namespace App\Providers;
 
-use App\Models\Carousel;
 use App\Models\Post;
+use App\Models\PostImage;
 use App\Models\Product;
-use App\Models\ProductCategory;
 use App\Models\ProductImage;
-use App\Models\Service;
-use App\Observers\CarouselObserver;
+use App\Models\Employee;
+use App\Models\EmployeeImage;
+use App\Models\Slider;
+use App\Models\Partner;
+use App\Models\Association;
+use App\Models\Setting;
 use App\Observers\PostObserver;
-use App\Observers\ProductCategoryObserver;
+use App\Observers\PostImageObserver;
 use App\Observers\ProductImageObserver;
 use App\Observers\ProductObserver;
-use App\Observers\ServiceObserver;
+use App\Observers\EmployeeObserver;
+use App\Observers\EmployeeImageObserver;
+use App\Observers\SliderObserver;
+use App\Observers\PartnerObserver;
+use App\Observers\AssociationObserver;
+use App\Observers\SettingObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -37,13 +44,20 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Đăng ký observer
-        ProductCategory::observe(ProductCategoryObserver::class);
+        // Đăng ký observer cho các model có file upload
         Product::observe(ProductObserver::class);
         ProductImage::observe(ProductImageObserver::class);
-        Carousel::observe(CarouselObserver::class);
         Post::observe(PostObserver::class);
-        Service::observe(ServiceObserver::class);
+        PostImage::observe(PostImageObserver::class);
+        Employee::observe(EmployeeObserver::class);
+        EmployeeImage::observe(EmployeeImageObserver::class);
+        Slider::observe(SliderObserver::class);
+        Partner::observe(PartnerObserver::class);
+        Association::observe(AssociationObserver::class);
+        Setting::observe(SettingObserver::class);
+
+        // Đăng ký observer cho Order
+        \App\Models\Order::observe(\App\Observers\OrderObserver::class);
     }
 
     /**

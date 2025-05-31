@@ -4,31 +4,39 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BroadcastsModelChanges;
+use App\Traits\ClearsViewCache;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, BroadcastsModelChanges, ClearsViewCache;
 
     protected $fillable = [
         'name',
-        'slug',
-        'sku',
         'description',
+        'seo_title',
+        'seo_description',
+        'og_image_link',
+        'slug',
         'price',
-        'sale_price',
+        'compare_price',
+        'brand',
+        'sku',
         'stock',
-        'product_category_id',
-        'featured',
-        'status',
+        'unit',
+        'is_hot',
         'order',
+        'status',
+        'category_id',
     ];
 
     protected $casts = [
-        'price' => 'float',
-        'sale_price' => 'float',
+        'price' => 'decimal:2',
+        'compare_price' => 'decimal:2',
         'stock' => 'integer',
-        'featured' => 'boolean',
-        'status' => 'boolean',
+        'is_hot' => 'boolean',
+        'status' => 'string',
+        'order' => 'integer',
     ];
 
     public function productImages()
@@ -36,14 +44,40 @@ class Product extends Model
         return $this->hasMany(ProductImage::class);
     }
 
+    // Quan hệ với ProductImage
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
+
+    // Quan hệ với MenuItem
     public function menuItems()
     {
         return $this->hasMany(MenuItem::class);
     }
 
+    // Quan hệ với CatProduct (category chính)
+    public function category()
+    {
+        return $this->belongsTo(CatProduct::class, 'category_id');
+    }
+
+    // Alias cho relationship category để tương thích với ProductResource
     public function productCategory()
     {
-        return $this->belongsTo(ProductCategory::class);
+        return $this->belongsTo(CatProduct::class, 'category_id');
+    }
+
+    // Quan hệ với CartItem
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
+    // Quan hệ với OrderItem
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 
     /**
@@ -55,8 +89,8 @@ class Product extends Model
     {
         // Lấy hình ảnh đầu tiên trong danh sách hình ảnh sản phẩm
         $firstImage = $this->productImages()->orderBy('order', 'asc')->first();
-        
-        return $firstImage ? $firstImage->image : null;
+
+        return $firstImage ? $firstImage->image_link : null;
     }
 
     /**
@@ -66,7 +100,7 @@ class Product extends Model
      */
     public function hasDiscount(): bool
     {
-        return !is_null($this->sale_price) && $this->sale_price < $this->price;
+        return !is_null($this->compare_price) && $this->compare_price < $this->price;
     }
 
     /**
@@ -76,7 +110,7 @@ class Product extends Model
      */
     public function getCurrentPrice(): float
     {
-        return $this->hasDiscount() ? $this->sale_price : $this->price;
+        return $this->hasDiscount() ? $this->compare_price : $this->price;
     }
 
     /**
@@ -90,6 +124,6 @@ class Product extends Model
             return null;
         }
 
-        return (int) (100 - ($this->sale_price / $this->price * 100));
+        return (int) (100 - ($this->compare_price / $this->price * 100));
     }
 }

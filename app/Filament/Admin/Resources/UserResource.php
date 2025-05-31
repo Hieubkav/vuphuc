@@ -20,12 +20,16 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    protected static ?string $modelLabel = 'người dùng';
+
+    protected static ?string $pluralModelLabel = 'người dùng';
+
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
-    
+
     protected static ?string $navigationGroup = 'Hệ Thống';
-    
+
     protected static ?string $navigationLabel = 'Quản lý người dùng';
-    
+
     protected static ?int $navigationSort = 50;
 
     public static function form(Form $form): Form
@@ -38,14 +42,14 @@ class UserResource extends Resource
                             ->label('Tên người dùng')
                             ->required()
                             ->maxLength(255),
-                            
+
                         TextInput::make('email')
                             ->label('Email')
                             ->email()
                             ->unique(ignoreRecord: true)
                             ->required()
                             ->maxLength(255),
-                            
+
                         TextInput::make('password')
                             ->label('Mật khẩu')
                             ->password()
@@ -53,20 +57,20 @@ class UserResource extends Resource
                             ->dehydrated(fn ($state) => filled($state))
                             ->required(fn (string $operation): bool => $operation === 'create'),
                     ])->columns(2),
-                    
+
                 Section::make('Cấu hình hiển thị')
                     ->schema([
                         TextInput::make('order')
                             ->label('Thứ tự hiển thị')
                             ->integer()
                             ->default(0),
-                            
+
                         Toggle::make('status')
                             ->label('Hoạt động')
                             ->default(true)
                             ->onColor('success')
                             ->offColor('danger'),
-                            
+
                         DateTimePicker::make('last_login_at')
                             ->label('Lần đăng nhập cuối')
                             ->disabled(),
@@ -81,25 +85,25 @@ class UserResource extends Resource
                 TextColumn::make('order')
                     ->label('Thứ tự')
                     ->sortable(),
-                    
+
                 TextColumn::make('name')
                     ->label('Tên người dùng')
                     ->searchable()
                     ->sortable(),
-                    
+
                 TextColumn::make('email')
                     ->label('Email')
                     ->searchable(),
-                    
+
                 ToggleColumn::make('status')
                     ->label('Hoạt động')
                     ->sortable(),
-                    
+
                 TextColumn::make('last_login_at')
                     ->label('Lần đăng nhập cuối')
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
-                    
+
                 TextColumn::make('created_at')
                     ->label('Ngày tạo')
                     ->dateTime('d/m/Y H:i')
@@ -109,24 +113,27 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Sửa'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Xóa'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Xóa đã chọn'),
                 ]),
             ])
             ->defaultSort('order', 'asc');
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -134,5 +141,5 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
-    }    
+    }
 }

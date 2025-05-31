@@ -20,12 +20,16 @@ class CustomerResource extends Resource
 {
     protected static ?string $model = Customer::class;
 
+    protected static ?string $modelLabel = 'khách hàng';
+
+    protected static ?string $pluralModelLabel = 'khách hàng';
+
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    
+
     protected static ?string $navigationGroup = 'Hệ Thống';
-    
+
     protected static ?string $navigationLabel = 'Quản lý khách hàng';
-    
+
     protected static ?int $navigationSort = 20;
 
     public static function form(Form $form): Form
@@ -38,39 +42,39 @@ class CustomerResource extends Resource
                             ->label('Tên khách hàng')
                             ->required()
                             ->maxLength(255),
-                            
+
                         TextInput::make('email')
                             ->label('Email')
                             ->email()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
-                            
+
                         TextInput::make('phone')
                             ->label('Số điện thoại')
                             ->tel()
                             ->unique(ignoreRecord: true)
                             ->maxLength(20),
-                            
+
                         TextInput::make('password')
                             ->label('Mật khẩu')
                             ->password()
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                             ->dehydrated(fn ($state) => filled($state))
                             ->required(fn (string $operation): bool => $operation === 'create'),
-                            
+
                         Textarea::make('address')
                             ->label('Địa chỉ')
                             ->rows(3)
                             ->maxLength(500),
                     ])->columns(2),
-                    
+
                 Section::make('Cấu hình hiển thị')
                     ->schema([
                         TextInput::make('order')
                             ->label('Thứ tự hiển thị')
                             ->integer()
                             ->default(0),
-                            
+
                         Toggle::make('status')
                             ->label('Hoạt động')
                             ->default(true)
@@ -87,29 +91,29 @@ class CustomerResource extends Resource
                 TextColumn::make('order')
                     ->label('Thứ tự')
                     ->sortable(),
-                    
+
                 TextColumn::make('name')
                     ->label('Tên khách hàng')
                     ->searchable()
                     ->sortable(),
-                    
+
                 TextColumn::make('email')
                     ->label('Email')
                     ->searchable(),
-                    
+
                 TextColumn::make('phone')
                     ->label('Số điện thoại')
                     ->searchable(),
-                    
+
                 TextColumn::make('address')
                     ->label('Địa chỉ')
                     ->limit(30)
                     ->searchable(),
-                    
+
                 ToggleColumn::make('status')
                     ->label('Hoạt động')
                     ->sortable(),
-                    
+
                 TextColumn::make('created_at')
                     ->label('Ngày tạo')
                     ->dateTime('d/m/Y H:i')
@@ -119,24 +123,28 @@ class CustomerResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Sửa'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Xóa'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Xóa đã chọn'),
                 ]),
             ])
-            ->defaultSort('order', 'asc');
+            ->defaultSort('order', 'asc')
+            ->reorderable('order');
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -144,13 +152,13 @@ class CustomerResource extends Resource
             'create' => Pages\CreateCustomer::route('/create'),
             'edit' => Pages\EditCustomer::route('/{record}/edit'),
         ];
-    }    
+    }
 
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
     }
-    
+
     public static function getNavigationBadgeColor(): ?string
     {
         return 'success';

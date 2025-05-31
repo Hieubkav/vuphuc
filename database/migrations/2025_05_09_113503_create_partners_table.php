@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('partners', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('logo')->nullable();
-            $table->string('website')->nullable();
+            $table->string('logo_link')->nullable();
+            $table->string('website_link')->nullable();
             $table->text('description')->nullable();
             $table->integer('order')->default(0);
-            $table->boolean('status')->default(true);
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

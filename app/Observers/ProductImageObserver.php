@@ -4,9 +4,12 @@ namespace App\Observers;
 
 use App\Models\ProductImage;
 use App\Services\ImageService;
+use App\Traits\HandlesFileObserver;
 
 class ProductImageObserver
 {
+    use HandlesFileObserver;
+
     protected $imageService;
 
     public function __construct(ImageService $imageService)
@@ -27,9 +30,12 @@ class ProductImageObserver
      */
     public function updating(ProductImage $productImage): void
     {
-        if ($productImage->isDirty('image') && $productImage->getOriginal('image')) {
-            // Lưu đường dẫn hình ảnh cũ vào thuộc tính tạm thời để xóa sau
-            $productImage->old_image = $productImage->getOriginal('image');
+        $modelClass = get_class($productImage);
+        $modelId = $productImage->id;
+
+        // Lưu image_link cũ
+        if ($productImage->isDirty('image_link')) {
+            $this->storeOldFile($modelClass, $modelId, 'image_link', $productImage->getOriginal('image_link'));
         }
     }
 
@@ -38,10 +44,13 @@ class ProductImageObserver
      */
     public function updated(ProductImage $productImage): void
     {
-        // Nếu có hình ảnh cũ cần xóa
-        if (isset($productImage->old_image)) {
-            $this->imageService->deleteImage($productImage->old_image);
-            unset($productImage->old_image);
+        $modelClass = get_class($productImage);
+        $modelId = $productImage->id;
+
+        // Lấy và xóa image_link cũ
+        $oldImage = $this->getAndDeleteOldFile($modelClass, $modelId, 'image_link');
+        if ($oldImage) {
+            $this->imageService->deleteImage($oldImage);
         }
     }
 
@@ -51,8 +60,8 @@ class ProductImageObserver
     public function deleted(ProductImage $productImage): void
     {
         // Xóa hình ảnh khi xóa record
-        if ($productImage->image) {
-            $this->imageService->deleteImage($productImage->image);
+        if ($productImage->image_link) {
+            $this->imageService->deleteImage($productImage->image_link);
         }
     }
 

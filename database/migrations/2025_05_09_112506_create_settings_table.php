@@ -13,19 +13,25 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('company_name');
-            $table->string('email')->unique();
-            $table->string('phone');
-            $table->string('youtube_url')->nullable();
-            $table->string('zalo_url')->nullable();
-            $table->string('facebook_url')->nullable();
-            $table->string('logo_url')->nullable();
-            $table->text('meta_description')->nullable();
-            $table->text('address1')->nullable();
-            $table->text('address2')->nullable();
-            $table->text('address3')->nullable();
-            $table->text('address4')->nullable();
-            $table->text('address5')->nullable();
+            $table->string('site_name')->nullable();
+            $table->string('logo_link')->nullable();
+            $table->string('favicon_link')->nullable();
+            $table->string('seo_title')->nullable();
+            $table->text('seo_description')->nullable();
+            $table->string('og_image_link')->nullable();
+            $table->string('hotline')->nullable();
+            $table->text('address')->nullable();
+            $table->string('email')->nullable();
+            $table->string('slogan')->nullable();
+            $table->string('facebook_link')->nullable();
+            $table->string('zalo_link')->nullable();
+            $table->string('youtube_link')->nullable();
+            $table->string('tiktok_link')->nullable();
+            $table->string('working_hours')->nullable();
+            $table->string('dmca_link')->nullable();
+            $table->text('footer_description')->nullable();
+            $table->integer('order')->default(0);
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

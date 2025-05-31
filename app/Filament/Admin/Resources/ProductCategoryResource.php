@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\ProductCategoryResource\Pages;
-use App\Models\ProductCategory;
+use App\Models\CatProduct;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -19,26 +19,30 @@ use Illuminate\Support\Str;
 
 class ProductCategoryResource extends Resource
 {
-    protected static ?string $model = ProductCategory::class;
+    protected static ?string $model = CatProduct::class;
+
+    protected static ?string $modelLabel = 'danh mục sản phẩm';
+
+    protected static ?string $pluralModelLabel = 'danh mục sản phẩm';
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-    
+
     protected static ?string $navigationGroup = 'Quản lý sản phẩm';
-    
+
     protected static ?string $navigationLabel = 'Danh mục sản phẩm';
-    
+
     protected static ?int $navigationSort = 10;
 
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
     }
-    
+
     public static function getNavigationBadgeColor(): ?string
     {
         return 'success';
     }
-    
+
     public static function form(Form $form): Form
     {
         return $form
@@ -51,20 +55,20 @@ class ProductCategoryResource extends Resource
                             ->maxLength(255)
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn (string $state, callable $set) => $set('slug', Str::slug($state))),
-                            
+
                         TextInput::make('slug')
                             ->label('Đường dẫn')
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
-                            
+
                         Select::make('parent_id')
                             ->label('Danh mục cha')
                             ->relationship('parent', 'name')
                             ->searchable()
                             ->nullable(),
                     ])->columns(2),
-                    
+
                 Section::make('Mô tả danh mục')
                     ->schema([
                         RichEditor::make('description')
@@ -74,14 +78,14 @@ class ProductCategoryResource extends Resource
                             ->nullable()
                             ->columnSpanFull(),
                     ]),
-                    
+
                 Section::make('Cấu hình hiển thị')
                     ->schema([
                         TextInput::make('order')
                             ->label('Thứ tự hiển thị')
                             ->integer()
                             ->default(0),
-                            
+
                         Toggle::make('status')
                             ->label('Hiển thị')
                             ->default(true)
@@ -98,22 +102,22 @@ class ProductCategoryResource extends Resource
                 TextColumn::make('order')
                     ->label('Thứ tự')
                     ->sortable(),
-                    
+
                 TextColumn::make('name')
                     ->label('Tên danh mục')
                     ->searchable()
                     ->sortable(),
-                    
+
                 TextColumn::make('parent.name')
                     ->label('Danh mục cha')
                     ->searchable()
                     ->sortable(),
-                    
+
                 TextColumn::make('products_count')
                     ->label('Số sản phẩm')
                     ->counts('products')
                     ->sortable(),
-                
+
                 ToggleColumn::make('status')
                     ->label('Hiển thị')
                     ->sortable(),
@@ -123,24 +127,27 @@ class ProductCategoryResource extends Resource
                     ->label('Hiển thị'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Sửa'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Xóa'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Xóa đã chọn'),
                 ]),
             ])
             ->defaultSort('order', 'asc');
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -150,5 +157,5 @@ class ProductCategoryResource extends Resource
         ];
     }
 
-    
+
 }

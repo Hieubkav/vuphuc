@@ -13,20 +13,17 @@ return new class extends Migration
     {
         Schema::create('menu_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->foreignId('parent_id')->nullable()->constrained('menu_items')->nullOnDelete();
             $table->string('label');
-            $table->enum('type', ['link', 'product', 'post']);
+            $table->enum('type', ['link', 'cat_post', 'post', 'cat_product', 'product'])->default('link');
             $table->string('link')->nullable();
-            $table->unsignedBigInteger('product_id')->nullable();
-            $table->unsignedBigInteger('post_id')->nullable();
+            $table->foreignId('cat_post_id')->nullable()->constrained('cat_posts')->nullOnDelete();
+            $table->foreignId('post_id')->nullable()->constrained('posts')->nullOnDelete();
+            $table->foreignId('cat_product_id')->nullable()->constrained('cat_products')->nullOnDelete();
+            $table->foreignId('product_id')->nullable()->constrained('products')->nullOnDelete();
             $table->integer('order')->default(0);
-            $table->boolean('status')->default(true);
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
-            
-            // Khóa ngoại
-            $table->foreign('parent_id')->references('id')->on('menu_items')->onDelete('set null');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('set null');
-            $table->foreign('post_id')->references('id')->on('posts')->onDelete('set null');
         });
     }
 

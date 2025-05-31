@@ -29,7 +29,12 @@ export default {
                 }
             },
             fontFamily: {
-                'heading': ['Montserrat', 'sans-serif']
+                'heading': ['Montserrat', 'sans-serif'],
+                'montserrat': ['Montserrat', 'sans-serif'],
+                'open-sans': ['Open Sans', 'sans-serif']
+            },
+            boxShadow: {
+                '3xl': '0 35px 60px -12px rgba(0, 0, 0, 0.25)',
             },
             textColor: theme => ({
                 'heading': {

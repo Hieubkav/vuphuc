@@ -5,9 +5,6 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\ProductResource\Pages;
 use App\Filament\Admin\Resources\ProductResource\RelationManagers\ProductImagesRelationManager;
 use App\Models\Product;
-use App\Models\ProductCategory;
-use App\Models\ProductImage;
-use App\Services\ImageService;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -19,7 +16,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
+
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
@@ -28,12 +25,16 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
+    protected static ?string $modelLabel = 'sản phẩm';
+
+    protected static ?string $pluralModelLabel = 'sản phẩm';
+
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
-    
+
     protected static ?string $navigationGroup = 'Quản lý sản phẩm';
-    
+
     protected static ?string $navigationLabel = 'Sản phẩm';
-    
+
     protected static ?int $navigationSort = 11;
 
     public static function form(Form $form): Form
@@ -48,26 +49,34 @@ class ProductResource extends Resource
                             ->maxLength(255)
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn (string $state, callable $set) => $set('slug', Str::slug($state))),
-                            
+
                         TextInput::make('slug')
                             ->label('Đường dẫn')
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
-                            
-                        Select::make('product_category_id')
+
+                        Select::make('category_id')
                             ->label('Danh mục')
                             ->relationship('productCategory', 'name')
                             ->required()
                             ->searchable()
                             ->preload(),
-                            
+
                         TextInput::make('sku')
                             ->label('Mã sản phẩm (SKU)')
                             ->unique(ignoreRecord: true)
                             ->maxLength(50),
+
+                        TextInput::make('brand')
+                            ->label('Thương hiệu')
+                            ->maxLength(255),
+
+                        TextInput::make('unit')
+                            ->label('Đơn vị tính')
+                            ->maxLength(50),
                     ])->columns(2),
-                    
+
                 Section::make('Thông tin giá')
                     ->schema([
                         TextInput::make('price')
@@ -75,21 +84,21 @@ class ProductResource extends Resource
                             // ->required()
                             ->numeric()
                             ->prefix('VNĐ'),
-                            
-                        TextInput::make('sale_price')
+
+                        TextInput::make('compare_price')
                             ->label('Giá khuyến mãi')
                             ->numeric()
                             ->prefix('VNĐ')
                             ->nullable()
                             ->lte('price'),
-                            
+
                         TextInput::make('stock')
                             ->label('Số lượng trong kho')
                             ->numeric()
                             ->default(1)
                             ->minValue(0),
                     ])->columns(3),
-                    
+
                 Section::make('Mô tả sản phẩm')
                     ->schema([
                         RichEditor::make('description')
@@ -99,25 +108,43 @@ class ProductResource extends Resource
                             ->fileAttachmentsDirectory('products')
                             ->columnSpanFull(),
                     ]),
-                    
+
+                Section::make('SEO')
+                    ->schema([
+                        TextInput::make('seo_title')
+                            ->label('Tiêu đề SEO')
+                            ->maxLength(255),
+
+                        TextInput::make('seo_description')
+                            ->label('Mô tả SEO')
+                            ->maxLength(500),
+
+                        TextInput::make('og_image_link')
+                            ->label('Ảnh OG (Open Graph)')
+                            ->maxLength(255),
+                    ])->columns(1),
+
                 Section::make('Cấu hình hiển thị')
                     ->schema([
                         TextInput::make('order')
                             ->label('Thứ tự hiển thị')
                             ->integer()
                             ->default(0),
-                            
-                        Toggle::make('featured')
+
+                        Toggle::make('is_hot')
                             ->label('Nổi bật')
                             ->default(false)
                             ->onColor('success')
                             ->offColor('danger'),
-                            
-                        Toggle::make('status')
-                            ->label('Hiển thị')
-                            ->default(true)
-                            ->onColor('success')
-                            ->offColor('danger'),
+
+                        Select::make('status')
+                            ->label('Trạng thái')
+                            ->options([
+                                'active' => 'Hiển thị',
+                                'inactive' => 'Ẩn',
+                            ])
+                            ->default('active')
+                            ->required(),
                     ])->columns(3),
             ]);
     }
@@ -136,73 +163,89 @@ class ProductResource extends Resource
                     ->circular()
                     ->getStateUsing(function (Product $record) {
                         $firstImage = $record->productImages()->orderBy('order', 'asc')->first();
-                        return $firstImage ? $firstImage->image : null;
+                        return $firstImage ? $firstImage->image_link : null;
                     }),
-                    
+
                 TextColumn::make('name')
                     ->label('Tên sản phẩm')
                     ->searchable()
                     ->sortable()
                     ->limit(40),
-                    
+
                 TextColumn::make('sku')
                     ->label('Mã sản phẩm')
                     ->searchable()
                     ->sortable(),
-                
+
                 TextColumn::make('price')
                     ->label('Giá bán')
                     ->money('VND')
                     ->sortable(),
-                    
+
                 TextColumn::make('productCategory.name')
                     ->label('Danh mục')
                     ->searchable()
                     ->sortable(),
-                    
+
                 TextColumn::make('stock')
                     ->label('Tồn kho')
                     ->sortable(),
-                    
-                IconColumn::make('featured')
+
+                IconColumn::make('is_hot')
                     ->label('Nổi bật')
                     ->boolean()
                     ->sortable(),
-                    
-                ToggleColumn::make('status')
-                    ->label('Hiển thị')
+
+                TextColumn::make('status')
+                    ->label('Trạng thái')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'active' => 'success',
+                        'inactive' => 'danger',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'active' => 'Hiển thị',
+                        'inactive' => 'Ẩn',
+                    })
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('product_category_id')
+                Tables\Filters\SelectFilter::make('category_id')
                     ->relationship('productCategory', 'name')
                     ->label('Danh mục'),
-                    
-                Tables\Filters\TernaryFilter::make('featured')
+
+                Tables\Filters\TernaryFilter::make('is_hot')
                     ->label('Nổi bật'),
-                    
-                Tables\Filters\TernaryFilter::make('status')
-                    ->label('Hiển thị'),
+
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('Trạng thái')
+                    ->options([
+                        'active' => 'Hiển thị',
+                        'inactive' => 'Ẩn',
+                    ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Sửa'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Xóa'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Xóa đã chọn'),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
     }
-    
+
     public static function getRelations(): array
     {
         return [
             ProductImagesRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -211,17 +254,17 @@ class ProductResource extends Resource
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
-    
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->with(['productCategory', 'productImages']);
     }
-    
+
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
     }
-    
+
     public static function getNavigationBadgeColor(): ?string
     {
         return 'success';

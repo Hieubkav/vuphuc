@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\ProductCategory;
+use App\Models\CatProduct;
+use App\Services\SeoService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -11,30 +12,52 @@ class ProductController extends Controller
     /**
      * Hiển thị danh sách sản phẩm theo danh mục
      */
-    public function category($slug)
+    public function category($slug, Request $request)
     {
-        $category = ProductCategory::where('slug', $slug)->where('status', 1)->firstOrFail();
-        
-        $products = Product::where('product_category_id', $category->id)
-            ->where('status', 1)
-            ->orderBy('featured', 'desc')
-            ->orderBy('order')
-            ->paginate(12);
-            
+        $category = CatProduct::where('slug', $slug)->where('status', 'active')->firstOrFail();
+
+        // Query builder cho sản phẩm
+        $query = Product::where('category_id', $category->id)
+            ->where('status', 'active')
+            ->with(['category', 'productImages' => function($query) {
+                $query->where('status', 'active')->orderBy('order');
+            }]);
+
+        // Sắp xếp
+        $sortBy = $request->get('sort', 'default');
+        switch ($sortBy) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'name_asc':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('name', 'desc');
+                break;
+            case 'newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            default:
+                $query->orderBy('is_hot', 'desc')
+                      ->orderBy('order')
+                      ->orderBy('created_at', 'desc');
+        }
+
+        $products = $query->paginate(12)->withQueryString();
+
         return view('storefront.products.category', compact('category', 'products'));
     }
 
     /**
-     * Hiển thị trang danh sách tất cả danh mục
+     * Hiển thị trang danh sách tất cả danh mục với sản phẩm và bộ lọc
      */
     public function categories()
     {
-        $categories = ProductCategory::where('status', 1)
-            ->whereNull('parent_id')
-            ->orderBy('order')
-            ->get();
-            
-        return view('storefront.products.categories', compact('categories'));
+        return view('storefront.products.index');
     }
 
     /**
@@ -43,16 +66,41 @@ class ProductController extends Controller
     public function show($slug)
     {
         $product = Product::where('slug', $slug)
-            ->where('status', 1)
-            ->with('productImages', 'productCategory')
+            ->where('status', 'active')
+            ->with([
+                'productImages' => function($query) {
+                    $query->where('status', 'active')->orderBy('order');
+                },
+                'category'
+            ])
             ->firstOrFail();
-            
-        $relatedProducts = Product::where('product_category_id', $product->product_category_id)
+
+        // Sản phẩm liên quan
+        $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
-            ->where('status', 1)
-            ->limit(4)
+            ->where('status', 'active')
+            ->with(['productImages' => function($query) {
+                $query->where('status', 'active')->orderBy('order')->limit(1);
+            }])
+            ->orderBy('is_hot', 'desc')
+            ->orderBy('order')
+            ->limit(8)
             ->get();
-            
-        return view('storefront.products.show', compact('product', 'relatedProducts'));
+
+        // SEO data
+        $seoData = [
+            'title' => $product->seo_title ?: $product->name,
+            'description' => $product->seo_description ?: $product->description,
+            'ogImage' => SeoService::getProductOgImage($product),
+            'structuredData' => SeoService::getProductStructuredData($product),
+            'breadcrumbs' => [
+                ['name' => 'Trang chủ', 'url' => route('storeFront')],
+                ['name' => 'Sản phẩm', 'url' => route('products.categories')],
+                ['name' => $product->category->name ?? 'Danh mục', 'url' => route('products.category', $product->category->slug ?? '#')],
+                ['name' => $product->name, 'url' => route('products.show', $product->slug)]
+            ]
+        ];
+
+        return view('storefront.products.show', compact('product', 'relatedProducts', 'seoData'));
     }
 }
