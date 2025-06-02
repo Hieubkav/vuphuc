@@ -20,12 +20,12 @@
 @if(isset($servicesData) && !empty($servicesData) && $servicesData->count() > 0)
 <div class="container mx-auto px-4">
     <!-- Section Header -->
-    <div class="text-center mb-12 md:mb-16">
+    <div class="text-center mb-10 md:mb-12">
         <span class="inline-block py-1 px-3 text-xs font-semibold bg-red-100 text-red-800 rounded-full tracking-wider">DỊCH VỤ</span>
         <h2 class="mt-4 text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight font-montserrat">
             Dịch vụ <span class="text-red-700">chuyên nghiệp</span>
         </h2>
-        <p class="mt-6 text-lg text-gray-600 font-open-sans max-w-3xl mx-auto">
+        <p class="mt-5 text-lg text-gray-600 font-open-sans max-w-3xl mx-auto">
             Chúng tôi cung cấp đa dạng dịch vụ chất lượng cao để hỗ trợ khách hàng phát triển bền vững
         </p>
     </div>
@@ -101,7 +101,7 @@
     </div>
 
     <!-- View All Services Button -->
-    <div class="mt-12 text-center">
+    <div class="mt-10 text-center">
         <a href="{{ route('posts.services') }}"
            class="group inline-flex items-center justify-center px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl">
             <span class="font-montserrat">Xem tất cả dịch vụ</span>

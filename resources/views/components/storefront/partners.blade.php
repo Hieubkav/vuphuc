@@ -17,9 +17,8 @@
     $maxGridItems = 12; // Số lượng tối đa để hiển thị dạng grid
 @endphp
 
-<section class="py-16 bg-white" id="partners">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
+<div class="container mx-auto px-4">
+    <div class="text-center mb-10">
             <h2 class="text-3xl font-bold text-gray-900">Đối tác của chúng tôi</h2>
             <div class="w-24 h-1 bg-red-600 mx-auto mt-4 mb-6"></div>
             <p class="text-gray-600 max-w-2xl mx-auto">Vũ Phúc Baking tự hào là đối tác chiến lược của nhiều thương hiệu lớn trong ngành bánh và pha chế</p>
@@ -186,7 +185,7 @@
         </div>
         @endif
     </div>
-</section>
+</div>
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />

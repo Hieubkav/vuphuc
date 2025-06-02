@@ -28,17 +28,9 @@
 @endphp
 
 @if($postsCount > 0)
-<section class="py-16 bg-white relative" id="blog">
-    <!-- Mô hình hình học tối giản làm nền -->
-    <div class="absolute inset-0 overflow-hidden opacity-5 pointer-events-none">
-        <div class="absolute -right-20 top-10 w-64 h-64 rounded-full border-8 border-red-200"></div>
-        <div class="absolute -left-20 top-1/3 w-40 h-40 rounded-full border-8 border-red-100"></div>
-        <div class="absolute right-1/4 bottom-10 w-80 h-80 rounded-full border-8 border-red-100"></div>
-    </div>
-
-    <div class="container mx-auto px-4 relative">
-        <!-- Tiêu đề sáng tạo với gạch chéo -->
-        <div class="text-center mb-12 relative">
+<div class="container mx-auto px-4 relative">
+    <!-- Tiêu đề sáng tạo với gạch chéo -->
+    <div class="text-center mb-10 relative">
             <div class="inline-block relative">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Tin tức & Sự kiện</h2>
                 <div class="w-full h-1 bg-gradient-to-r from-red-600 via-red-500 to-red-600 absolute -bottom-3 left-0"></div>
@@ -438,7 +430,7 @@
             </div>
         @endif
     </div>
-</section>
+</div>
 @endif
 
 @push('styles')

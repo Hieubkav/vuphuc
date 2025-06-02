@@ -6,10 +6,9 @@
 @endphp
 
 @if($productsCount > 0)
-<section class="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-white" id="products">
-    <div class="container mx-auto px-4">
-        <!-- Section Header -->
-        <div class="text-center mb-12 md:mb-16">
+<div class="container mx-auto px-4">
+    <!-- Section Header -->
+    <div class="text-center mb-10 md:mb-12">
             <span class="inline-block py-1 px-3 text-xs font-semibold bg-red-100 text-red-800 rounded-full tracking-wider mb-4">SẢN PHẨM</span>
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight font-montserrat mb-6">
                 Sản phẩm <span class="text-red-700">nổi bật</span>
@@ -344,7 +343,7 @@
             </div>
         </div>
     </div>
-</section>
+</div>
 
 @push('scripts')
 <script>

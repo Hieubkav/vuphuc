@@ -18,14 +18,14 @@
 @endphp
 
 <!-- Nút cuộn lên trên -->
-<button id="scroll-to-top" class="fixed bottom-64 right-6 z-40 bg-red-600 text-white rounded-full w-12 h-12 shadow-lg flex items-center justify-center hover:bg-red-700 focus:outline-none transition-all opacity-0 invisible" aria-label="Cuộn lên trên">
+<button id="scroll-to-top" class="fixed bottom-80 right-6 z-30 bg-red-600 text-white rounded-full w-12 h-12 shadow-lg flex items-center justify-center hover:bg-red-700 focus:outline-none transition-all opacity-0 invisible" aria-label="Cuộn lên trên">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
     </svg>
 </button>
 
 <!-- Nút cuộn xuống -->
-<button id="scroll-to-bottom" class="fixed bottom-64 right-6 z-40 bg-red-600 text-white rounded-full w-12 h-12 shadow-lg flex items-center justify-center hover:bg-red-700 focus:outline-none transition-all opacity-0 invisible" aria-label="Cuộn xuống dưới">
+<button id="scroll-to-bottom" class="fixed bottom-80 right-6 z-30 bg-red-600 text-white rounded-full w-12 h-12 shadow-lg flex items-center justify-center hover:bg-red-700 focus:outline-none transition-all opacity-0 invisible" aria-label="Cuộn xuống dưới">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V4" />
     </svg>
@@ -156,6 +156,7 @@
         transition: all 0.3s ease;
         box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
         backdrop-filter: blur(10px);
+        z-index: 35; /* Thấp hơn speedial để không đè lên */
     }
     #scroll-to-top:hover, #scroll-to-bottom:hover {
         box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
@@ -170,6 +171,8 @@
         animation: slideInUp 0.4s ease forwards;
         transform: translateY(20px);
         opacity: 0;
+        position: relative;
+        z-index: 41; /* Cao hơn container để tooltip hiển thị đúng */
     }
     .speedial-btn:nth-child(1) {
         animation-delay: 0.1s;
@@ -179,6 +182,11 @@
     }
     .speedial-btn:nth-child(3) {
         animation-delay: 0.3s;
+    }
+
+    /* Đảm bảo spacing giữa các speedial buttons */
+    .speedial-btn + .speedial-btn {
+        margin-top: 0.5rem;
     }
 
 
@@ -207,8 +215,9 @@
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
+        /* Điều chỉnh vị trí scroll buttons để không đè lên speedial */
         #scroll-to-top, #scroll-to-bottom {
-            bottom: 12rem;
+            bottom: 15rem; /* Tăng khoảng cách để tránh đè lên speedial */
             right: 1rem;
             width: 2.75rem;
             height: 2.75rem;
@@ -217,21 +226,24 @@
             width: 1.125rem;
             height: 1.125rem;
         }
+
+        /* Speedial container */
         .fixed.bottom-6.right-6 {
             bottom: 1rem;
             right: 1rem;
         }
+
+        /* Speedial buttons */
         .speedial-btn {
             width: 3.25rem !important;
             height: 3.25rem !important;
         }
-        .speedial-btn svg {
-            width: 1.25rem !important;
-            height: 1.25rem !important;
+        .speedial-btn img {
+            width: 2.75rem !important;
+            height: 2.75rem !important;
         }
-        .speedial-btn span.font-bold {
-            font-size: 0.875rem !important;
-        }
+
+        /* Tooltip adjustments */
         .speedial-btn span.absolute {
             right: 3.5rem !important;
             font-size: 0.75rem !important;
@@ -240,31 +252,73 @@
     }
 
     @media (max-width: 480px) {
+        /* Scroll buttons cho màn hình nhỏ */
         #scroll-to-top, #scroll-to-bottom {
-            bottom: 10rem;
+            bottom: 13rem; /* Điều chỉnh cho màn hình nhỏ */
             right: 0.75rem;
             width: 2.5rem;
             height: 2.5rem;
         }
+        #scroll-to-top svg, #scroll-to-bottom svg {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* Speedial container cho màn hình nhỏ */
         .fixed.bottom-6.right-6 {
             bottom: 0.75rem;
             right: 0.75rem;
         }
+
+        /* Speedial buttons cho màn hình nhỏ */
         .speedial-btn {
             width: 3rem !important;
             height: 3rem !important;
         }
-        .speedial-btn svg {
-            width: 1.125rem !important;
-            height: 1.125rem !important;
+        .speedial-btn img {
+            width: 2.5rem !important;
+            height: 2.5rem !important;
         }
-        .speedial-btn span.font-bold {
-            font-size: 0.75rem !important;
-        }
+
+        /* Tooltip cho màn hình nhỏ */
         .speedial-btn span.absolute {
             right: 3.25rem !important;
             font-size: 0.6875rem !important;
             padding: 0.25rem 0.375rem !important;
+        }
+    }
+
+    /* Thêm responsive cho màn hình rất nhỏ */
+    @media (max-width: 360px) {
+        #scroll-to-top, #scroll-to-bottom {
+            bottom: 12rem;
+            right: 0.5rem;
+            width: 2.25rem;
+            height: 2.25rem;
+        }
+        #scroll-to-top svg, #scroll-to-bottom svg {
+            width: 0.875rem;
+            height: 0.875rem;
+        }
+
+        .fixed.bottom-6.right-6 {
+            bottom: 0.5rem;
+            right: 0.5rem;
+        }
+
+        .speedial-btn {
+            width: 2.75rem !important;
+            height: 2.75rem !important;
+        }
+        .speedial-btn img {
+            width: 2.25rem !important;
+            height: 2.25rem !important;
+        }
+
+        .speedial-btn span.absolute {
+            right: 3rem !important;
+            font-size: 0.625rem !important;
+            padding: 0.25rem !important;
         }
     }
 </style>

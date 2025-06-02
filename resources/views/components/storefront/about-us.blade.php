@@ -1,10 +1,13 @@
 <div class="container mx-auto px-4">
-    <div class="flex flex-col lg:flex-row gap-12 items-center">
+    <div class="flex flex-col lg:flex-row gap-10 items-center">
         <!-- Left side content -->
-        <div class="lg:w-1/2 space-y-6">
+        <div class="lg:w-1/2 space-y-5">
             <div>
                 <span class="inline-block py-1 px-3 text-xs font-semibold bg-red-100 text-red-800 rounded-full tracking-wider">VỀ CHÚNG TÔI</span>
-                <h2 class="mt-4 text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-gray-900">Chào mừng đến với <span class="text-red-700 italic">Vuphuc Baking<sup>®</sup></span></h2>
+                <h2 class="mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-gray-900">
+                    <span class="whitespace-nowrap">Chào mừng đến với</span>
+                    <span class="text-red-700 italic whitespace-nowrap">Vuphuc Baking<sup>®</sup></span>
+                </h2>
             </div>
 
             <div class="prose prose-lg max-w-none text-gray-600">

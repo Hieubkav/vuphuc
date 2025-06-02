@@ -12,47 +12,46 @@
     @include('components.storefront.hero-banner')
 
     <!-- Giới thiệu tổng quan về Vũ Phúc Baking -->
-    <section class="animate-on-scroll py-16 md:py-24 bg-white">
+    <section class="animate-on-scroll py-12 md:py-16 bg-white">
         @include('components.storefront.about-us')
     </section>
 
     <!-- Thống kê số liệu -->
-    <section class="animate-on-scroll py-16 md:py-24 bg-gray-50">
+    <section class="animate-on-scroll py-12 md:py-16 bg-gray-50">
         @include('components.storefront.stats-counter')
     </section>
 
     <!-- Giới thiệu sản phẩm tiêu biểu -->
-    <section class="animate-on-scroll py-16 md:py-24 bg-gray-50">
+    <section class="animate-on-scroll py-12 md:py-16 bg-gray-50">
         @include('components.storefront.featured-products')
     </section>
 
     <!-- Services Section -->
-    <section class="animate-on-scroll py-16 md:py-24 bg-gray-50">
+    <section class="animate-on-scroll py-12 md:py-16 bg-gray-50">
         @include('components.storefront.services')
     </section>
 
     <!-- Slogan Section -->
-    <section class="animate-on-scroll py-8 md:py-12">
+    <section class="animate-on-scroll py-6 md:py-8">
         @include('components.storefront.slogan')
     </section>
 
-
     <!-- Giới thiệu khóa học - Chỉ hiển thị tổng quan và liên kết đến trang khóa học -->
-    <section class="animate-on-scroll py-16 md:py-24 bg-white">
+    <section class="animate-on-scroll py-12 md:py-16 bg-white">
         @include('components.storefront.courses-overview')
     </section>
 
     <!-- Trusted Partners Gallery -->
-    <section class="animate-on-scroll py-16 md:py-24 bg-white">
+    <section class="animate-on-scroll py-12 md:py-16 bg-white">
         @include('components.storefront.partners')
     </section>
 
     <!-- Curated Articles & Insights -->
-    <section class="animate-on-scroll py-16 md:py-24 bg-gray-50">
+    <section class="animate-on-scroll py-12 md:py-16 bg-gray-50">
         @include('components.storefront.blog-posts')
     </section>
 
-    <section class="py-14 md:py-20 bg-gradient-to-r from-red-800 via-red-700 to-red-600 text-white relative overflow-hidden">
+    <section class="py-12 md:py-16 bg-gradient-to-r from-red-800 via-red-700 to-red-600 text-white relative overflow-hidden">
         @include('components.storefront.homepage-cta')
     </section>
 

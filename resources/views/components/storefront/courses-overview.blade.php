@@ -1,7 +1,6 @@
 @if(isset($courses) && !empty($courses) && $courses->count() > 0)
-<section class="py-16 md:py-24 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <div class="flex flex-col items-center text-center mb-12">
+<div class="container mx-auto px-4">
+    <div class="flex flex-col items-center text-center mb-10">
             <span class="text-red-600 font-semibold tracking-wider uppercase text-sm mb-2">Khóa học làm bánh</span>
             <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Khám Phá Nghệ Thuật Làm Bánh</h2>
             <p class="max-w-2xl text-gray-600">Tham gia các khóa học làm bánh đa dạng từ cơ bản đến nâng cao cùng Vũ Phúc Baking Academy.</p>
@@ -49,5 +48,5 @@
             </a>
         </div>
     </div>
-</section>
+</div>
 @endif
