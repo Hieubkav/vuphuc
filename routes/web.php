@@ -50,6 +50,10 @@ Route::controller(PostController::class)->group(function () {
 
 // Thêm route cho nhân viên
 Route::controller(EmployeeController::class)->group(function () {
+    // Route danh sách nhân viên - yêu cầu đăng nhập
+    Route::get('/nhan-vien', 'index')->name('employee.index')->middleware('auth');
+
+    // Route profile công khai
     Route::get('/nhan-vien/{slug}', 'profile')->name('employee.profile');
     Route::get('/nhan-vien/{slug}/qr-code', 'showQrCode')->name('employee.qr-code');
     Route::get('/nhan-vien/{slug}/qr-download', 'downloadQrCode')->name('employee.qr-download');

@@ -17,6 +17,19 @@ class EmployeeController extends Controller
     }
 
     /**
+     * Hiển thị danh sách nhân viên (chỉ dành cho user đã đăng nhập)
+     */
+    public function index()
+    {
+        $employees = Employee::where('status', 'active')
+            ->orderBy('order')
+            ->orderBy('name')
+            ->get();
+
+        return view('employee.index', compact('employees'));
+    }
+
+    /**
      * Hiển thị trang thông tin nhân viên
      */
     public function profile(string $slug)

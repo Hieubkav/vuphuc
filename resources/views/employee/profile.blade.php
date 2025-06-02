@@ -193,6 +193,26 @@
     .gallery-item:hover img {
         transform: scale(1.05);
     }
+
+    /* Responsive text handling */
+    .contact-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    @media (max-width: 768px) {
+        .contact-text {
+            font-size: 1.125rem;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .contact-text {
+            font-size: 1rem;
+        }
+    }
 </style>
 @endpush
 
@@ -234,15 +254,15 @@
                     </div>
 
                     <!-- Contact Info -->
-                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="space-y-6 mb-8">
                         @if($employee->phone)
                         <div class="contact-card rounded-2xl p-6 flex items-center space-x-4">
                             <div class="w-14 h-14 red-accent rounded-xl flex items-center justify-center flex-shrink-0">
                                 <i class="fas fa-phone text-white text-lg"></i>
                             </div>
-                            <div class="flex-1">
+                            <div class="flex-1 min-w-0">
                                 <p class="text-gray-500 text-sm font-medium uppercase tracking-wide">Điện thoại</p>
-                                <a href="tel:{{ $employee->phone }}" class="text-gray-900 font-bold text-xl hover:text-red-600 transition-colors">
+                                <a href="tel:{{ $employee->phone }}" class="text-gray-900 font-bold text-xl hover:text-red-600 transition-colors contact-text">
                                     {{ $employee->phone }}
                                 </a>
                             </div>
@@ -254,23 +274,14 @@
                             <div class="w-14 h-14 red-accent rounded-xl flex items-center justify-center flex-shrink-0">
                                 <i class="fas fa-envelope text-white text-lg"></i>
                             </div>
-                            <div class="flex-1">
+                            <div class="flex-1 min-w-0">
                                 <p class="text-gray-500 text-sm font-medium uppercase tracking-wide">Email</p>
-                                <a href="mailto:{{ $employee->email }}" class="text-gray-900 font-bold text-xl hover:text-red-600 transition-colors break-all">
+                                <a href="mailto:{{ $employee->email }}" class="text-gray-900 font-bold text-xl hover:text-red-600 transition-colors contact-text">
                                     {{ $employee->email }}
                                 </a>
                             </div>
                         </div>
                         @endif
-                    </div>
-
-                    <!-- QR Code Download -->
-                    <div class="text-center lg:text-left">
-                        <a href="{{ route('employee.qr-download', $employee->slug) }}"
-                           class="btn-primary inline-flex items-center space-x-3 px-10 py-4 rounded-2xl font-semibold text-lg">
-                            <i class="fas fa-qrcode text-xl"></i>
-                            <span>Tải QR Code</span>
-                        </a>
                     </div>
                 </div>
             </div>

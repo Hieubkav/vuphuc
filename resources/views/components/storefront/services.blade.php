@@ -31,13 +31,23 @@
     </div>
 
     <!-- Services Grid - Responsive layout tự động điều chỉnh theo số lượng -->
-    <div class="grid gap-6 md:gap-8 max-w-7xl mx-auto
-        @if($servicesData->count() == 1) grid-cols-1 max-w-md
-        @elseif($servicesData->count() == 2) grid-cols-1 md:grid-cols-2 max-w-4xl
-        @elseif($servicesData->count() == 3) grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-5xl
-        @elseif($servicesData->count() == 4) grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 max-w-6xl
-        @elseif($servicesData->count() >= 5) grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl
-        @endif">
+    @php
+        $gridClasses = 'grid gap-6 md:gap-8 mx-auto';
+        $count = $servicesData->count();
+
+        if ($count == 1) {
+            $gridClasses .= ' grid-cols-1 max-w-md';
+        } elseif ($count == 2) {
+            $gridClasses .= ' grid-cols-1 md:grid-cols-2 max-w-4xl';
+        } elseif ($count == 3) {
+            $gridClasses .= ' grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-5xl';
+        } elseif ($count == 4) {
+            $gridClasses .= ' grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 max-w-6xl';
+        } else {
+            $gridClasses .= ' grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl';
+        }
+    @endphp
+    <div class="{{ $gridClasses }}">
 
         @foreach($servicesData as $service)
             <div class="group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer">
