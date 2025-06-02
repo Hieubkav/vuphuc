@@ -24,6 +24,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+
 use Illuminate\Support\Str;
 
 class PostResource extends Resource
@@ -104,25 +105,25 @@ class PostResource extends Resource
 
                         FileUpload::make('thumbnail') // Giữ tên trường là 'thumbnail' để khớp với database
                             ->label('Hình đại diện')
+                            ->helperText('💡 Kích thước khuyến nghị: 1200x630px (tỷ lệ 1.91:1) cho hiển thị tối ưu trên mạng xã hội')
                             ->image()
                             ->directory('posts/thumbnails')
                             ->visibility('public')
-                            // ->maxSize(1024)
+                            ->maxSize(5120) // Tăng lên 5MB để cho phép ảnh chất lượng cao
                             ->imageEditor()
-                            ->imageResizeMode('cover')
-                            ->imageResizeTargetWidth(1200)
-                            ->imageResizeTargetHeight(630)
+                            ->imagePreviewHeight('200') // Hiển thị preview lớn hơn
                             ->nullable()
-                            // Sửa lại phương thức xử lý upload file để tương thích với Livewire
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                            // Sử dụng saveImageWithAspectRatio để không bị méo ảnh
                             ->saveUploadedFileUsing(function ($file, $get) {
                                 $imageService = app(ImageService::class);
                                 $title = $get('title') ?? 'bai-viet';
-                                return $imageService->saveImage(
+                                return $imageService->saveImageWithAspectRatio(
                                     $file,
                                     'posts/thumbnails',
-                                    1200,  // width
-                                    630,   // height cho tỉ lệ 1.91:1 (chuẩn Facebook/Twitter card)
-                                    85,    // quality
+                                    1200,  // max width
+                                    630,   // max height - giữ tỷ lệ gốc
+                                    90,    // quality cao hơn
                                     "thumbnail-{$title}" // SEO-friendly name
                                 );
                             }),
@@ -250,7 +251,9 @@ class PostResource extends Resource
                 ImageColumn::make('thumbnail') // Giữ tên trường là 'thumbnail' để khớp với database
                     ->label('Hình đại diện')
                     ->defaultImageUrl(fn() => asset('images/default-post.jpg'))
-                    ->circular(),
+                    ->size(80) // Kích thước cố định
+                    ->extraImgAttributes(['class' => 'object-cover rounded-lg']) // Không bị méo, bo góc
+                    ->tooltip(fn ($record) => $record->title), // Hiển thị tiêu đề khi hover
 
                 TextColumn::make('title')
                     ->label('Tiêu đề')

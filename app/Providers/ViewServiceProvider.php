@@ -99,12 +99,12 @@ class ViewServiceProvider extends ServiceProvider
             'featuredProducts' => Cache::remember('storefront_products', 1800, function () {
                 return Product::where('status', 'active')
                     ->where('is_hot', true)
-                    ->with(['category:id,name', 'images' => function($query) {
+                    ->with(['category', 'images' => function($query) {
                         $query->where('status', 'active')
                             ->orderByRaw('is_main DESC, `order` ASC');
                     }])
                     ->select(['id', 'name', 'slug', 'price', 'compare_price', 'is_hot', 'category_id', 'seo_title', 'order'])
-                    ->orderBy('order')
+                    ->orderBy('order', 'asc')
                     ->take(8)
                     ->get();
             }),

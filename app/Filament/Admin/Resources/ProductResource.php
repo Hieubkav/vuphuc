@@ -209,6 +209,7 @@ class ProductResource extends Resource
                     })
                     ->sortable(),
             ])
+            ->reorderable('order')
             ->filters([
                 Tables\Filters\SelectFilter::make('category_id')
                     ->relationship('productCategory', 'name')
@@ -236,7 +237,7 @@ class ProductResource extends Resource
                         ->label('Xóa đã chọn'),
                 ]),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('order', 'asc');
     }
 
     public static function getRelations(): array

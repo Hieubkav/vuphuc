@@ -346,6 +346,10 @@
 
     @filamentStyles
     @vite('resources/css/app.css')
+
+    <!-- Custom CSS cho responsive images -->
+    <link rel="stylesheet" href="{{ asset('css/image-responsive.css') }}">
+
     @stack('styles')
 
 </head>
@@ -396,6 +400,9 @@
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Custom JS cho smart images -->
+    <script src="{{ asset('js/image-smart.js') }}"></script>
 
     @stack('scripts')
 

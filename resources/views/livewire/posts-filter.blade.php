@@ -128,15 +128,18 @@
                             <article class="group">
                                 <a href="{{ route('posts.show', $post->slug) }}" class="block">
                                     <div class="post-card bg-white rounded-3xl overflow-hidden shadow-xl">
-                                        <!-- Post Image -->
-                                        <div class="aspect-video overflow-hidden">
+                                        <!-- Post Image - Responsive và thông minh -->
+                                        <div class="relative overflow-hidden rounded-t-3xl">
                                             @if($post->thumbnail)
-                                                <img src="{{ asset('storage/' . $post->thumbnail) }}"
-                                                     alt="{{ $post->title }}"
-                                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                                <div class="aspect-[16/9] w-full">
+                                                    <img src="{{ asset('storage/' . $post->thumbnail) }}"
+                                                         alt="{{ $post->title }}"
+                                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                         loading="lazy">
+                                                </div>
                                             @else
-                                                <!-- Custom placeholder -->
-                                                <div class="w-full h-full bg-gradient-to-br from-red-50 to-red-100 flex flex-col items-center justify-center relative overflow-hidden">
+                                                <!-- Custom placeholder với aspect ratio cố định -->
+                                                <div class="aspect-[16/9] w-full bg-gradient-to-br from-red-50 to-red-100 flex flex-col items-center justify-center relative overflow-hidden">
                                                     <!-- Background pattern -->
                                                     <div class="absolute inset-0 opacity-10">
                                                         <svg class="w-full h-full" viewBox="0 0 100 100" fill="none">

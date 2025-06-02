@@ -156,12 +156,16 @@
 <main class="bg-white">
     <div class="container mx-auto px-4 py-12">
         <div class="max-w-4xl mx-auto">
-            <!-- Featured Image -->
+            <!-- Featured Image - Responsive và thông minh -->
             @if($post->thumbnail)
                 <div class="mb-12">
-                    <img src="{{ asset('storage/' . $post->thumbnail) }}"
-                         alt="{{ $post->title }}"
-                         class="w-full h-64 md:h-80 object-cover rounded-lg shadow-lg">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg">
+                        <img src="{{ asset('storage/' . $post->thumbnail) }}"
+                             alt="{{ $post->title }}"
+                             class="w-full h-auto object-cover"
+                             style="max-height: 500px;"
+                             loading="eager">
+                    </div>
                 </div>
             @endif
 

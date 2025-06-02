@@ -59,7 +59,35 @@ class ImageService
             return $directory . '/' . $filename;
         }
 
-        // Nếu là đường dẫn chuỗi (đã lưu trước đó)
+        // Nếu là đường dẫn file tuyệt đối (để resize ảnh đã tồn tại)
+        elseif (is_string($image) && file_exists($image)) {
+            // Tạo tên file mới
+            $filename = $this->generateFilename($customName) . '.webp';
+
+            // Đọc ảnh từ đường dẫn
+            $img = $manager->read($image);
+
+            // Resize nếu có kích thước được chỉ định
+            if ($width > 0 && $height > 0) {
+                $img->resize($width, $height);
+            } elseif ($width > 0) {
+                $img->resize(width: $width);
+            } elseif ($height > 0) {
+                $img->resize(height: $height);
+            }
+
+            // Chuyển đổi sang WebP và tối ưu hóa
+            $encodedImage = $img->toWebp($quality);
+
+            // Lưu vào storage với đường dẫn public/{directory}/{filename}
+            $path = 'public/' . $directory . '/' . $filename;
+            Storage::put($path, $encodedImage);
+
+            // Trả về đường dẫn tương đối trong storage/app/public
+            return $directory . '/' . $filename;
+        }
+
+        // Nếu là đường dẫn chuỗi (đã lưu trước đó trong storage)
         elseif (is_string($image) && Storage::exists('public/' . $image)) {
             return $image; // Giữ nguyên nếu đã tồn tại
         }
@@ -143,7 +171,42 @@ class ImageService
             return $directory . '/' . $filename;
         }
 
-        // Nếu là đường dẫn chuỗi (đã lưu trước đó)
+        // Nếu là đường dẫn file tuyệt đối (để resize ảnh đã tồn tại)
+        elseif (is_string($image) && file_exists($image)) {
+            // Tạo tên file mới
+            $filename = $this->generateFilename($customName) . '.webp';
+
+            // Đọc ảnh từ đường dẫn
+            $img = $manager->read($image);
+
+            // Resize giữ nguyên tỷ lệ - chỉ resize nếu ảnh lớn hơn kích thước tối đa
+            $originalWidth = $img->width();
+            $originalHeight = $img->height();
+
+            if ($originalWidth > $maxWidth || $originalHeight > $maxHeight) {
+                // Tính tỷ lệ scale để vừa trong khung mà không méo
+                $scaleWidth = $maxWidth / $originalWidth;
+                $scaleHeight = $maxHeight / $originalHeight;
+                $scale = min($scaleWidth, $scaleHeight);
+
+                $newWidth = (int)($originalWidth * $scale);
+                $newHeight = (int)($originalHeight * $scale);
+
+                $img->resize($newWidth, $newHeight);
+            }
+
+            // Chuyển đổi sang WebP và tối ưu hóa
+            $encodedImage = $img->toWebp($quality);
+
+            // Lưu vào storage với đường dẫn public/{directory}/{filename}
+            $path = 'public/' . $directory . '/' . $filename;
+            Storage::put($path, $encodedImage);
+
+            // Trả về đường dẫn tương đối trong storage/app/public
+            return $directory . '/' . $filename;
+        }
+
+        // Nếu là đường dẫn chuỗi (đã lưu trước đó trong storage)
         elseif (is_string($image) && Storage::exists('public/' . $image)) {
             return $image; // Giữ nguyên nếu đã tồn tại
         }
