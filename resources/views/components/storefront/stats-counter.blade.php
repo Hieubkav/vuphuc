@@ -2,20 +2,20 @@
     <!-- Animated Stats Counters -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
         <div class="text-center p-6 rounded-lg bg-white shadow-lg hover:shadow-xl transition-shadow border-t-4 border-red-600 stagger-item">
-            <div class="text-4xl font-bold text-red-700 counter" data-target="10">0</div>
-            <p class="text-gray-600 mt-2">Năm kinh nghiệm</p>
+            <div class="text-4xl font-bold text-red-700 counter" data-target="8500">0</div>
+            <p class="text-gray-600 mt-2">Khách hàng</p>
         </div>
         <div class="text-center p-6 rounded-lg bg-white shadow-lg hover:shadow-xl transition-shadow border-t-4 border-red-600 stagger-item">
-            <div class="text-4xl font-bold text-red-700 counter" data-target="5000">0</div>
-            <p class="text-gray-600 mt-2">Khách hàng tin cậy</p>
+            <div class="text-4xl font-bold text-red-700 counter" data-target="150">0</div>
+            <p class="text-gray-600 mt-2">Đối tác</p>
         </div>
         <div class="text-center p-6 rounded-lg bg-white shadow-lg hover:shadow-xl transition-shadow border-t-4 border-red-600 stagger-item">
-            <div class="text-4xl font-bold text-red-700 counter" data-target="300">0</div>
-            <p class="text-gray-600 mt-2">Sản phẩm đa dạng</p>
+            <div class="text-4xl font-bold text-red-700 counter" data-target="1200">0</div>
+            <p class="text-gray-600 mt-2">Sản phẩm</p>
         </div>
         <div class="text-center p-6 rounded-lg bg-white shadow-lg hover:shadow-xl transition-shadow border-t-4 border-red-600 stagger-item">
-            <div class="text-4xl font-bold text-red-700 counter" data-target="19">0</div>
-            <p class="text-gray-600 mt-2">Tỉnh thành phủ sóng</p>
+            <div class="text-4xl font-bold text-red-700 counter" data-target="63">0</div>
+            <p class="text-gray-600 mt-2">Khu vực phân phối</p>
         </div>
     </div>
 </div>
