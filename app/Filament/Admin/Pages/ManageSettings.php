@@ -68,20 +68,22 @@ class ManageSettings extends Page implements HasForms
                     ->schema([
                         FileUpload::make('logo_link')
                             ->label('Logo')
+                            ->helperText('Logo sẽ được giữ nguyên tỷ lệ, không bị méo mó')
                             ->image()
                             ->directory('settings/logos')
                             ->visibility('public')
-                            ->imageResizeMode('cover')
+                            ->imageResizeMode('contain')
                             ->imageResizeTargetWidth(400)
                             ->imageResizeTargetHeight(200)
+                            ->imageEditor()
                             ->saveUploadedFileUsing(function ($file, $get) {
                                 $imageService = app(\App\Services\ImageService::class);
                                 $siteName = $get('site_name') ?? 'website';
-                                return $imageService->saveImage(
+                                return $imageService->saveImageWithAspectRatio(
                                     $file,
                                     'settings/logos',
-                                    400,   // width
-                                    200,   // height
+                                    400,   // max width
+                                    200,   // max height
                                     100,   // quality
                                     "logo-{$siteName}" // SEO-friendly name
                                 );
@@ -90,20 +92,22 @@ class ManageSettings extends Page implements HasForms
 
                         FileUpload::make('favicon_link')
                             ->label('Favicon')
+                            ->helperText('Kích thước tối ưu: 32x32px (sẽ giữ nguyên tỷ lệ)')
                             ->image()
                             ->directory('settings/favicons')
                             ->visibility('public')
-                            ->imageResizeMode('cover')
+                            ->imageResizeMode('contain')
                             ->imageResizeTargetWidth(32)
                             ->imageResizeTargetHeight(32)
+                            ->imageEditor()
                             ->saveUploadedFileUsing(function ($file, $get) {
                                 $imageService = app(\App\Services\ImageService::class);
                                 $siteName = $get('site_name') ?? 'website';
-                                return $imageService->saveImage(
+                                return $imageService->saveImageWithAspectRatio(
                                     $file,
                                     'settings/favicons',
-                                    32,    // width
-                                    32,    // height
+                                    32,    // max width
+                                    32,    // max height
                                     100,   // quality
                                     "favicon-{$siteName}" // SEO-friendly name
                                 );
@@ -147,41 +151,44 @@ class ManageSettings extends Page implements HasForms
                             ->maxLength(255),
                         FileUpload::make('og_image_link')
                             ->label('Hình ảnh OG (Social Media)')
+                            ->helperText('Kích thước tối ưu: 1200x630px (sẽ giữ nguyên tỷ lệ)')
                             ->image()
                             ->directory('settings/og-images')
                             ->visibility('public')
-                            ->imageResizeMode('cover')
+                            ->imageResizeMode('contain')
                             ->imageResizeTargetWidth(1200)
                             ->imageResizeTargetHeight(630)
+                            ->imageEditor()
                             ->saveUploadedFileUsing(function ($file, $get) {
                                 $imageService = app(\App\Services\ImageService::class);
                                 $siteName = $get('site_name') ?? 'website';
-                                return $imageService->saveImage(
+                                return $imageService->saveImageWithAspectRatio(
                                     $file,
                                     'settings/og-images',
-                                    1200,  // width
-                                    630,   // height
+                                    1200,  // max width
+                                    630,   // max height
                                     85,    // quality
                                     "og-image-{$siteName}" // SEO-friendly name
                                 );
                             }),
                         FileUpload::make('placeholder_image')
                             ->label('Ảnh tạm thời (Placeholder)')
-                            ->helperText('Ảnh hiển thị khi không có ảnh chính cho sản phẩm, bài viết, nhân viên...')
+                            ->helperText('Ảnh hiển thị khi không có ảnh chính cho sản phẩm, bài viết, nhân viên... (sẽ giữ nguyên tỷ lệ)')
                             ->image()
                             ->directory('settings/placeholders')
                             ->visibility('public')
-                            ->imageResizeMode('cover')
+                            ->imageResizeMode('contain')
                             ->imageResizeTargetWidth(400)
                             ->imageResizeTargetHeight(400)
+                            ->imageEditor()
                             ->saveUploadedFileUsing(function ($file, $get) {
                                 $imageService = app(\App\Services\ImageService::class);
                                 $siteName = $get('site_name') ?? 'website';
-                                return $imageService->saveImage(
+                                return $imageService->saveImageWithAspectRatio(
                                     $file,
                                     'settings/placeholders',
-                                    400,   // width
-                                    400,   // height
+                                    400,   // max width
+                                    400,   // max height
                                     90,    // quality
                                     "placeholder-{$siteName}" // SEO-friendly name
                                 );

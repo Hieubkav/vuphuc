@@ -65,14 +65,17 @@
                         </a>
                     @endif
                     @if($slider->image_link)
-                        <img
-                            src="{{ Storage::url($slider->image_link) }}"
-                            alt="{{ $slider->alt_text ?: ($slider->title ? $slider->title . ' - Vũ Phúc Baking' : 'Banner Vũ Phúc Baking ' . ($index + 1)) }}"
-                            class="object-cover object-center w-full h-full transform scale-105 transition-all duration-7000 ease-in-out"
-                            x-bind:class="{ 'scale-100': activeSlide === {{ $index }}, 'scale-105': activeSlide !== {{ $index }} }"
-                            loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
-                            onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-bg').style.display='flex';"
-                        >
+                        <div class="smart-image-container w-full h-full overflow-hidden">
+                            <img
+                                src="{{ Storage::url($slider->image_link) }}"
+                                alt="{{ $slider->alt_text ?: ($slider->title ? $slider->title . ' - Vũ Phúc Baking' : 'Banner Vũ Phúc Baking ' . ($index + 1)) }}"
+                                class="smart-hero-image w-full h-full transform scale-105 transition-all duration-7000 ease-in-out"
+                                x-bind:class="{ 'scale-100': activeSlide === {{ $index }}, 'scale-105': activeSlide !== {{ $index }} }"
+                                loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
+                                onload="adjustImagePosition(this)"
+                                onerror="this.style.display='none'; this.parentElement.parentElement.querySelector('.fallback-bg').style.display='flex';"
+                            >
+                        </div>
                         <!-- Fallback background khi ảnh không load được -->
                         <div class="fallback-bg w-full h-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center" style="display: none;">
                             <span class="text-white text-lg font-medium">{{ $slider->title ?? 'Vũ Phúc Baking' }}</span>
@@ -146,14 +149,17 @@
                         </a>
                     @endif
                     @if($slider->image_link)
-                        <img
-                            src="{{ Storage::url($slider->image_link) }}"
-                            alt="{{ $slider->alt_text ?: ($slider->title ? $slider->title . ' - Vũ Phúc Baking' : 'Banner Vũ Phúc Baking ' . ($index + 1)) }}"
-                            class="object-cover object-center w-full h-full transform scale-105 transition-all duration-7000 ease-in-out"
-                            x-bind:class="{ 'scale-100': activeSlide === {{ $index }}, 'scale-105': activeSlide !== {{ $index }} }"
-                            loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
-                            onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-bg').style.display='flex';"
-                        >
+                        <div class="smart-image-container w-full h-full overflow-hidden">
+                            <img
+                                src="{{ Storage::url($slider->image_link) }}"
+                                alt="{{ $slider->alt_text ?: ($slider->title ? $slider->title . ' - Vũ Phúc Baking' : 'Banner Vũ Phúc Baking ' . ($index + 1)) }}"
+                                class="smart-hero-image w-full h-full transform scale-105 transition-all duration-7000 ease-in-out"
+                                x-bind:class="{ 'scale-100': activeSlide === {{ $index }}, 'scale-105': activeSlide !== {{ $index }} }"
+                                loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
+                                onload="adjustImagePosition(this)"
+                                onerror="this.style.display='none'; this.parentElement.parentElement.querySelector('.fallback-bg').style.display='flex';"
+                            >
+                        </div>
                         <!-- Fallback background khi ảnh không load được -->
                         <div class="fallback-bg w-full h-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center" style="display: none;">
                             <span class="text-white text-2xl font-medium">{{ $slider->title ?? 'Vũ Phúc Baking' }}</span>
@@ -276,9 +282,60 @@
         transform-style: preserve-3d;
     }
 
-    .hero-slide img {
+    /* Smart Image Container - Thiết kế thông minh cho ảnh hero */
+    .smart-image-container {
+        position: relative;
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    }
+
+    .smart-hero-image {
+        object-fit: cover;
+        object-position: center center;
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
+        transition: object-position 0.3s ease-out, transform 7s ease-in-out;
+    }
+
+    /* Responsive object positioning cho mobile */
+    @media (max-width: 767px) {
+        .smart-hero-image {
+            object-position: center 15%; /* Ưu tiên phần trên nhiều hơn */
+        }
+
+        .smart-hero-image.landscape {
+            object-position: center 20%;
+        }
+
+        .smart-hero-image.portrait {
+            object-position: center 10%;
+        }
+
+        .smart-hero-image.square {
+            object-position: center 18%;
+        }
+    }
+
+    /* Responsive object positioning cho desktop */
+    @media (min-width: 768px) {
+        .smart-hero-image {
+            object-position: center 25%; /* Ưu tiên phần trên trên desktop */
+        }
+
+        .smart-hero-image.landscape {
+            object-position: center 30%;
+        }
+
+        .smart-hero-image.portrait {
+            object-position: center 20%;
+        }
+
+        .smart-hero-image.square {
+            object-position: center 25%;
+        }
+
+        .smart-hero-image.wide {
+            object-position: center 35%;
+        }
     }
 
     @keyframes progressBar {
@@ -337,4 +394,126 @@
             min-height: 700px;
         }
     }
+
+    /* Loading state cho smart images */
+    .smart-hero-image {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out, object-position 0.3s ease-out, transform 7s ease-in-out;
+    }
+
+    .smart-hero-image.loaded {
+        opacity: 1;
+    }
 </style>
+
+{{-- JavaScript thông minh cho điều chỉnh vị trí ảnh --}}
+<script>
+function adjustImagePosition(img) {
+    // Đợi ảnh load hoàn toàn
+    if (!img.complete) {
+        img.addEventListener('load', function() {
+            adjustImagePosition(img);
+        });
+        return;
+    }
+
+    // Thêm class loaded để hiển thị ảnh
+    img.classList.add('loaded');
+
+    const naturalWidth = img.naturalWidth;
+    const naturalHeight = img.naturalHeight;
+
+    if (naturalWidth === 0 || naturalHeight === 0) return;
+
+    // Tính tỷ lệ khung hình
+    const aspectRatio = naturalWidth / naturalHeight;
+
+    // Xóa các class cũ
+    img.classList.remove('landscape', 'portrait', 'square', 'wide');
+
+    // Phân loại ảnh và áp dụng positioning thông minh
+    if (aspectRatio > 2.5) {
+        // Ảnh rất rộng (panorama)
+        img.classList.add('wide');
+    } else if (aspectRatio > 1.3) {
+        // Ảnh ngang (landscape)
+        img.classList.add('landscape');
+    } else if (aspectRatio < 0.8) {
+        // Ảnh dọc (portrait)
+        img.classList.add('portrait');
+    } else {
+        // Ảnh vuông hoặc gần vuông
+        img.classList.add('square');
+    }
+
+    // Điều chỉnh thêm dựa trên kích thước container
+    const container = img.closest('.smart-image-container');
+    if (container) {
+        const containerRect = container.getBoundingClientRect();
+        const containerRatio = containerRect.width / containerRect.height;
+
+        // Nếu container rộng hơn nhiều so với ảnh, ưu tiên phần trên
+        if (containerRatio > aspectRatio * 1.5) {
+            if (window.innerWidth >= 768) {
+                img.style.objectPosition = 'center 20%'; // Ưu tiên phần trên
+            } else {
+                img.style.objectPosition = 'center 15%'; // Ưu tiên phần trên nhiều hơn trên mobile
+            }
+        }
+        // Nếu ảnh rộng hơn nhiều so với container, vẫn ưu tiên phần trên
+        else if (aspectRatio > containerRatio * 1.5) {
+            if (window.innerWidth >= 768) {
+                img.style.objectPosition = 'center 25%';
+            } else {
+                img.style.objectPosition = 'center 18%';
+            }
+        }
+    }
+
+    // Tối ưu cho mobile: luôn ưu tiên phần trên của ảnh
+    if (window.innerWidth < 768) {
+        if (img.classList.contains('portrait')) {
+            img.style.objectPosition = 'center 8%'; // Rất ưu tiên phần trên cho ảnh dọc
+        } else if (img.classList.contains('landscape')) {
+            img.style.objectPosition = 'center 15%'; // Ưu tiên phần trên cho ảnh ngang
+        } else if (img.classList.contains('square')) {
+            img.style.objectPosition = 'center 12%'; // Ưu tiên phần trên cho ảnh vuông
+        } else if (img.classList.contains('wide')) {
+            img.style.objectPosition = 'center 20%'; // Ít ưu tiên hơn cho ảnh rất rộng
+        }
+    } else {
+        // Desktop: vẫn ưu tiên phần trên nhưng ít hơn mobile
+        if (img.classList.contains('portrait')) {
+            img.style.objectPosition = 'center 15%';
+        } else if (img.classList.contains('landscape')) {
+            img.style.objectPosition = 'center 25%';
+        } else if (img.classList.contains('square')) {
+            img.style.objectPosition = 'center 20%';
+        } else if (img.classList.contains('wide')) {
+            img.style.objectPosition = 'center 30%';
+        }
+    }
+}
+
+// Điều chỉnh lại khi resize window
+let resizeTimeout;
+window.addEventListener('resize', function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function() {
+        document.querySelectorAll('.smart-hero-image').forEach(function(img) {
+            if (img.complete) {
+                adjustImagePosition(img);
+            }
+        });
+    }, 250);
+});
+
+// Khởi tạo cho các ảnh đã load sẵn
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.smart-hero-image').forEach(function(img) {
+        if (img.complete) {
+            adjustImagePosition(img);
+        }
+    });
+});
+</script>

@@ -121,6 +121,8 @@ return array(
     'App\\Http\\Middleware\\TrustProxies' => $baseDir . '/app/Http/Middleware/TrustProxies.php',
     'App\\Http\\Middleware\\ValidateSignature' => $baseDir . '/app/Http/Middleware/ValidateSignature.php',
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
+    'App\\Livewire\\PostsFilter' => $baseDir . '/app/Livewire/PostsFilter.php',
+    'App\\Livewire\\ProductsFilter' => $baseDir . '/app/Livewire/ProductsFilter.php',
     'App\\Livewire\\Public\\CartIcon' => $baseDir . '/app/Livewire/Public/CartIcon.php',
     'App\\Livewire\\Public\\DynamicMenu' => $baseDir . '/app/Livewire/Public/DynamicMenu.php',
     'App\\Livewire\\Public\\SearchBar' => $baseDir . '/app/Livewire/Public/SearchBar.php',

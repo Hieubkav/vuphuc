@@ -22,7 +22,7 @@ class SearchBar extends Component
 
     public function updatedQuery()
     {
-        if (strlen($this->query) >= 2) {
+        if (strlen($this->query) >= 1) {
             $this->showResults = true;
             $this->search();
         } else {

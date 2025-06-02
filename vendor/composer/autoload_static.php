@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit4260f65412ed5081fba47e27bcfcaaf6
+class ComposerStaticInit0fa40d1a9c6f0e97e04f6c5710d8afb1
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -845,6 +845,8 @@ class ComposerStaticInit4260f65412ed5081fba47e27bcfcaaf6
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\ValidateSignature' => __DIR__ . '/../..' . '/app/Http/Middleware/ValidateSignature.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
+        'App\\Livewire\\PostsFilter' => __DIR__ . '/../..' . '/app/Livewire/PostsFilter.php',
+        'App\\Livewire\\ProductsFilter' => __DIR__ . '/../..' . '/app/Livewire/ProductsFilter.php',
         'App\\Livewire\\Public\\CartIcon' => __DIR__ . '/../..' . '/app/Livewire/Public/CartIcon.php',
         'App\\Livewire\\Public\\DynamicMenu' => __DIR__ . '/../..' . '/app/Livewire/Public/DynamicMenu.php',
         'App\\Livewire\\Public\\SearchBar' => __DIR__ . '/../..' . '/app/Livewire/Public/SearchBar.php',
@@ -9406,9 +9408,9 @@ class ComposerStaticInit4260f65412ed5081fba47e27bcfcaaf6
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit4260f65412ed5081fba47e27bcfcaaf6::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit4260f65412ed5081fba47e27bcfcaaf6::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit4260f65412ed5081fba47e27bcfcaaf6::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit0fa40d1a9c6f0e97e04f6c5710d8afb1::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit0fa40d1a9c6f0e97e04f6c5710d8afb1::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit0fa40d1a9c6f0e97e04f6c5710d8afb1::$classMap;
 
         }, null, ClassLoader::class);
     }
