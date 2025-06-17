@@ -48,7 +48,7 @@ class MenuItem extends Model
 
     public function post()
     {
-        return $this->belongsTo(Post::class);
+        return $this->belongsTo(Post::class, 'post_id');
     }
 
     public function catProduct()
@@ -58,7 +58,7 @@ class MenuItem extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     // Helper method để lấy URL

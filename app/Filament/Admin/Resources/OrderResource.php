@@ -16,6 +16,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 
@@ -248,6 +249,13 @@ class OrderResource extends Resource
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['customer:id,name,email,phone'])
+            ->select(['id', 'order_number', 'customer_id', 'shipping_name', 'shipping_phone', 'total', 'status', 'payment_status', 'created_at', 'updated_at']);
     }
 
     public static function getRelations(): array

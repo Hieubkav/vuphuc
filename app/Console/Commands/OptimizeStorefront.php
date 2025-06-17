@@ -198,7 +198,7 @@ class OptimizeStorefront extends Command
         // Warm up partners
         Cache::remember('storefront_partners', 7200, function () {
             return \App\Models\Partner::where('status', 'active')
-                ->select(['id', 'name', 'logo_link', 'website_link', 'order'])
+                ->select(['id', 'name', 'logo_link', 'website_link', 'description', 'order'])
                 ->orderBy('order')
                 ->get();
         });

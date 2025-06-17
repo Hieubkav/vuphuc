@@ -13,6 +13,7 @@ class Post extends Model
     protected $fillable = [
         'title',
         'content',
+        'content_builder',
         'seo_title',
         'seo_description',
         'og_image_link',
@@ -26,6 +27,7 @@ class Post extends Model
     ];
 
     protected $casts = [
+        'content_builder' => 'array',
         'is_featured' => 'boolean',
         'status' => 'string',
         'type' => 'string',

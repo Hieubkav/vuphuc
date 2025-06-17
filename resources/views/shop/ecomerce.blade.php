@@ -38,11 +38,6 @@
     <section class="animate-on-scroll py-16 md:py-24 bg-white">
         @include('components.ecomerce.shopping-faq')
     </section>
-    
-    <!-- Call To Action -->
-    <section class="py-14 md:py-20 bg-gradient-to-r from-red-800 via-red-700 to-red-600 text-white relative overflow-hidden">
-        @include('components.ecomerce.shopping-cta')
-    </section>
 @endsection
 
 @push('styles')

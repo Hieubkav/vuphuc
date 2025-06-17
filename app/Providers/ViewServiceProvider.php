@@ -152,7 +152,7 @@ class ViewServiceProvider extends ServiceProvider
             // Partners - Cache 2 giờ
             'partners' => Cache::remember('storefront_partners', 7200, function () {
                 return Partner::where('status', 'active')
-                    ->select(['id', 'name', 'logo_link', 'website_link', 'order'])
+                    ->select(['id', 'name', 'logo_link', 'website_link', 'description', 'order'])
                     ->orderBy('order')
                     ->get();
             }),
@@ -194,9 +194,17 @@ class ViewServiceProvider extends ServiceProvider
                 // Menu Items cho dynamic navigation
                 'menuItems' => MenuItem::where('status', 'active')
                     ->whereNull('parent_id')
-                    ->with(['children' => function ($query) {
-                        $query->where('status', 'active')->orderBy('order');
-                    }])
+                    ->with([
+                        'children' => function ($query) {
+                            $query->where('status', 'active')
+                                ->with(['post:id,slug', 'catPost:id,slug', 'product:id,slug', 'catProduct:id,slug'])
+                                ->orderBy('order');
+                        },
+                        'post:id,slug',
+                        'catPost:id,slug',
+                        'product:id,slug',
+                        'catProduct:id,slug'
+                    ])
                     ->orderBy('order')
                     ->get(),
 

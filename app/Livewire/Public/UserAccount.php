@@ -3,6 +3,8 @@
 namespace App\Livewire\Public;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 
 class UserAccount extends Component
 {
@@ -14,13 +16,27 @@ class UserAccount extends Component
         $this->checkAuthStatus();
     }
 
+    #[On('customer-logged-in')]
+    #[On('customer-registered')]
     public function checkAuthStatus()
     {
-        // TODO: Implement authentication logic
-        // Hiện tại để mặc định là chưa đăng nhập
+        $this->isLoggedIn = Auth::guard('customer')->check();
+        $this->user = Auth::guard('customer')->user();
+    }
+
+    public function logout()
+    {
+        Auth::guard('customer')->logout();
+        session()->invalidate();
+        session()->regenerateToken();
+
         $this->isLoggedIn = false;
         $this->user = null;
+
+        session()->flash('success', 'Đăng xuất thành công!');
     }
+
+
 
     public function render()
     {

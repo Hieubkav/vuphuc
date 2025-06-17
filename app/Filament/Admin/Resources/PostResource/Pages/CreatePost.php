@@ -23,4 +23,24 @@ class CreatePost extends CreateRecord
     {
         return 'Bài viết đã được thêm thành công';
     }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        // Tự động tạo SEO title nếu trống
+        if (empty($data['seo_title']) && !empty($data['title'])) {
+            $data['seo_title'] = PostResource::generateSeoTitle($data['title']);
+        }
+
+        // Tự động tạo SEO description nếu trống
+        if (empty($data['seo_description']) && !empty($data['content'])) {
+            $data['seo_description'] = PostResource::generateSeoDescription($data['content']);
+        }
+
+        // Tự động copy thumbnail làm OG image nếu OG image trống
+        if (empty($data['og_image_link']) && !empty($data['thumbnail'])) {
+            $data['og_image_link'] = $data['thumbnail'];
+        }
+
+        return $data;
+    }
 }

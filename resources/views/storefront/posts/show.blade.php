@@ -170,8 +170,8 @@
             @endif
 
             <!-- Article Content -->
-            <article class="prose prose-lg max-w-none">
-                {!! $post->content !!}
+            <article>
+                <x-post-content :post="$post" />
             </article>
         </div>
     </div>

@@ -6,6 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ImageService
@@ -212,6 +213,93 @@ class ImageService
         }
 
         return null;
+    }
+
+    /**
+     * Lưu file cho RichEditor - giữ nguyên GIF, chuyển các format khác thành WebP
+     *
+     * @param UploadedFile $file File upload
+     * @param string $directory Thư mục lưu
+     * @param int $maxWidth Chiều rộng tối đa
+     * @param int $quality Chất lượng ảnh
+     * @param string|null $customName Tên file tùy chỉnh
+     * @return string|null Đường dẫn đến file đã lưu
+     */
+    public function saveRichEditorFile($file, string $directory, int $maxWidth = 1200, int $quality = 85, ?string $customName = null): ?string
+    {
+        Log::info('RichEditor file upload started', [
+            'file_type' => get_class($file),
+            'directory' => $directory,
+            'custom_name' => $customName
+        ]);
+
+        if (!$file instanceof UploadedFile) {
+            Log::error('File is not UploadedFile instance');
+            return null;
+        }
+
+        $originalExtension = strtolower($file->getClientOriginalExtension());
+        $mimeType = $file->getMimeType();
+
+        Log::info('File details', [
+            'original_name' => $file->getClientOriginalName(),
+            'extension' => $originalExtension,
+            'mime_type' => $mimeType,
+            'size' => $file->getSize()
+        ]);
+
+        // Giữ nguyên GIF để bảo toàn animation
+        if ($originalExtension === 'gif' || $mimeType === 'image/gif') {
+            $filename = $this->generateFilename($customName) . '.gif';
+            $path = 'public/' . $directory . '/' . $filename;
+
+            Log::info('Saving GIF file', ['path' => $path, 'filename' => $filename]);
+
+            // Lưu trực tiếp file GIF mà không xử lý
+            Storage::put($path, file_get_contents($file->getRealPath()));
+
+            $result = $directory . '/' . $filename;
+            Log::info('GIF saved successfully', ['result' => $result]);
+            return $result;
+        }
+
+        // Với các format khác, chuyển thành WebP để tối ưu
+        $manager = new ImageManager(new Driver());
+        $filename = $this->generateFilename($customName) . '.webp';
+
+        try {
+            Log::info('Processing image to WebP', ['filename' => $filename]);
+
+            $img = $manager->read($file->getRealPath());
+
+            // Resize nếu ảnh quá lớn
+            if ($maxWidth > 0 && $img->width() > $maxWidth) {
+                Log::info('Resizing image', ['original_width' => $img->width(), 'new_width' => $maxWidth]);
+                $img->resize(width: $maxWidth);
+            }
+
+            // Chuyển đổi sang WebP
+            $encodedImage = $img->toWebp($quality);
+
+            // Lưu vào storage
+            $path = 'public/' . $directory . '/' . $filename;
+            Storage::put($path, $encodedImage);
+
+            $result = $directory . '/' . $filename;
+            Log::info('WebP saved successfully', ['result' => $result]);
+            return $result;
+        } catch (\Exception $e) {
+            Log::error('Error processing image', ['error' => $e->getMessage()]);
+
+            // Nếu có lỗi, lưu file gốc
+            $originalFilename = $this->generateFilename($customName) . '.' . $originalExtension;
+            $path = 'public/' . $directory . '/' . $originalFilename;
+            Storage::put($path, file_get_contents($file->getRealPath()));
+
+            $result = $directory . '/' . $originalFilename;
+            Log::info('Original file saved as fallback', ['result' => $result]);
+            return $result;
+        }
     }
 
     /**

@@ -189,7 +189,8 @@ class ProductResource extends Resource
 
                 TextColumn::make('stock')
                     ->label('Tồn kho')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 IconColumn::make('is_hot')
                     ->label('Nổi bật')
@@ -258,7 +259,11 @@ class ProductResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['productCategory', 'productImages']);
+        return parent::getEloquentQuery()
+            ->with(['productCategory', 'productImages' => function($query) {
+                $query->orderBy('order', 'asc')->limit(1); // Chỉ load ảnh đầu tiên để tăng tốc
+            }])
+            ->select(['id', 'name', 'sku', 'price', 'sale_price', 'category_id', 'status', 'is_hot', 'order', 'created_at', 'updated_at']);
     }
 
     public static function getNavigationBadge(): ?string

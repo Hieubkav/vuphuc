@@ -154,13 +154,14 @@ class CustomerResource extends Resource
         ];
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
-    }
+    // Tắt navigation badge để tăng tốc độ load
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return static::getModel()::count();
+    // }
 
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return 'success';
-    }
+    // public static function getNavigationBadgeColor(): ?string
+    // {
+    //     return 'success';
+    // }
 }

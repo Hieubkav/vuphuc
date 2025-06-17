@@ -3,10 +3,10 @@
 namespace App\Filament\Admin\Resources\PostResource\Pages;
 
 use App\Filament\Admin\Resources\PostResource;
+use App\Filament\Admin\Pages\BaseListRecords;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
 
-class ListPosts extends ListRecords
+class ListPosts extends BaseListRecords
 {
     protected static string $resource = PostResource::class;
 

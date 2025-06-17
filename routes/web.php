@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\CustomerAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Artisan;
@@ -59,6 +60,16 @@ Route::controller(EmployeeController::class)->group(function () {
     Route::get('/nhan-vien/{slug}/qr-download', 'downloadQrCode')->name('employee.qr-download');
 });
 
+// Routes cho customer authentication
+Route::controller(CustomerAuthController::class)->group(function () {
+    Route::get('/khach-hang/dang-nhap', 'showLoginForm')->name('customer.login')->middleware('customer.guest');
+    Route::post('/khach-hang/dang-nhap', 'login')->middleware('customer.guest');
+    Route::get('/khach-hang/dang-ky', 'showRegisterForm')->name('customer.register')->middleware('customer.guest');
+    Route::post('/khach-hang/dang-ky', 'register')->middleware('customer.guest');
+    Route::post('/khach-hang/dang-xuat', 'logout')->name('customer.logout')->middleware('auth:customer');
+    Route::get('/khach-hang/thong-tin', 'showProfile')->name('customer.profile')->middleware('auth:customer');
+});
+
 // SEO routes
 Route::controller(SitemapController::class)->group(function () {
     Route::get('/sitemap.xml', 'index')->name('sitemap');
@@ -75,6 +86,8 @@ Route::controller(SearchController::class)->group(function () {
 Route::get('/test-navbar', function () {
     return view('test-navbar');
 })->name('test.navbar');
+
+
 
 // Route test menu update
 Route::get('/test-menu', function () {
@@ -119,6 +132,36 @@ Route::get('/debug-products', function () {
         return response()->json($data, 200, [], JSON_PRETTY_PRINT);
     }
     return response()->json(['message' => 'No hot products found'], 404);
+});
+
+// Debug post route
+Route::get('/debug-post/{id}', function ($id) {
+    $post = \App\Models\Post::find($id);
+    if ($post) {
+        $data = [
+            'id' => $post->id,
+            'title' => $post->title,
+            'slug' => $post->slug,
+            'status' => $post->status,
+            'type' => $post->type,
+            'content_length' => strlen($post->content ?? ''),
+            'content_builder_count' => is_array($post->content_builder) ? count($post->content_builder) : 0,
+            'content_builder_data' => $post->content_builder,
+            'updated_at' => $post->updated_at,
+            'route_url' => route('posts.show', $post->slug)
+        ];
+        return response()->json($data, 200, [], JSON_PRETTY_PRINT);
+    }
+    return response()->json(['message' => 'Post not found'], 404);
+});
+
+// Test post content component
+Route::get('/test-post-content/{id}', function ($id) {
+    $post = \App\Models\Post::find($id);
+    if ($post) {
+        return view('components.post-content', compact('post'));
+    }
+    return 'Post not found';
 });
 
 

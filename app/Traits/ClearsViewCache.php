@@ -34,6 +34,8 @@ trait ClearsViewCache
     {
         $modelClass = get_class($model);
 
+
+
         switch ($modelClass) {
             case 'App\Models\Setting':
                 ViewServiceProvider::refreshCache('settings');
@@ -46,11 +48,18 @@ trait ClearsViewCache
 
             case 'App\Models\Product':
             case 'App\Models\CatProduct':
+                ViewServiceProvider::refreshCache('storefront');
+                ViewServiceProvider::refreshCache('navigation');
+                break;
+
             case 'App\Models\Post':
+                ViewServiceProvider::refreshCache('storefront');
+                ViewServiceProvider::refreshCache('navigation'); // Vì có recentPosts trong navigation_data
+                break;
+
             case 'App\Models\Partner':
             case 'App\Models\Slider':
                 ViewServiceProvider::refreshCache('storefront');
-                ViewServiceProvider::refreshCache('navigation');
                 break;
 
             default:

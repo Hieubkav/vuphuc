@@ -1,7 +1,7 @@
 <div class="relative group" x-data="{ open: false }">
     @if(!$isLoggedIn)
         <!-- Chưa đăng nhập -->
-        <a href="#" class="relative flex items-center justify-center w-10 h-10 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-lg transition-all duration-300 group" aria-label="Đăng nhập">
+        <a href="{{ route('customer.login') }}" class="relative flex items-center justify-center w-10 h-10 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-lg transition-all duration-300 group" aria-label="Đăng nhập">
             <!-- User Icon -->
             <svg class="h-5 w-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300"
                  fill="none"
@@ -18,13 +18,12 @@
         </a>
 
         <!-- Enhanced Tooltip -->
-        <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-50">
-            <div class="bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg px-3 py-2 shadow-xl">
-                <div class="font-medium">Đăng nhập</div>
-                <div class="text-xs text-gray-300">Tài khoản</div>
+        <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-50">
+            <div class="bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg px-3 py-1.5 shadow-xl whitespace-nowrap">
+                <span class="font-medium">Đăng nhập tài khoản</span>
             </div>
             <!-- Tooltip Arrow -->
-            <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900 dark:border-t-gray-700"></div>
+            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900 dark:border-b-gray-700"></div>
         </div>
     @else
         <!-- Đã đăng nhập -->
@@ -83,7 +82,9 @@
                             @endif
                             <div class="flex-1 min-w-0">
                                 <div class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $user->name }}</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $user->email }}</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                    {{ $user->email ?: $user->phone }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -91,7 +92,7 @@
 
                 <!-- Menu Items -->
                 <div class="py-2">
-                    <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-gray-700 dark:hover:to-gray-600 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 group">
+                    <a href="{{ route('customer.profile') }}" class="w-full flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-gray-700 dark:hover:to-gray-600 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 group">
                         <svg class="w-4 h-4 mr-3 text-gray-400 group-hover:text-blue-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
@@ -114,12 +115,12 @@
 
                     <div class="border-t border-gray-200 dark:border-gray-600 my-2"></div>
 
-                    <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-red-50 hover:to-orange-50 dark:hover:from-gray-700 dark:hover:to-gray-600 hover:text-red-600 dark:hover:text-red-400 transition-all duration-200 group">
+                    <button wire:click="logout" class="w-full flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-red-50 hover:to-orange-50 dark:hover:from-gray-700 dark:hover:to-gray-600 hover:text-red-600 dark:hover:text-red-400 transition-all duration-200 group">
                         <svg class="w-4 h-4 mr-3 text-gray-400 group-hover:text-red-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
                         Đăng xuất
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
