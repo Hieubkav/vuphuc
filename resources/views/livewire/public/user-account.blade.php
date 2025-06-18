@@ -99,18 +99,11 @@
                         Thông tin tài khoản
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 dark:hover:from-gray-700 dark:hover:to-gray-600 hover:text-green-600 dark:hover:text-green-400 transition-all duration-200 group">
+                    <a href="{{ route('customer.orders.index') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 dark:hover:from-gray-700 dark:hover:to-gray-600 hover:text-green-600 dark:hover:text-green-400 transition-all duration-200 group">
                         <svg class="w-4 h-4 mr-3 text-gray-400 group-hover:text-green-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                         </svg>
                         Đơn hàng của tôi
-                    </a>
-
-                    <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 dark:hover:from-gray-700 dark:hover:to-gray-600 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-200 group">
-                        <svg class="w-4 h-4 mr-3 text-gray-400 group-hover:text-pink-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                        </svg>
-                        Yêu thích
                     </a>
 
                     <div class="border-t border-gray-200 dark:border-gray-600 my-2"></div>

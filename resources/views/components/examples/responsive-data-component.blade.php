@@ -92,10 +92,10 @@
                                         {{ number_format($item['price']) }}đ
                                     </span>
                                     
-                                    {{-- Sale Price - Chỉ hiển thị nếu có sale_price --}}
-                                    @if(!empty($item['sale_price']) && $item['sale_price'] < $item['price'])
+                                    {{-- Compare Price - Chỉ hiển thị nếu có compare_price --}}
+                                    @if(!empty($item['compare_price']) && $item['compare_price'] < $item['price'])
                                         <span class="text-gray-400 line-through">
-                                            {{ number_format($item['sale_price']) }}đ
+                                            {{ number_format($item['compare_price']) }}đ
                                         </span>
                                     @endif
                                 </div>

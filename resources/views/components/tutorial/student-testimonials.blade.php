@@ -7,7 +7,7 @@
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 staggered-grid">
         <!-- Testimonial 1 -->
-        <div class="stagger-item bg-white p-6 rounded-lg shadow-lg border border-gray-100 relative">
+        <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-100 relative">
             <div class="absolute -top-5 left-6">
                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

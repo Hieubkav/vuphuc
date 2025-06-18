@@ -18,6 +18,12 @@ class EditPost extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('viewFrontend')
+                ->label('Mở trang')
+                ->icon('heroicon-o-eye')
+                ->color('info')
+                ->url(fn () => route('posts.show', $this->getRecord()->slug))
+                ->openUrlInNewTab(),
             Actions\DeleteAction::make()
                 ->label('Xóa'),
         ];

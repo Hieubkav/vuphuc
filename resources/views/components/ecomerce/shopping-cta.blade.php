@@ -1,4 +1,4 @@
-<section class="animate-on-scroll relative py-16 md:py-24 bg-gradient-to-r from-red-600 to-red-800 text-white">
+<section class="relative py-16 md:py-24 bg-gradient-to-r from-red-600 to-red-800 text-white">
     <div class="absolute inset-0 bg-pattern"></div>
     <div class="container mx-auto px-4 relative z-10">
         <div class="flex flex-col lg:flex-row items-center justify-between gap-8">

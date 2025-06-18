@@ -1,4 +1,4 @@
-<section class="animate-on-scroll py-16 md:py-24 bg-white">
+<section class="py-16 md:py-24 bg-white">
     <div class="container mx-auto px-4">
         <div class="flex flex-col items-center text-center mb-12">
             <span class="text-red-600 font-semibold tracking-wider uppercase text-sm mb-2">Hỗ trợ mua sắm</span>

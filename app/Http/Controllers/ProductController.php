@@ -80,7 +80,7 @@ class ProductController extends Controller
             ->where('id', '!=', $product->id)
             ->where('status', 'active')
             ->with(['productImages' => function($query) {
-                $query->where('status', 'active')->orderBy('order')->limit(1);
+                $query->where('status', 'active')->orderBy('order');
             }])
             ->orderBy('is_hot', 'desc')
             ->orderBy('order')

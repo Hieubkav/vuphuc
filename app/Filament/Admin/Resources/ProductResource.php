@@ -182,6 +182,12 @@ class ProductResource extends Resource
                     ->money('VND')
                     ->sortable(),
 
+                TextColumn::make('compare_price')
+                    ->label('Giá khuyến mãi')
+                    ->money('VND')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('productCategory.name')
                     ->label('Danh mục')
                     ->searchable()
@@ -263,7 +269,7 @@ class ProductResource extends Resource
             ->with(['productCategory', 'productImages' => function($query) {
                 $query->orderBy('order', 'asc')->limit(1); // Chỉ load ảnh đầu tiên để tăng tốc
             }])
-            ->select(['id', 'name', 'sku', 'price', 'sale_price', 'category_id', 'status', 'is_hot', 'order', 'created_at', 'updated_at']);
+            ->select(['id', 'name', 'slug', 'sku', 'price', 'compare_price', 'category_id', 'status', 'is_hot', 'order', 'created_at', 'updated_at']);
     }
 
     public static function getNavigationBadge(): ?string

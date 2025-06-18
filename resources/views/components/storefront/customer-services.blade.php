@@ -9,7 +9,7 @@
     <!-- Services Grid with Hover Effects -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Service Card 1 -->
-        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group stagger-item">
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
             <div class="h-48 bg-gradient-to-r from-red-700 to-red-500 relative overflow-hidden">
                 <div class="absolute inset-0 bg-black bg-opacity-30"></div>
                 <img src="{{ asset('images/technical-support.jpg') }}" alt="Hỗ trợ kỹ thuật" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" onerror="this.src='https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=700&q=80';">
@@ -34,7 +34,7 @@
         </div>
         
         <!-- Service Card 2 -->
-        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group stagger-item">
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
             <div class="h-48 bg-gradient-to-r from-red-700 to-red-500 relative overflow-hidden">
                 <div class="absolute inset-0 bg-black bg-opacity-30"></div>
                 <img src="{{ asset('images/technical-support.jpg') }}" alt="Hỗ trợ kỹ thuật" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" onerror="this.src='https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=700&q=80';">
@@ -59,7 +59,7 @@
         </div>
         
         <!-- Service Card 3 -->
-        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group stagger-item">
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
             <div class="h-48 bg-gradient-to-r from-red-700 to-red-500 relative overflow-hidden">
                 <div class="absolute inset-0 bg-black bg-opacity-30"></div>
                 <img src="{{ asset('images/training.jpg') }}" alt="Đào tạo chuyên sâu" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" onerror="this.src='https://images.unsplash.com/photo-1576267423445-b2e0074d68a4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=700&q=80';">
@@ -84,7 +84,7 @@
         </div>
         
         <!-- Service Card 4 -->
-        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group stagger-item">
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
             <div class="h-48 bg-gradient-to-r from-red-700 to-red-500 relative overflow-hidden">
                 <div class="absolute inset-0 bg-black bg-opacity-30"></div>
                 <img src="{{ asset('images/career.jpg') }}" alt="Định hướng nghề nghiệp" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" onerror="this.src='https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=700&q=80';">
@@ -109,7 +109,7 @@
         </div>
         
         <!-- Service Card 5 -->
-        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group stagger-item">
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
             <div class="h-48 bg-gradient-to-r from-red-700 to-red-500 relative overflow-hidden">
                 <div class="absolute inset-0 bg-black bg-opacity-30"></div>
                 <img src="{{ asset('images/trends.jpg') }}" alt="Xu hướng mới" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" onerror="this.src='https://images.unsplash.com/photo-1483137140003-ae073b395549?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=700&q=80';">
@@ -134,7 +134,7 @@
         </div>
         
         <!-- Service Card 6 -->
-        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group stagger-item">
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
             <div class="h-48 bg-gradient-to-r from-red-700 to-red-500 relative overflow-hidden">
                 <div class="absolute inset-0 bg-black bg-opacity-30"></div>
                 <img src="{{ asset('images/global.jpg') }}" alt="Kết nối toàn cầu" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" onerror="this.src='https://images.unsplash.com/photo-1519750783826-e2420f4d687f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=700&q=80';">

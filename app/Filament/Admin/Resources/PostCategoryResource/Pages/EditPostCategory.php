@@ -13,6 +13,12 @@ class EditPostCategory extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('viewFrontend')
+                ->label('Mở trang')
+                ->icon('heroicon-o-eye')
+                ->color('info')
+                ->url(fn () => route('posts.index', ['category' => $this->getRecord()->id]))
+                ->openUrlInNewTab(),
             Actions\DeleteAction::make()
                 ->label('Xóa'),
         ];

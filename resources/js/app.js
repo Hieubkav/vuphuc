@@ -2,9 +2,6 @@ import './bootstrap';
 import 'preline';
 import 'flowbite';
 
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-
 // Import Swiper
 import Swiper from 'swiper';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
@@ -17,14 +14,6 @@ Swiper.use([Navigation, Pagination, Autoplay]);
 
 // Make Swiper available globally
 window.Swiper = Swiper;
-
-// Khởi tạo AOS
-AOS.init({
-    duration: 800,
-    easing: 'ease-in-out',
-    once: false,  // Set false để animation chạy mỗi lần scroll
-    mirror: true  // Set true để animation chạy khi scroll ngược lại
-});
 
 // Khởi tạo lại drawer menu
 document.addEventListener('DOMContentLoaded', function() {

@@ -3,11 +3,14 @@
 namespace App\Livewire;
 
 use App\Models\Post;
+use App\Models\CatPost;
 use Livewire\Component;
+use Illuminate\Support\Facades\Cache;
 
 class PostsFilter extends Component
 {
     public $search = '';
+    public $category = '';
     public $type = '';
     public $sort = 'newest';
     public $perPage = 12;
@@ -23,6 +26,7 @@ class PostsFilter extends Component
 
     protected $queryString = [
         'search' => ['except' => ''],
+        'category' => ['except' => ''],
         'type' => ['except' => ''],
         'sort' => ['except' => 'newest'],
     ];
@@ -30,12 +34,18 @@ class PostsFilter extends Component
     public function mount()
     {
         $this->search = request('search', '');
+        $this->category = request('category', '');
         $this->type = request('type', '');
         $this->sort = request('sort', 'newest');
         $this->loadPosts();
     }
 
     public function updatedSearch()
+    {
+        $this->resetPosts();
+    }
+
+    public function updatedCategory()
     {
         $this->resetPosts();
     }
@@ -53,6 +63,7 @@ class PostsFilter extends Component
     public function clearFilters()
     {
         $this->search = '';
+        $this->category = '';
         $this->type = '';
         $this->sort = 'newest';
         $this->resetPosts();
@@ -91,6 +102,11 @@ class PostsFilter extends Component
                 $query->where('status', 'active')->orderBy('order');
             }]);
 
+        // Lọc theo danh mục
+        if ($this->category && $this->category !== 'all') {
+            $query->where('category_id', $this->category);
+        }
+
         // Lọc theo type
         if ($this->type && in_array($this->type, ['normal', 'news', 'service', 'course'])) {
             $query->where('type', $this->type);
@@ -119,6 +135,19 @@ class PostsFilter extends Component
         }
 
         return $query;
+    }
+
+    public function getCategoriesProperty()
+    {
+        return Cache::remember('posts_categories_filter', 1800, function () {
+            return CatPost::where('status', 'active')
+                ->whereNull('parent_id')
+                ->withCount(['posts' => function($query) {
+                    $query->where('status', 'active');
+                }])
+                ->orderBy('order')
+                ->get();
+        });
     }
 
     public function render()

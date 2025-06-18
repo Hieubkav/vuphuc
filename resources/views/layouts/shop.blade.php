@@ -55,8 +55,6 @@
         .page-container { max-width: 1440px; margin: 0 auto; }
 
         /* Animations */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.7s ease-out forwards; }
         .section-transition { transition: all 0.5s ease-in-out; }
         .section-transition:hover { transform: translateY(-5px); }
 
@@ -150,17 +148,7 @@
                 setTimeout(() => { preloader.style.opacity = 0; setTimeout(() => preloader.style.display = 'none', 500); }, 500);
             }
 
-            // Animate sections on scroll
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate-fade-in');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1 });
 
-            document.querySelectorAll('.animate-on-scroll').forEach(section => observer.observe(section));
         });
     </script>
 </body>

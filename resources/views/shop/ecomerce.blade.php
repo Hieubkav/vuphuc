@@ -5,22 +5,22 @@
     @include('components.ecomerce.hero-banner')
     
     <!-- Danh mục sản phẩm -->
-    <section class="animate-on-scroll py-16 md:py-24">
+    <section class="py-16 md:py-24">
         @include('components.storefront.categories')
     </section>
-    
+
     <!-- Sản phẩm nổi bật -->
-    <section id="featured-products" class="animate-on-scroll py-16 md:py-24 bg-gray-50">
+    <section id="featured-products" class="py-16 md:py-24 bg-gray-50">
         @include('components.storefront.featured-products')
     </section>
-    
+
     <!-- Bộ sưu tập sản phẩm đặc biệt -->
-    <section class="animate-on-scroll py-16 md:py-24 bg-white">
+    <section class="py-16 md:py-24 bg-white">
         @include('components.storefront.product-gallery')
     </section>
-    
+
     <!-- Dịch vụ và tiện ích mua hàng -->
-    <section class="animate-on-scroll py-16 md:py-24 bg-gray-50">
+    <section class="py-16 md:py-24 bg-gray-50">
         @include('components.ecomerce.shopping-services')
     </section>
     
@@ -48,17 +48,7 @@
         transition: all 0.5s ease;
     }
     
-    /* Enhanced scroll animations */
-    .animate-on-scroll {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 1.2s ease, transform 1.2s ease;
-    }
-    
-    .animate-on-scroll.animate-visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
+
     
     /* Section dividers for elegant separation */
     section::after {
@@ -136,41 +126,11 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Enhanced scroll animations
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-visible');
-                    
-                    // Add staggered animation to children if they exist
-                    const animatedChildren = entry.target.querySelectorAll('.stagger-item');
-                    if (animatedChildren.length) {
-                        animatedChildren.forEach((child, index) => {
-                            setTimeout(() => {
-                                child.classList.add('animate-visible');
-                            }, 150 * index);
-                        });
-                    }
-                }
-            });
-        }, observerOptions);
-        
-        const sections = document.querySelectorAll('.animate-on-scroll');
-        sections.forEach(section => {
-            observer.observe(section);
-        });
-        
         // Subtle parallax effect for premium feel
         window.addEventListener('scroll', function() {
             const scrollTop = window.pageYOffset;
             const parallaxElements = document.querySelectorAll('.parallax-bg');
-            
+
             parallaxElements.forEach(element => {
                 const speed = element.dataset.speed || 0.5;
                 element.style.transform = `translateY(${scrollTop * speed}px)`;

@@ -23,6 +23,24 @@
                     </div>
                 </div>
 
+                <!-- Category Filter -->
+                <div class="filter-card rounded-xl p-5">
+                    <h3 class="text-base font-semibold text-gray-900 mb-3 font-montserrat">Danh mục</h3>
+                    <div class="space-y-1.5">
+                        <button wire:click="$set('category', '')"
+                               class="filter-btn block w-full text-left px-3 py-2 rounded-lg font-open-sans text-sm {{ !$category ? 'active' : '' }}">
+                            Tất cả danh mục
+                        </button>
+                        @foreach($this->categories as $cat)
+                            <button wire:click="$set('category', '{{ $cat->id }}')"
+                                   class="filter-btn block w-full text-left px-3 py-2 rounded-lg font-open-sans text-sm {{ $category == $cat->id ? 'active' : '' }}">
+                                {{ $cat->name }}
+                                <span class="text-gray-400 text-xs">({{ $cat->posts_count }})</span>
+                            </button>
+                        @endforeach
+                    </div>
+                </div>
+
                 <!-- Type Filter -->
                 <div class="filter-card rounded-xl p-5">
                     <h3 class="text-base font-semibold text-gray-900 mb-3 font-montserrat">Loại nội dung</h3>
@@ -41,7 +59,7 @@
                 </div>
 
                 <!-- Clear Filters -->
-                @if($search || $type || $sort !== 'newest')
+                @if($search || $category || $type || $sort !== 'newest')
                 <div class="filter-card rounded-xl p-5">
                     <button wire:click="clearFilters"
                            class="block w-full text-center px-3 py-2.5 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors font-medium font-open-sans text-sm">
@@ -85,13 +103,25 @@
 
                     <!-- Right: Active filters and clear button -->
                     <div class="flex flex-wrap items-center gap-3">
-                        @if($search || $type || $sort !== 'newest')
+                        @if($search || $category || $type || $sort !== 'newest')
                             <!-- Active filters -->
                             @if($search)
                                 <span class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-800 rounded-full text-xs font-medium font-open-sans">
                                     <i class="fas fa-search mr-1.5"></i>
                                     "{{ Str::limit($search, 20) }}"
                                 </span>
+                            @endif
+
+                            @if($category)
+                                @php
+                                    $selectedCategory = $this->categories->where('id', $category)->first();
+                                @endphp
+                                @if($selectedCategory)
+                                    <span class="inline-flex items-center px-3 py-1.5 bg-green-100 text-green-800 rounded-full text-xs font-medium font-open-sans">
+                                        <i class="fas fa-folder mr-1.5"></i>
+                                        {{ $selectedCategory->name }}
+                                    </span>
+                                @endif
                             @endif
 
                             @if($type)

@@ -96,11 +96,20 @@
                         <a href="{{ route('products.show', $relatedProduct->slug) }}" class="group">
                             <div class="bg-gray-50 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
                                 @php $image = $relatedProduct->productImages->first(); @endphp
-                                @if($image)
-                                    <img src="{{ getProductImageUrlFromImage($image, $relatedProduct->name) }}"
-                                         alt="{{ $relatedProduct->name }}"
-                                         class="w-full aspect-square object-cover group-hover:scale-105 transition-transform">
-                                @endif
+                                <div class="w-full aspect-square overflow-hidden bg-gray-100 flex items-center justify-center">
+                                    @if($image)
+                                        <img src="{{ getProductImageUrlFromImage($image, $relatedProduct->name) }}"
+                                             alt="{{ $relatedProduct->name }}"
+                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                                    @else
+                                        <div class="w-full h-full bg-gradient-to-br from-red-50 to-red-100 flex flex-col items-center justify-center">
+                                            <div class="text-center">
+                                                <i class="fas fa-birthday-cake text-3xl text-red-300 mb-1"></i>
+                                                <p class="text-xs text-red-400 font-medium">Vũ Phúc Baking</p>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
                                 <div class="p-3">
                                     <h3 class="text-sm font-medium mb-2 line-clamp-2">{{ $relatedProduct->name }}</h3>
                                     <p class="text-sm font-bold text-red-600">{{ formatPrice($relatedProduct->price) }}</p>

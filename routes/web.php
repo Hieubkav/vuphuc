@@ -7,6 +7,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\CustomerAuthController;
+use App\Http\Controllers\CustomerOrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Artisan;
@@ -68,6 +69,15 @@ Route::controller(CustomerAuthController::class)->group(function () {
     Route::post('/khach-hang/dang-ky', 'register')->middleware('customer.guest');
     Route::post('/khach-hang/dang-xuat', 'logout')->name('customer.logout')->middleware('auth:customer');
     Route::get('/khach-hang/thong-tin', 'showProfile')->name('customer.profile')->middleware('auth:customer');
+});
+
+// Routes cho customer orders (yêu cầu đăng nhập)
+Route::middleware('auth:customer')->group(function () {
+    Route::controller(CustomerOrderController::class)->group(function () {
+        Route::get('/khach-hang/don-hang', 'index')->name('customer.orders.index');
+        Route::get('/khach-hang/don-hang/{orderNumber}', 'show')->name('customer.orders.show');
+        Route::patch('/khach-hang/don-hang/{orderNumber}/huy', 'cancel')->name('customer.orders.cancel');
+    });
 });
 
 // SEO routes
