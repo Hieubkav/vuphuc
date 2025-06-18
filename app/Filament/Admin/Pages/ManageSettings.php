@@ -13,6 +13,7 @@ use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Cache;
+use App\Constants\NavigationGroups;
 
 class ManageSettings extends Page implements HasForms
 {
@@ -20,7 +21,7 @@ class ManageSettings extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
 
-    protected static ?string $navigationGroup = 'Hệ Thống';
+    protected static ?string $navigationGroup = NavigationGroups::SETTINGS;
 
     protected static string $view = 'filament.admin.pages.manage-settings';
 
@@ -28,7 +29,7 @@ class ManageSettings extends Page implements HasForms
 
     protected static ?string $navigationLabel = 'Cài Đặt Website';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 41;
 
     public ?array $data = [];
 

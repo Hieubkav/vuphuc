@@ -15,6 +15,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
+use App\Constants\NavigationGroups;
 
 class UserResource extends Resource
 {
@@ -26,11 +27,11 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationGroup = 'Hệ Thống';
+    protected static ?string $navigationGroup = NavigationGroups::PEOPLE;
 
     protected static ?string $navigationLabel = 'Quản lý người dùng';
 
-    protected static ?int $navigationSort = 50;
+    protected static ?int $navigationSort = 23;
 
     public static function form(Form $form): Form
     {

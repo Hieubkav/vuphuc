@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\PostCategoryResource\Pages;
+use App\Filament\Admin\Resources\PostCategoryResource\RelationManagers;
 use App\Models\CatPost;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -15,6 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use App\Constants\NavigationGroups;
 
 class PostCategoryResource extends Resource
 {
@@ -26,11 +28,11 @@ class PostCategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationGroup = 'Quản lý nội dung';
+    protected static ?string $navigationGroup = NavigationGroups::CONTENT;
 
     protected static ?string $navigationLabel = 'Danh mục bài viết';
 
-    protected static ?int $navigationSort = 60;
+    protected static ?int $navigationSort = 14;
 
     public static function form(Form $form): Form
     {
@@ -90,10 +92,10 @@ class PostCategoryResource extends Resource
                     ->label('Đường dẫn')
                     ->searchable(),
 
-                TextColumn::make('description')
-                    ->label('Mô tả')
-                    ->limit(50)
-                    ->searchable(),
+                TextColumn::make('posts_count')
+                    ->label('Số bài viết')
+                    ->counts('posts')
+                    ->sortable(),
 
                 ToggleColumn::make('status')
                     ->label('Hiển thị')
@@ -125,7 +127,7 @@ class PostCategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\CategoryPostsRelationManager::class,
         ];
     }
 

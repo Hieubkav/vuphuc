@@ -20,6 +20,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use App\Constants\NavigationGroups;
 
 class ProductResource extends Resource
 {
@@ -31,11 +32,11 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
-    protected static ?string $navigationGroup = 'Quản lý sản phẩm';
+    protected static ?string $navigationGroup = NavigationGroups::SALES;
 
     protected static ?string $navigationLabel = 'Sản phẩm';
 
-    protected static ?int $navigationSort = 11;
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {

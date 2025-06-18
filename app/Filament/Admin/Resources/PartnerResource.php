@@ -17,6 +17,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use App\Constants\NavigationGroups;
 
 class PartnerResource extends Resource
 {
@@ -28,11 +29,11 @@ class PartnerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static ?string $navigationGroup = 'Quản lý nội dung';
+    protected static ?string $navigationGroup = NavigationGroups::PARTNERS;
 
     protected static ?string $navigationLabel = 'Quản lý đối tác';
 
-    protected static ?int $navigationSort = 25;
+    protected static ?int $navigationSort = 31;
 
     public static function form(Form $form): Form
     {

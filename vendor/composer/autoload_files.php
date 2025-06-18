@@ -49,4 +49,5 @@ return array(
     'ec07570ca5a812141189b1fa81503674' => $vendorDir . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
     '320163ac6b93aebe3dc25b60a0533d56' => $vendorDir . '/spatie/laravel-ignition/src/helpers.php',
     '11fc3f4d0ee708fa878331ce68d5b617' => $baseDir . '/app/Helpers/ImageHelper.php',
+    '55d094d7f971775ef9358b70d1cd9330' => $baseDir . '/app/Helpers/ContentHelper.php',
 );

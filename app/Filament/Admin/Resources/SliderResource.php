@@ -19,6 +19,7 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
+use App\Constants\NavigationGroups;
 
 class SliderResource extends Resource
 {
@@ -26,7 +27,7 @@ class SliderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-photo';
 
-    protected static ?string $navigationGroup = 'Quản lý nội dung';
+    protected static ?string $navigationGroup = NavigationGroups::CONTENT;
 
     protected static ?string $navigationLabel = 'Slider Banner';
 
@@ -34,7 +35,7 @@ class SliderResource extends Resource
 
     protected static ?string $pluralModelLabel = 'slider banner';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 11;
 
     public static function form(Form $form): Form
     {

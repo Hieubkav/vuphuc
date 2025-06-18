@@ -29,6 +29,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Constants\NavigationGroups;
 
 class PostResource extends Resource
 {
@@ -40,11 +41,11 @@ class PostResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
 
-    protected static ?string $navigationGroup = 'Quản lý nội dung';
+    protected static ?string $navigationGroup = NavigationGroups::CONTENT;
 
     protected static ?string $navigationLabel = 'Bài viết';
 
-    protected static ?int $navigationSort = 20;
+    protected static ?int $navigationSort = 13;
 
     public static function form(Form $form): Form
     {

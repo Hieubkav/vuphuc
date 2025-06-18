@@ -96,9 +96,12 @@
                         @else
                         <h3 class="text-2xl font-bold text-gray-900 mb-3 line-clamp-2">{{ $featuredPost->title ?? 'Tin tức mới' }}</h3>
                         @endif
-                        @if(isset($featuredPost->content) && !empty($featuredPost->content))
+                        @php
+                            $cleanContent = \App\Helpers\ContentHelper::getCleanExcerpt($featuredPost, 180);
+                        @endphp
+                        @if($cleanContent)
                         <p class="text-gray-600 mb-6 line-clamp-3">
-                            {{ Str::limit(strip_tags($featuredPost->content), 180) }}
+                            {{ $cleanContent }}
                         </p>
                         @endif
                         @if(isset($featuredPost->slug))
@@ -165,9 +168,12 @@
                                     @else
                                     <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{{ $post->title ?? 'Tin tức mới' }}</h3>
                                     @endif
-                                    @if(isset($post->content) && !empty($post->content))
+                                    @php
+                                        $cleanContent = \App\Helpers\ContentHelper::getCleanExcerpt($post, 100);
+                                    @endphp
+                                    @if($cleanContent)
                                     <p class="text-gray-600 mb-4 line-clamp-2">
-                                        {{ Str::limit(strip_tags($post->content), 100) }}
+                                        {{ $cleanContent }}
                                     </p>
                                     @endif
                                     @if(isset($post->slug))
@@ -236,9 +242,12 @@
                                                 @else
                                                 <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{{ $post->title ?? 'Tin tức mới' }}</h3>
                                                 @endif
-                                                @if(isset($post->content) && !empty($post->content))
+                                                @php
+                                                    $cleanContent = \App\Helpers\ContentHelper::getCleanExcerpt($post, 100);
+                                                @endphp
+                                                @if($cleanContent)
                                                 <p class="text-gray-600 mb-4 line-clamp-2">
-                                                    {{ Str::limit(strip_tags($post->content), 100) }}
+                                                    {{ $cleanContent }}
                                                 </p>
                                                 @endif
                                                 @if(isset($post->slug))
@@ -322,9 +331,12 @@
                         @else
                         <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">{{ $featuredPost->title ?? 'Tin tức mới' }}</h3>
                         @endif
-                        @if(isset($featuredPost->content) && !empty($featuredPost->content))
+                        @php
+                            $cleanContent = \App\Helpers\ContentHelper::getCleanExcerpt($featuredPost, 120);
+                        @endphp
+                        @if($cleanContent)
                         <p class="text-sm text-gray-600 mb-3 line-clamp-3">
-                            {{ Str::limit(strip_tags($featuredPost->content), 120) }}
+                            {{ $cleanContent }}
                         </p>
                         @endif
                         @if(isset($featuredPost->slug))
@@ -390,9 +402,12 @@
                                             @else
                                             <h3 class="text-base font-medium text-gray-900 mb-1.5 line-clamp-2 leading-snug">{{ $post->title ?? 'Tin tức mới' }}</h3>
                                             @endif
-                                            @if(isset($post->content) && !empty($post->content))
+                                            @php
+                                                $cleanContent = \App\Helpers\ContentHelper::getCleanExcerpt($post, 70);
+                                            @endphp
+                                            @if($cleanContent)
                                             <p class="text-xs text-gray-600 mb-3 line-clamp-2">
-                                                {{ Str::limit(strip_tags($post->content), 70) }}
+                                                {{ $cleanContent }}
                                             </p>
                                             @endif
                                             @if(isset($post->slug))

@@ -22,6 +22,7 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\Action;
 use Filament\Notifications\Notification;
+use App\Constants\NavigationGroups;
 
 class EmployeeResource extends Resource
 {
@@ -29,7 +30,7 @@ class EmployeeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $navigationGroup = 'Quản lý nhân sự';
+    protected static ?string $navigationGroup = NavigationGroups::PEOPLE;
 
     protected static ?string $navigationLabel = 'Nhân viên';
 
@@ -37,7 +38,7 @@ class EmployeeResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Nhân viên';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 21;
 
     public static function form(Form $form): Form
     {

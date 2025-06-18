@@ -215,9 +215,13 @@
                                             </h3>
 
                                             <!-- Excerpt -->
-                                            @if($post->content)
+                                            @php
+                                                $cleanContent = \App\Helpers\ContentHelper::getCleanExcerpt($post, 150);
+                                            @endphp
+
+                                            @if($cleanContent)
                                                 <p class="text-gray-600 mb-4 font-open-sans line-clamp-3">
-                                                    {{ Str::limit(strip_tags($post->content), 150) }}
+                                                    {{ $cleanContent }}
                                                 </p>
                                             @endif
 

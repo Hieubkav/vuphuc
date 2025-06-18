@@ -18,6 +18,7 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
+use App\Constants\NavigationGroups;
 
 class AssociationResource extends Resource
 {
@@ -25,7 +26,7 @@ class AssociationResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static ?string $navigationGroup = 'Quản lý đối tác';
+    protected static ?string $navigationGroup = NavigationGroups::PARTNERS;
 
     protected static ?string $navigationLabel = 'Hiệp hội';
 
@@ -33,7 +34,7 @@ class AssociationResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Hiệp hội';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 32;
 
     public static function form(Form $form): Form
     {

@@ -17,6 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use App\Constants\NavigationGroups;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 
@@ -26,7 +27,7 @@ class OrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
 
-    protected static ?string $navigationGroup = 'Quản lý bán hàng';
+    protected static ?string $navigationGroup = NavigationGroups::SALES;
 
     protected static ?string $navigationLabel = 'Đơn hàng';
 
@@ -34,7 +35,7 @@ class OrderResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Đơn hàng';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
