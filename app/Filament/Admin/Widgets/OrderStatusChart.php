@@ -10,6 +10,7 @@ class OrderStatusChart extends ChartWidget
 {
     protected static ?string $heading = 'Trạng thái đơn hàng';
     protected static ?int $sort = 2;
+    protected static ?string $pollingInterval = '5s';
     protected int | string | array $columnSpan = [
         'sm' => 1,
         'md' => 1,

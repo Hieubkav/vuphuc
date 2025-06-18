@@ -21,8 +21,8 @@ class LatestOrders extends BaseWidget
         '2xl' => 4,
     ];
 
-    // Auto refresh every 30 seconds
-    protected static ?string $pollingInterval = '30s';
+    // Auto refresh every 5 seconds
+    protected static ?string $pollingInterval = '5s';
 
     public function table(Table $table): Table
     {

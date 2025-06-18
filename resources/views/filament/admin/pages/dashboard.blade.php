@@ -13,6 +13,27 @@
         </div>
     </div>
 
+    <!-- Quick Actions Bar -->
+    <div class="mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        🔄 Auto-refresh mỗi 5 giây |
+                        📊 Dữ liệu realtime |
+                        🧪 Công cụ test tracking
+                    </span>
+                </div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    Sử dụng widget "Bảng Điều Khiển Tracking" bên dưới để reset dữ liệu
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     @if (method_exists($this, 'filtersForm'))
         <div class="mb-6">
             {{ $this->filtersForm }}

@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Widgets;
 
 use App\Models\Product;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Filament\Tables\Columns\TextColumn;
@@ -18,8 +17,8 @@ class TopProducts extends BaseWidget
     protected static ?int $sort = 6;
     protected int | string | array $columnSpan = 2;
 
-    // Auto refresh every 30 seconds
-    protected static ?string $pollingInterval = '30s';
+    // Auto refresh every 5 seconds
+    protected static ?string $pollingInterval = '5s';
 
     public function table(Table $table): Table
     {

@@ -51,4 +51,22 @@ class Post extends Model
     {
         return $this->belongsTo(CatPost::class, 'category_id');
     }
+
+    // Quan hệ với PostView
+    public function views()
+    {
+        return $this->hasMany(PostView::class);
+    }
+
+    // Lấy tổng số lượt xem
+    public function getTotalViewsAttribute()
+    {
+        return $this->views()->count();
+    }
+
+    // Lấy số người xem khác nhau
+    public function getUniqueViewsAttribute()
+    {
+        return $this->views()->distinct('ip_address')->count();
+    }
 }

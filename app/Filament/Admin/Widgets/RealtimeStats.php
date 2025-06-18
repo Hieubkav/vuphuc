@@ -13,8 +13,8 @@ class RealtimeStats extends BaseWidget
     protected static ?int $sort = 0;
     protected int | string | array $columnSpan = 'full';
 
-    // Auto refresh every 10 seconds for realtime effect
-    protected static ?string $pollingInterval = '10s';
+    // Auto refresh every 5 seconds for realtime effect
+    protected static ?string $pollingInterval = '5s';
 
     protected function getStats(): array
     {

@@ -13,8 +13,8 @@ class QuickStats extends BaseWidget
     protected static ?int $sort = 9;
     protected int | string | array $columnSpan = 'full';
 
-    // Auto refresh every 20 seconds
-    protected static ?string $pollingInterval = '20s';
+    // Auto refresh every 5 seconds
+    protected static ?string $pollingInterval = '5s';
 
     protected function getStats(): array
     {

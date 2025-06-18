@@ -17,7 +17,7 @@ class AlertsOverview extends Widget
         'xl' => 2,
         '2xl' => 3,
     ];
-    protected static ?string $pollingInterval = '15s';
+    protected static ?string $pollingInterval = '5s';
 
     public function getViewData(): array
     {

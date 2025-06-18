@@ -14,8 +14,8 @@ class RecentActivity extends Widget
     protected static ?int $sort = 8;
     protected int | string | array $columnSpan = 'full';
 
-    // Auto refresh every 15 seconds
-    protected static ?string $pollingInterval = '15s';
+    // Auto refresh every 5 seconds
+    protected static ?string $pollingInterval = '5s';
 
     public function getViewData(): array
     {

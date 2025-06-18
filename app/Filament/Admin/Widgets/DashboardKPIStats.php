@@ -12,6 +12,7 @@ class DashboardKPIStats extends BaseWidget
 {
     protected static ?int $sort = 1;
     protected int | string | array $columnSpan = 'full';
+    protected static ?string $pollingInterval = '5s';
 
     public ?array $filters = [];
 
@@ -118,7 +119,7 @@ class DashboardKPIStats extends BaseWidget
     private function getChangeDescription(float $change, string $type): string
     {
         $direction = $change >= 0 ? 'tăng' : 'giảm';
-        return abs($change) . "% {$direction} so với kỳ trước";
+        return abs($change) . "% {$direction} {$type} so với kỳ trước";
     }
 
     private function getRevenueChart(string $period): array

@@ -10,6 +10,7 @@ class RevenueChart extends ChartWidget
 {
     protected static ?string $heading = 'Biểu đồ doanh thu';
     protected static ?int $sort = 3;
+    protected static ?string $pollingInterval = '5s';
     protected int | string | array $columnSpan = 'full';
 
     public ?array $filters = [];
