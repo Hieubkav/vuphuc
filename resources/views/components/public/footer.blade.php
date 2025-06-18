@@ -96,9 +96,20 @@
             <div>
                 <h3 class="text-lg font-semibold text-red-700 mb-5">Chính sách</h3>
                 <ul class="space-y-3 text-gray-600">
-                    <li><a href="#" class="hover:text-red-700 transition-colors">CHÍNH SÁCH & ĐIỀU KHOẢN MUA BÁN HÀNG HÓA</a></li>
-                    <li><a href="#" class="hover:text-red-700 transition-colors">HỆ THỐNG ĐẠI LÝ & ĐIỂM BÁN HÀNG</a></li>
-                    <li><a href="#" class="hover:text-red-700 transition-colors">BẢO MẬT & QUYỀN RIÊNG TƯ</a></li>
+                    @php
+                        $policies = webDesignContent('footer', 'policies', [
+                            ['title' => 'CHÍNH SÁCH & ĐIỀU KHOẢN MUA BÁN HÀNG HÓA', 'url' => '#'],
+                            ['title' => 'HỆ THỐNG ĐẠI LÝ & ĐIỂM BÁN HÀNG', 'url' => '#'],
+                            ['title' => 'BẢO MẬT & QUYỀN RIÊNG TƯ', 'url' => '#'],
+                        ]);
+                    @endphp
+                    @foreach($policies as $policy)
+                        <li>
+                            <a href="{{ $policy['url'] ?? '#' }}" class="hover:text-red-700 transition-colors">
+                                {{ $policy['title'] ?? '' }}
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
             </div>
         </div>
@@ -109,9 +120,10 @@
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <p class="text-sm">
-                    &copy; {{ date('Y') }} Copyright by
-                    {{ isset($globalSettings) && !empty($globalSettings->site_name) ? $globalSettings->site_name : 'VUPHUC BAKING®' }}
-                    - All Rights Reserved
+                    @php
+                        $copyright = webDesignContent('footer', 'copyright', '© ' . date('Y') . ' Copyright by VUPHUC BAKING - All Rights Reserved');
+                    @endphp
+                    {{ $copyright }}
                 </p>
                 {{-- <p class="text-sm mt-2 md:mt-0">Thiết kế bởi <a href="#" class="text-white hover:text-red-200">Phương Việt</a></p> --}}
             </div>

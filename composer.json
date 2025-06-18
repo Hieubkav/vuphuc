@@ -33,7 +33,8 @@
         },
         "files": [
             "app/Helpers/ImageHelper.php",
-            "app/Helpers/ContentHelper.php"
+            "app/Helpers/ContentHelper.php",
+            "app/Helpers/WebDesignHelper.php"
         ]
     },
     "autoload-dev": {

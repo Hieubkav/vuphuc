@@ -1,4 +1,8 @@
 @php
+    // Lấy dữ liệu header từ WebDesign
+    $partnersWebDesign = webDesignData('partners');
+    $isVisible = webDesignVisible('partners');
+
     // Sử dụng dữ liệu thực từ ViewServiceProvider với fallback
     $partnersData = $partners ?? collect();
 
@@ -17,12 +21,17 @@
     $maxGridItems = 12; // Số lượng tối đa để hiển thị dạng grid
 @endphp
 
+@if($isVisible)
 <div class="container mx-auto px-4">
     <div class="text-center mb-10">
-            <h2 class="text-3xl font-bold text-gray-900">Đối tác của chúng tôi</h2>
-            <div class="w-24 h-1 bg-red-600 mx-auto mt-4 mb-6"></div>
-            <p class="text-gray-600 max-w-2xl mx-auto">Vũ Phúc Baking tự hào là đối tác chiến lược của nhiều thương hiệu lớn trong ngành bánh và pha chế</p>
-        </div>
+        <h2 class="text-3xl font-bold text-gray-900">
+            {{ $partnersWebDesign->title ?? 'Đối tác của chúng tôi' }}
+        </h2>
+        <div class="w-24 h-1 bg-red-600 mx-auto mt-4 mb-6"></div>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+            {{ $partnersWebDesign->subtitle ?? 'Vũ Phúc Baking tự hào là đối tác chiến lược của nhiều thương hiệu lớn trong ngành bánh và pha chế' }}
+        </p>
+    </div>
 
         @if(isset($partnersData) && !empty($partnersData) && $partnersData->count() > 0)
         <!-- Desktop View - Grid hoặc Swiper tùy thuộc vào số lượng -->
@@ -186,6 +195,7 @@
         @endif
     </div>
 </div>
+@endif
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />

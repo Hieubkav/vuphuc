@@ -1,18 +1,19 @@
 @php
     use Carbon\Carbon;
 
-    // Sử dụng dữ liệu từ ViewServiceProvider với fallback
-    $newsPostsData = $newsPosts ?? collect();
+    // Lấy dữ liệu từ WebDesign
+    $blogWebDesign = webDesignData('blog-posts');
+    $isVisible = webDesignVisible('blog-posts');
 
-    // Fallback: nếu không có dữ liệu từ ViewServiceProvider, lấy trực tiếp từ model
-    if ($newsPostsData->isEmpty()) {
+    // Lấy 3 bài viết news mới nhất
+    $newsPostsData = collect();
+    if ($isVisible) {
         try {
             $newsPostsData = \App\Models\Post::where('status', 'active')
                 ->where('type', 'news')
                 ->with(['category', 'images'])
-                ->orderBy('order')
                 ->orderBy('created_at', 'desc')
-                ->take(6)
+                ->limit(3)
                 ->get();
         } catch (\Exception $e) {
             $newsPostsData = collect();
@@ -27,17 +28,21 @@
     $remainingPosts = $newsPostsData->isNotEmpty() ? $newsPostsData->slice(1) : collect();
 @endphp
 
-@if($postsCount > 0)
+@if($isVisible && $postsCount > 0)
 <div class="container mx-auto px-4 relative">
     <!-- Tiêu đề sáng tạo với gạch chéo -->
     <div class="text-center mb-10 relative">
-            <div class="inline-block relative">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Tin tức & Sự kiện</h2>
-                <div class="w-full h-1 bg-gradient-to-r from-red-600 via-red-500 to-red-600 absolute -bottom-3 left-0"></div>
-                <div class="w-3 h-3 bg-red-600 absolute -bottom-4 left-1/2 transform -translate-x-1/2 rotate-45"></div>
-            </div>
-            <p class="text-gray-600 max-w-2xl mx-auto mt-6">Cập nhật những tin tức nổi bật và sự kiện mới nhất từ Vũ Phúc Baking</p>
+        <div class="inline-block relative">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+                {{ $blogWebDesign->title ?? 'Tin tức & Sự kiện' }}
+            </h2>
+            <div class="w-full h-1 bg-gradient-to-r from-red-600 via-red-500 to-red-600 absolute -bottom-3 left-0"></div>
+            <div class="w-3 h-3 bg-red-600 absolute -bottom-4 left-1/2 transform -translate-x-1/2 rotate-45"></div>
         </div>
+        <p class="text-gray-600 max-w-2xl mx-auto mt-6">
+            {{ $blogWebDesign->subtitle ?? 'Cập nhật những tin tức nổi bật và sự kiện mới nhất từ Vũ Phúc Baking' }}
+        </p>
+    </div>
 
         <!-- Desktop View với Featured Post + Grid layout -->
         <div class="hidden md:block">

@@ -1,48 +1,8 @@
 @extends('layouts.shop')
 
 @section('content')
-    {{-- Hero Banner --}}
-    @include('components.storefront.hero-banner')
-
-    <!-- About Us -->
-    <section class="py-12 md:py-16 bg-white">
-        @include('components.storefront.about-us')
-    </section>
-
-    <!-- Stats Counter -->
-    <section class="py-12 md:py-16 bg-gray-50">
-        @include('components.storefront.stats-counter')
-    </section>
-
-    <!-- Featured Products -->
-    <section class="py-12 md:py-16 bg-gray-50">
-        @include('components.storefront.featured-products')
-    </section>
-
-    <!-- Services -->
-    <section class="py-12 md:py-16 bg-gray-50">
-        @include('components.storefront.services')
-    </section>
-
-    <!-- Slogan -->
-    <section class="py-6 md:py-8">
-        @include('components.storefront.slogan')
-    </section>
-
-    <!-- Courses Overview -->
-    <section class="py-12 md:py-16 bg-white">
-        @include('components.storefront.courses-overview')
-    </section>
-
-    <!-- Partners -->
-    <section class="py-12 md:py-16 bg-white">
-        @include('components.storefront.partners')
-    </section>
-
-    <!-- Blog Posts -->
-    <section class="py-12 md:py-16 bg-gray-50">
-        @include('components.storefront.blog-posts')
-    </section>
+    {{-- Sử dụng Dynamic StoreFront Component để hiển thị theo thứ tự cấu hình --}}
+    @include('components.dynamic-storefront')
 
 
 @endsection

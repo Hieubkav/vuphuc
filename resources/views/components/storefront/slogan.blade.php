@@ -1,18 +1,7 @@
 @php
-    // Sử dụng dữ liệu từ ViewServiceProvider (đã được preload và cached)
-    $settingsData = $globalSettings ?? $settings ?? null;
-
-    // Kiểm tra dữ liệu slogan có tồn tại và không rỗng
-    $hasSlogan = isset($settingsData) &&
-                 !empty($settingsData) &&
-                 isset($settingsData->slogan) &&
-                 !empty(trim($settingsData->slogan));
-
-    // Kiểm tra footer description
-    $hasDescription = isset($settingsData) &&
-                      !empty($settingsData) &&
-                      isset($settingsData->footer_description) &&
-                      !empty(trim($settingsData->footer_description));
+    $sloganData = webDesignData('slogan');
+    $hasSlogan = $sloganData && $sloganData->title;
+    $hasDescription = $sloganData && $sloganData->subtitle;
 @endphp
 
 {{-- Chỉ hiển thị section nếu có slogan --}}
@@ -45,14 +34,14 @@
                 <!-- Slogan -->
                 <h2 id="slogan-heading"
                     class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6 leading-tight font-montserrat text-white">
-                    {{ trim($settingsData->slogan) }}
+                    {{ $sloganData->title }}
                 </h2>
 
                 <!-- Description -->
                 @if($hasDescription)
                     <div class="max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
                         <p class="text-white text-opacity-90 text-base sm:text-lg lg:text-xl font-open-sans leading-relaxed">
-                            {{ trim($settingsData->footer_description) }}
+                            {{ $sloganData->subtitle }}
                         </p>
                     </div>
                 @endif

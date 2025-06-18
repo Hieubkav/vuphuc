@@ -1,10 +1,35 @@
-@if(isset($courses) && !empty($courses) && $courses->count() > 0)
+@php
+    // Lấy dữ liệu từ WebDesign
+    $coursesWebDesign = webDesignData('courses-overview');
+    $isVisible = webDesignVisible('courses-overview');
+
+    // Lấy 3 bài viết course mới nhất
+    $courses = collect();
+    if ($isVisible) {
+        try {
+            $courses = \App\Models\Post::where('status', 'active')
+                ->where('type', 'course')
+                ->with(['category', 'images'])
+                ->orderBy('created_at', 'desc')
+                ->limit(3)
+                ->get();
+        } catch (\Exception $e) {
+            $courses = collect();
+        }
+    }
+@endphp
+
+@if($isVisible && $courses->count() > 0)
 <div class="container mx-auto px-4">
     <div class="flex flex-col items-center text-center mb-10">
-            <span class="text-red-600 font-semibold tracking-wider uppercase text-sm mb-2">Khóa học làm bánh</span>
-            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Khám Phá Nghệ Thuật Làm Bánh</h2>
-            <p class="max-w-2xl text-gray-600">Tham gia các khóa học làm bánh đa dạng từ cơ bản đến nâng cao cùng Vũ Phúc Baking Academy.</p>
-        </div>
+        <span class="text-red-600 font-semibold tracking-wider uppercase text-sm mb-2">KHÓA HỌC</span>
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
+            {{ $coursesWebDesign->title ?? 'Khám Phá Nghệ Thuật Làm Bánh' }}
+        </h2>
+        <p class="max-w-2xl text-gray-600">
+            {{ $coursesWebDesign->subtitle ?? 'Tham gia các khóa học làm bánh đa dạng từ cơ bản đến nâng cao cùng Vũ Phúc Baking Academy.' }}
+        </p>
+    </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($courses as $course)

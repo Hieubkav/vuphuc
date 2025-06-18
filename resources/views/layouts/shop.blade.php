@@ -128,7 +128,11 @@
     </section>
 
     <!-- Footer & Components -->
-    @include('components.public.footer')
+    @if(webDesignVisible('footer'))
+    <footer id="footer">
+        @include('components.public.footer')
+    </footer>
+    @endif
     @include('components.public.speedial')
     @livewire('notifications')
 

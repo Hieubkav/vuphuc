@@ -1,0 +1,38 @@
+
+# Functionality Preferences
+- User prefers no fade-in animations on homepage components, wants immediate display because website users are older people.
+- User does not want favorites/wishlist functionality in the application and wants it completely removed from customer dropdown and codebase.
+- User wants posts filter component to have category filtering functionality similar to the products filter component for consistency.
+- User prefers to redirect to edit page after creating posts instead of redirecting to list page.
+- User prefers smooth swiper/carousel implementations with mouse drag and touch swipe functionality over basic scrollbars for better UX/UI in horizontal scrolling components.
+- User prefers minimal, simple interfaces without unnecessary icons/decorations and requires good text readability in dark mode.
+- User prefers removing URL Hình ảnh and URL Video fields from components as they're not useful, but wants image selection for features to support both external links and file uploads.
+- User prefers stats-counter component to have exactly 4 fixed pairs of data (number/statistic + description) and wants changes to automatically reflect in the storefront stats-counter component.
+- User prefers stats-counter component to only show the 4 fixed statistics fields in the builder, removing unnecessary fields like main title, subtitle, description, and services list.
+- User prefers featured-products, services, courses-overview, and blog-posts components to use dynamic data from Post model with specific types (service, course, news) showing 3 latest published posts, while slogan component should only have title/subtitle fields, and footer needs comprehensive builder fields for contact info, business details, and policies without breaking layout structure.
+- User prefers Global CTA component to have minimal fields: only title, subtitle, button text, and button URL - remove content builder and other unnecessary fields.
+
+# Filament Customization
+- User prefers Filament navigationGroup organization using 5 detailed groups (Phương án 2) and wants settings functionality at /admin/manage-settings to be included in the organization structure.
+- User prefers Filament navigationGroup organization in Filament to be clean and logical without excessive complexity, wants grouped but reasonable structure.
+- User wants category resources in Filament to show post counts in list view and include relationship managers for posts in detail view for better category management.
+- User prefers to remove description column from post category list view in Filament because it's too long and unnecessary.
+- User wants consistent content field usage in Filament post resources - unify content vs content_builder fields for optimal UX/UI across edit pages and relationship managers.
+- User suspects that spa() and unsavedChangesAlerts() configuration in AdminPanelProvider might be causing Filament RelationManager component errors and wants thorough investigation of all Filament-related configurations.
+- User wants to know about best practices and technical considerations when using SPA mode in Filament.
+- Filament SPA mode (->spa()) can cause Livewire component registry issues with RelationManagers, requiring filament:clear-cached-components and full namespace usage instead of imports to resolve.
+- User prefers removing redundant UI elements (preview links, stats, guides) from admin interfaces and wants content builders instead of raw JSON editing for non-technical business users.
+- User prefers error messages in Vietnamese language and wants them to clearly identify which component has the validation error for better UX in admin interfaces.
+
+# Web Design Configuration
+- User prefers WebDesign model for dynamic show/hide configuration of storefront and shop interface elements, managed through Filament pages for flexible website customization.
+- User prefers WebDesign system to have full content management capabilities (editable text, images, buttons, etc.) not just visibility controls, wants dynamic content from database rather than hardcoded values in components.
+- WebDesign model should only handle storefront sections (no page_type field needed), requires component IDs for smooth scrolling navigation, and should include footer in configurable sections.
+- User requires dynamic content (text, titles, images) but strictly prohibits changing the existing UI/layout because customers already like the current design and changes would be problematic.
+- Hero Banner component in WebDesign should only control visibility (show/hide) because its content is managed by the Slider model, making detailed content editing redundant.
+- About Us component should have exactly 4 fixed service/feature items with corresponding images (no add/remove functionality to maintain UI consistency).
+
+# Analytics and Reporting
+- User wants dashboard widgets for website visitor analytics (today + total visits, unique visitors) with Visitor model for tracking, reset functionality for testing, and top 3 most viewed posts/products with view counts and unique viewer statistics.
+- User prefers very frequent data updates (every 5 seconds) for visitor analytics and view count widgets instead of the default 30-60 second intervals.
+- User wants reset buttons in dashboard to clear all view counts and visitor tracking data to zero for testing purposes.
