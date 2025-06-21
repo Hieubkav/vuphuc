@@ -9,7 +9,7 @@
         try {
             $courses = \App\Models\Post::where('status', 'active')
                 ->where('type', 'course')
-                ->with(['category', 'images'])
+                ->with(['categories', 'images'])
                 ->orderBy('created_at', 'desc')
                 ->limit(3)
                 ->get();
@@ -22,12 +22,12 @@
 @if($isVisible && $courses->count() > 0)
 <div class="container mx-auto px-4">
     <div class="flex flex-col items-center text-center mb-10">
-        <span class="text-red-600 font-semibold tracking-wider uppercase text-sm mb-2">KHÓA HỌC</span>
-        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
-            {{ $coursesWebDesign->title ?? 'Khám Phá Nghệ Thuật Làm Bánh' }}
+        <span class="section-badge mb-2">KHÓA HỌC</span>
+        <h2 class="section-title mb-4">
+            {{ $coursesWebDesign?->title ?? 'Khám Phá Nghệ Thuật Làm Bánh' }}
         </h2>
-        <p class="max-w-2xl text-gray-600">
-            {{ $coursesWebDesign->subtitle ?? 'Tham gia các khóa học làm bánh đa dạng từ cơ bản đến nâng cao cùng Vũ Phúc Baking Academy.' }}
+        <p class="section-subtitle">
+            {{ $coursesWebDesign?->subtitle ?? 'Tham gia các khóa học làm bánh đa dạng từ cơ bản đến nâng cao cùng Vũ Phúc Baking Academy.' }}
         </p>
     </div>
 
@@ -51,8 +51,8 @@
                         {{ $course->seo_description ?? Str::limit(strip_tags($course->content), 100) }}
                     </p>
                     <div class="flex justify-between items-center">
-                        @if($course->category)
-                            <span class="text-red-600 font-semibold text-sm">{{ $course->category->name }}</span>
+                        @if($course->categories->count() > 0)
+                            <span class="text-red-600 font-semibold text-sm">{{ $course->categories->first()->name }}</span>
                         @else
                             <span class="text-red-600 font-semibold text-sm">Khóa học</span>
                         @endif

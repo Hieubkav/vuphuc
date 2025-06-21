@@ -23,7 +23,6 @@ class Post extends Model
         'type',
         'order',
         'status',
-        'category_id',
     ];
 
     protected $casts = [
@@ -46,10 +45,16 @@ class Post extends Model
         return $this->hasMany(MenuItem::class);
     }
 
-    // Quan hệ với CatPost (category chính)
-    public function category()
+    // Quan hệ với CatPost (many-to-many)
+    public function categories()
     {
-        return $this->belongsTo(CatPost::class, 'category_id');
+        return $this->belongsToMany(CatPost::class, 'post_categories', 'post_id', 'cat_post_id');
+    }
+
+    // Alias để tương thích với code cũ - lấy category đầu tiên
+    public function getCategoryAttribute()
+    {
+        return $this->categories()->first();
     }
 
     // Quan hệ với PostView

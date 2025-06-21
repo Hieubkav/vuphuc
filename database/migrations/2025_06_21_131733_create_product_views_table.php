@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('product_views', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->string('ip_address');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->string('ip_address', 45); // Hỗ trợ cả IPv4 và IPv6
             $table->string('session_id')->nullable();
             $table->timestamp('viewed_at');
             $table->timestamps();
-            
+
+            // Index để tối ưu query
+            $table->index(['product_id', 'ip_address', 'viewed_at']);
             $table->index(['product_id', 'viewed_at']);
-            $table->index(['ip_address', 'product_id']);
         });
     }
 

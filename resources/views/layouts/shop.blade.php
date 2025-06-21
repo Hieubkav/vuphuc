@@ -6,17 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- SEO Meta Tags -->
-    <title>@yield('title', $settings->seo_title ?? $settings->site_name ?? config('app.name'))</title>
+    <title>@yield('title', ($settings && $settings->seo_title) ? $settings->seo_title : (($settings && $settings->site_name) ? $settings->site_name : config('app.name')))</title>
     <meta name="description" content="@yield('description', 'Vũ Phúc Baking - Nhà phân phối nguyên liệu ngành bánh và pha chế tại ĐBSCL')">
     <meta name="keywords" content="Vũ Phúc Baking, nguyên liệu ngành bánh, pha chế, ĐBSCL, Rich Products Vietnam">
     <meta name="robots" content="all">
     <meta name="theme-color" content="#b91c1c">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="@yield('title', $settings->site_name ?? 'Vũ Phúc Baking')">
+    <meta property="og:title" content="@yield('title', ($settings && $settings->site_name) ? $settings->site_name : 'Vũ Phúc Baking')">
     <meta property="og:description" content="@yield('description', 'Nhà phân phối nguyên liệu ngành bánh và pha chế')">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="{{ $settings->og_image_link ? asset('storage/' . $settings->og_image_link) : ($settings->logo_link ? asset('storage/' . $settings->logo_link) : \App\Helpers\PlaceholderHelper::getLogo()) }}">
+    <meta property="og:image" content="{{ ($settings && $settings->og_image_link) ? asset('storage/' . $settings->og_image_link) : (($settings && $settings->logo_link) ? asset('storage/' . $settings->logo_link) : \App\Helpers\PlaceholderHelper::getLogo()) }}">
 
     <!-- Structured Data -->
     @if(isset($seoData['structuredData']))
@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
     <!-- Favicon -->
-    @php $favicon = $settings->favicon_link ? asset('storage/' . $settings->favicon_link) : ($settings->logo_link ? asset('storage/' . $settings->logo_link) : \App\Helpers\PlaceholderHelper::getLogo()); @endphp
+    @php $favicon = ($settings && $settings->favicon_link) ? asset('storage/' . $settings->favicon_link) : (($settings && $settings->logo_link) ? asset('storage/' . $settings->logo_link) : \App\Helpers\PlaceholderHelper::getLogo()); @endphp
     <link rel="icon" href="{{ $favicon }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ $favicon }}" type="image/x-icon">
     <link rel="apple-touch-icon" href="{{ $favicon }}">
@@ -101,15 +101,15 @@
     <!-- Preloader -->
     <div id="page-preloader" class="fixed inset-0 bg-white z-50 flex items-center justify-center transition-opacity duration-500">
         <div class="flex flex-col items-center">
-            @if($settings->logo_link)
-                <img src="{{ asset('storage/' . $settings->logo_link) }}" alt="{{ $settings->site_name ?? config('app.name') }}" class="h-16 w-auto mb-4 animate-pulse" loading="eager">
+            @if($settings && $settings->logo_link)
+                <img src="{{ asset('storage/' . $settings->logo_link) }}" alt="{{ ($settings && $settings->site_name) ? $settings->site_name : config('app.name') }}" class="h-16 w-auto mb-4 animate-pulse" loading="eager">
             @else
                 <div class="h-16 w-16 mb-4 bg-red-600 rounded-lg flex items-center justify-center animate-pulse">
                     <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5z"/></svg>
                 </div>
             @endif
             <div class="w-32 h-1 bg-gradient-to-r from-red-700 to-red-500 rounded-full animate-pulse"></div>
-            <p class="text-sm text-gray-600 mt-2 animate-pulse">{{ $settings->site_name ?? 'Đang tải...' }}</p>
+            <p class="text-sm text-gray-600 mt-2 animate-pulse">{{ ($settings && $settings->site_name) ? $settings->site_name : 'Đang tải...' }}</p>
         </div>
     </div>
 

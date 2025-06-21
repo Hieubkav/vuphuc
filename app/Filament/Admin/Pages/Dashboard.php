@@ -57,23 +57,14 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
-            // 0. Bảng điều khiển tracking (hàng đầu, full width)
-            \App\Filament\Admin\Widgets\TrackingControlWidget::class,
-
-            // 1. Thống kê KPI chính (hàng thứ 2, full width)
+            // 1. Thống kê KPI chính (hàng đầu, full width)
             \App\Filament\Admin\Widgets\DashboardKPIStats::class,
 
-            // 2. Thống kê lượt truy cập website (hàng thứ 3, full width)
-            \App\Filament\Admin\Widgets\VisitorStatsWidget::class,
-
-            // 3. Biểu đồ trạng thái đơn hàng (hàng thứ 4, nửa width)
+            // 2. Biểu đồ trạng thái đơn hàng (hàng thứ 2, nửa width)
             \App\Filament\Admin\Widgets\OrderStatusChart::class,
 
-            // 4. Biểu đồ doanh thu theo thời gian (hàng thứ 5, full width)
+            // 3. Biểu đồ doanh thu theo thời gian (hàng thứ 3, full width)
             \App\Filament\Admin\Widgets\RevenueChart::class,
-
-            // 5. Top nội dung được xem nhiều nhất (hàng thứ 6, full width)
-            \App\Filament\Admin\Widgets\TopContentWidget::class,
         ];
     }
 

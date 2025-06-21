@@ -25,11 +25,11 @@
 
                 <!-- Category Filter -->
                 <div class="filter-card rounded-xl p-5">
-                    <h3 class="text-base font-semibold text-gray-900 mb-3 font-montserrat">Danh mục</h3>
+                    <h3 class="text-base font-semibold text-gray-900 mb-3 font-montserrat">Chuyên mục</h3>
                     <div class="space-y-1.5">
                         <button wire:click="$set('category', '')"
                                class="filter-btn block w-full text-left px-3 py-2 rounded-lg font-open-sans text-sm {{ !$category ? 'active' : '' }}">
-                            Tất cả danh mục
+                            Tất cả chuyên mục
                         </button>
                         @foreach($this->categories as $cat)
                             <button wire:click="$set('category', '{{ $cat->id }}')"
@@ -232,10 +232,10 @@
                                                     {{ $post->created_at->format('d/m/Y') }}
                                                 </div>
 
-                                                @if($post->category)
+                                                @if($post->categories->count() > 0)
                                                     <div class="flex items-center">
                                                         <i class="fas fa-folder mr-2"></i>
-                                                        {{ $post->category->name }}
+                                                        {{ $post->categories->pluck('name')->join(', ') }}
                                                     </div>
                                                 @endif
                                             </div>

@@ -136,10 +136,10 @@
                     </time>
                 </div>
 
-                @if($post->category)
+                @if($post->categories->count() > 0)
                     <div class="flex items-center">
                         <i class="fas fa-folder mr-2"></i>
-                        <span>{{ $post->category->name }}</span>
+                        <span>{{ $post->categories->pluck('name')->join(', ') }}</span>
                     </div>
                 @endif
 
@@ -173,9 +173,44 @@
             <article>
                 <x-post-content :post="$post" />
             </article>
+
+            <!-- Additional Images Gallery -->
+            @if($post->images && $post->images->where('status', 'active')->count() > 0)
+                <div class="mt-12">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6 font-montserrat">Hình ảnh liên quan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach($post->images->where('status', 'active')->sortBy('order') as $image)
+                            <div class="group cursor-pointer" onclick="openImageModal('{{ asset('storage/' . $image->image_link) }}', '{{ $image->alt_text ?: $post->title }}')">
+                                <div class="aspect-video overflow-hidden rounded-lg shadow-lg">
+                                    <img src="{{ asset('storage/' . $image->image_link) }}"
+                                         alt="{{ $image->alt_text ?: $post->title }}"
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                         loading="lazy">
+                                </div>
+                                @if($image->alt_text)
+                                    <p class="text-sm text-gray-600 mt-2 text-center">{{ $image->alt_text }}</p>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </main>
+
+<!-- Image Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden items-center justify-center p-4" onclick="closeImageModal()">
+    <div class="relative max-w-4xl max-h-full">
+        <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <img id="modalImage" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg">
+        <p id="modalCaption" class="text-white text-center mt-4 text-lg"></p>
+    </div>
+</div>
 
 <!-- Related Posts -->
 @if($relatedPosts->count() > 0)
@@ -364,6 +399,35 @@ document.addEventListener('DOMContentLoaded', function() {
         preventClicks: true,
         preventClicksPropagation: true,
     });
+});
+
+// Image Modal Functions
+function openImageModal(imageSrc, caption) {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
+
+    modalImage.src = imageSrc;
+    modalImage.alt = caption;
+    modalCaption.textContent = caption;
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeImageModal();
+    }
 });
 </script>
 @endpush

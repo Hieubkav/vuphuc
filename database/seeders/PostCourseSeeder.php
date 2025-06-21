@@ -15,7 +15,7 @@ class PostCourseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Tạo danh mục khóa học nếu chưa có
+        // Tạo chuyên mục khóa học nếu chưa có
         $courseCategory = CatPost::firstOrCreate([
             'slug' => 'khoa-hoc'
         ], [
@@ -24,7 +24,8 @@ class PostCourseSeeder extends Seeder
             'seo_title' => 'Khóa học - Vũ Phúc Baking Academy',
             'seo_description' => 'Khám phá các khóa học làm bánh chuyên nghiệp tại Vũ Phúc Baking Academy',
             'order' => 3,
-            'status' => 'active'
+            'status' => 'active',
+            'type' => 'course'
         ]);
 
         $courses = [
@@ -161,13 +162,17 @@ class PostCourseSeeder extends Seeder
         ];
 
         foreach ($courses as $courseData) {
-            Post::firstOrCreate([
+            $post = Post::firstOrCreate([
                 'slug' => $courseData['slug']
             ], array_merge($courseData, [
-                'category_id' => $courseCategory->id,
                 'is_featured' => true,
                 'status' => 'active'
             ]));
+
+            // Attach category nếu chưa có
+            if (!$post->categories()->where('cat_post_id', $courseCategory->id)->exists()) {
+                $post->categories()->attach($courseCategory->id);
+            }
         }
 
         $this->command->info('Đã tạo ' . count($courses) . ' bài viết khóa học mẫu.');

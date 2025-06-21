@@ -12,12 +12,12 @@
 <div class="container mx-auto px-4">
     <!-- Section Header -->
     <div class="text-center mb-10 md:mb-12">
-        <span class="inline-block py-1 px-3 text-xs font-semibold bg-red-100 text-red-800 rounded-full tracking-wider mb-4">SẢN PHẨM</span>
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight font-montserrat mb-6">
-            {{ $featuredProductsData->title ?? 'Sản phẩm nổi bật' }}
+        <span class="section-badge mb-4">SẢN PHẨM</span>
+        <h2 class="section-title mb-6">
+            {{ $featuredProductsData?->title ?? 'Sản phẩm nổi bật' }}
         </h2>
-        <p class="text-lg text-gray-600 font-open-sans max-w-3xl mx-auto leading-relaxed">
-            {{ $featuredProductsData->subtitle ?? 'Khám phá những sản phẩm chất lượng cao được khách hàng tin dùng và đánh giá cao nhất tại Vũ Phúc Baking' }}
+        <p class="section-subtitle">
+            {{ $featuredProductsData?->subtitle ?? 'Khám phá những sản phẩm chất lượng cao được khách hàng tin dùng và đánh giá cao nhất tại Vũ Phúc Baking' }}
         </p>
     </div>
 

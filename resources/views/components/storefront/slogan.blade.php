@@ -33,7 +33,7 @@
 
                 <!-- Slogan -->
                 <h2 id="slogan-heading"
-                    class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6 leading-tight font-montserrat text-white">
+                    class="section-title mb-4 sm:mb-6 text-white">
                     {{ $sloganData->title }}
                 </h2>
 

@@ -18,6 +18,8 @@ class SearchBar extends Component
     public function mount($isMobile = false)
     {
         $this->isMobile = $isMobile;
+        $this->showResults = false;
+        $this->results = [];
     }
 
     public function updatedQuery()
@@ -91,7 +93,7 @@ class SearchBar extends Component
     public function performSearch()
     {
         if (!empty($this->query)) {
-            return redirect()->route('products.search', ['q' => $this->query]);
+            return redirect()->route('search.all', ['q' => $this->query]);
         }
     }
 

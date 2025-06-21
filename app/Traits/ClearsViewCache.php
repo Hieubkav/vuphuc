@@ -53,12 +53,18 @@ trait ClearsViewCache
                 break;
 
             case 'App\Models\Post':
+            case 'App\Models\CatPost':
                 ViewServiceProvider::refreshCache('storefront');
                 ViewServiceProvider::refreshCache('navigation'); // Vì có recentPosts trong navigation_data
                 break;
 
             case 'App\Models\Partner':
+                ViewServiceProvider::refreshCache('storefront');
+                break;
+
             case 'App\Models\Slider':
+                // Clear cache cụ thể cho sliders để tối ưu hơn
+                ViewServiceProvider::refreshCache('sliders');
                 ViewServiceProvider::refreshCache('storefront');
                 break;
 

@@ -11,7 +11,7 @@
         try {
             $newsPostsData = \App\Models\Post::where('status', 'active')
                 ->where('type', 'news')
-                ->with(['category', 'images'])
+                ->with(['categories', 'images'])
                 ->orderBy('created_at', 'desc')
                 ->limit(3)
                 ->get();
@@ -33,14 +33,14 @@
     <!-- Tiêu đề sáng tạo với gạch chéo -->
     <div class="text-center mb-10 relative">
         <div class="inline-block relative">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
-                {{ $blogWebDesign->title ?? 'Tin tức & Sự kiện' }}
+            <h2 class="section-title">
+                {{ $blogWebDesign?->title ?? 'Tin tức & Sự kiện' }}
             </h2>
             <div class="w-full h-1 bg-gradient-to-r from-red-600 via-red-500 to-red-600 absolute -bottom-3 left-0"></div>
             <div class="w-3 h-3 bg-red-600 absolute -bottom-4 left-1/2 transform -translate-x-1/2 rotate-45"></div>
         </div>
-        <p class="text-gray-600 max-w-2xl mx-auto mt-6">
-            {{ $blogWebDesign->subtitle ?? 'Cập nhật những tin tức nổi bật và sự kiện mới nhất từ Vũ Phúc Baking' }}
+        <p class="section-subtitle mt-6">
+            {{ $blogWebDesign?->subtitle ?? 'Cập nhật những tin tức nổi bật và sự kiện mới nhất từ Vũ Phúc Baking' }}
         </p>
     </div>
 
@@ -161,9 +161,9 @@
                                         @if(isset($post->created_at))
                                         <span class="text-gray-500">{{ Carbon::parse($post->created_at)->translatedFormat('d/m/Y') }}</span>
                                         @endif
-                                        @if(isset($post->category) && !empty($post->category))
+                                        @if(isset($post->categories) && $post->categories->count() > 0)
                                             <span class="mx-2 text-gray-300">•</span>
-                                            <span class="text-red-600">{{ $post->category->name }}</span>
+                                            <span class="text-red-600">{{ $post->categories->first()->name }}</span>
                                         @endif
                                     </div>
                                     @if(isset($post->slug))
@@ -235,9 +235,9 @@
                                                     @if(isset($post->created_at))
                                                     <span class="text-gray-500">{{ Carbon::parse($post->created_at)->translatedFormat('d/m/Y') }}</span>
                                                     @endif
-                                                    @if(isset($post->category) && !empty($post->category))
+                                                    @if($post->categories->isNotEmpty())
                                                         <span class="mx-2 text-gray-300">•</span>
-                                                        <span class="text-red-600">{{ $post->category->name }}</span>
+                                                        <span class="text-red-600">{{ $post->categories->first()->name }}</span>
                                                     @endif
                                                 </div>
                                                 @if(isset($post->slug))
@@ -395,8 +395,8 @@
                                                     @if(isset($post->created_at))
                                                     <span class="text-gray-500">{{ Carbon::parse($post->created_at)->translatedFormat('d/m/Y') }}</span>
                                                     @endif
-                                                    @if(isset($post->category) && !empty($post->category))
-                                                        <span class="text-red-600">{{ $post->category->name }}</span>
+                                                    @if($post->categories->isNotEmpty())
+                                                        <span class="text-red-600">{{ $post->categories->first()->name }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -555,15 +555,17 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Swiper cho desktop (4+ bài viết)
         if (document.querySelector('.blog-desktop-swiper')) {
+            const desktopSwiperEl = document.querySelector('.blog-desktop-swiper');
+            const desktopSlideCount = desktopSwiperEl.querySelectorAll('.swiper-slide').length;
             const blogDesktopSwiper = new Swiper('.blog-desktop-swiper', {
                 slidesPerView: 3,
                 spaceBetween: 16,
                 grabCursor: true,
-                loop: true,
-                autoplay: {
+                loop: desktopSlideCount > 3,
+                autoplay: desktopSlideCount > 3 ? {
                     delay: 5000,
                     disableOnInteraction: false,
-                },
+                } : false,
                 pagination: {
                     el: '.blog-desktop-pagination',
                     clickable: true,
@@ -587,15 +589,17 @@
 
         // Swiper cho mobile
         if (document.querySelector('.blog-mobile-swiper')) {
+            const mobileSwiperEl = document.querySelector('.blog-mobile-swiper');
+            const mobileSlideCount = mobileSwiperEl.querySelectorAll('.swiper-slide').length;
             const blogMobileSwiper = new Swiper('.blog-mobile-swiper', {
                 slidesPerView: 1.2,
                 spaceBetween: 12,
                 centeredSlides: false,
-                loop: true,
-                autoplay: {
+                loop: mobileSlideCount > 2,
+                autoplay: mobileSlideCount > 2 ? {
                     delay: 4000,
                     disableOnInteraction: false,
-                },
+                } : false,
                 pagination: {
                     el: '.blog-mobile-pagination',
                     clickable: true,

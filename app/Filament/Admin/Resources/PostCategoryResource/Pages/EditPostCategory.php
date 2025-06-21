@@ -26,7 +26,7 @@ class EditPostCategory extends EditRecord
 
     public function getTitle(): string
     {
-        return 'Chỉnh sửa Danh mục Bài viết';
+        return 'Chỉnh sửa Chuyên mục';
     }
 
     protected function getRedirectUrl(): string
@@ -36,6 +36,6 @@ class EditPostCategory extends EditRecord
 
     protected function getSavedNotificationTitle(): ?string
     {
-        return 'Danh mục bài viết đã được cập nhật thành công';
+        return 'Chuyên mục đã được cập nhật thành công';
     }
 }

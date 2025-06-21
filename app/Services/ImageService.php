@@ -303,6 +303,60 @@ class ImageService
     }
 
     /**
+     * Resize ảnh thành tỷ lệ 16:9 tối ưu cho slider banner
+     *
+     * @param string $imagePath Đường dẫn ảnh hiện tại trong storage
+     * @param string|null $customName Tên file tùy chỉnh
+     * @return string|null Đường dẫn đến ảnh đã resize
+     */
+    public function resizeToSixteenNine(string $imagePath, ?string $customName = null): ?string
+    {
+        if (!Storage::exists('public/' . $imagePath)) {
+            return null;
+        }
+
+        $manager = new ImageManager(new Driver());
+
+        try {
+            // Đọc ảnh từ storage
+            $fullPath = Storage::path('public/' . $imagePath);
+            $img = $manager->read($fullPath);
+
+            // Kích thước mục tiêu 16:9
+            $targetWidth = 1920;
+            $targetHeight = 1080;
+
+            // Resize và crop để đạt tỷ lệ 16:9 chính xác
+            $img->cover($targetWidth, $targetHeight);
+
+            // Tạo tên file mới
+            $filename = $this->generateFilename($customName ?: 'slider-16-9') . '.webp';
+
+            // Chuyển đổi sang WebP với chất lượng cao
+            $encodedImage = $img->toWebp(85);
+
+            // Lưu vào cùng thư mục
+            $directory = dirname($imagePath);
+            $newPath = 'public/' . $directory . '/' . $filename;
+            Storage::put($newPath, $encodedImage);
+
+            // Xóa ảnh cũ nếu khác tên
+            $oldFilename = basename($imagePath);
+            if ($oldFilename !== $filename) {
+                Storage::delete('public/' . $imagePath);
+            }
+
+            return $directory . '/' . $filename;
+        } catch (\Exception $e) {
+            Log::error('Error resizing image to 16:9', [
+                'image_path' => $imagePath,
+                'error' => $e->getMessage()
+            ]);
+            return null;
+        }
+    }
+
+    /**
      * Tạo tên file SEO-friendly
      *
      * @param string|null $customName Tên tùy chỉnh

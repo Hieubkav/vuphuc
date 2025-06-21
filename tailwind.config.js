@@ -41,6 +41,7 @@ export default {
                     DEFAULT: theme('colors.gray.800')
                 }
             }),
+
             keyframes: {
                 slideIn: {
                     'from': { transform: 'translateX(-100%) scale(0.8)', opacity: '0', filter: 'blur(10px)' },
@@ -125,7 +126,20 @@ export default {
     },
     plugins: [
         require('preline/plugin'),
-        require('flowbite/plugin')
+        require('flowbite/plugin'),
+        function({ addComponents }) {
+            addComponents({
+                '.section-title': {
+                    '@apply text-3xl md:text-4xl font-bold text-gray-900 leading-tight font-montserrat': {},
+                },
+                '.section-subtitle': {
+                    '@apply text-lg text-gray-600 font-open-sans max-w-3xl mx-auto leading-relaxed': {},
+                },
+                '.section-badge': {
+                    '@apply inline-block py-1 px-3 text-xs font-semibold bg-red-100 text-red-800 rounded-full tracking-wider': {},
+                }
+            })
+        }
     ],
     darkMode: 'class',
 }

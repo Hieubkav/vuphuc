@@ -15,7 +15,7 @@ class PostNewsSeeder extends Seeder
      */
     public function run(): void
     {
-        // Tạo danh mục tin tức nếu chưa có
+        // Tạo chuyên mục tin tức nếu chưa có
         $newsCategory = CatPost::firstOrCreate([
             'slug' => 'tin-tuc'
         ], [
@@ -24,7 +24,8 @@ class PostNewsSeeder extends Seeder
             'seo_title' => 'Tin tức - Vũ Phúc Baking',
             'seo_description' => 'Cập nhật tin tức mới nhất từ Vũ Phúc Baking',
             'order' => 2,
-            'status' => 'active'
+            'status' => 'active',
+            'type' => 'news'
         ]);
 
         // Tạo các bài viết tin tức mẫu
@@ -85,13 +86,17 @@ class PostNewsSeeder extends Seeder
         ];
 
         foreach ($news as $newsData) {
-            Post::firstOrCreate([
+            $post = Post::firstOrCreate([
                 'slug' => $newsData['slug']
             ], array_merge($newsData, [
-                'category_id' => $newsCategory->id,
                 'is_featured' => rand(0, 1),
                 'status' => 'active'
             ]));
+
+            // Attach category nếu chưa có
+            if (!$post->categories()->where('cat_post_id', $newsCategory->id)->exists()) {
+                $post->categories()->attach($newsCategory->id);
+            }
         }
 
         $this->command->info('Đã tạo ' . count($news) . ' bài viết tin tức mẫu.');

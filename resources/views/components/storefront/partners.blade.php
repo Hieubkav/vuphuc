@@ -24,12 +24,12 @@
 @if($isVisible)
 <div class="container mx-auto px-4">
     <div class="text-center mb-10">
-        <h2 class="text-3xl font-bold text-gray-900">
-            {{ $partnersWebDesign->title ?? 'Đối tác của chúng tôi' }}
+        <h2 class="section-title">
+            {{ $partnersWebDesign?->title ?? 'Đối tác của chúng tôi' }}
         </h2>
         <div class="w-24 h-1 bg-red-600 mx-auto mt-4 mb-6"></div>
-        <p class="text-gray-600 max-w-2xl mx-auto">
-            {{ $partnersWebDesign->subtitle ?? 'Vũ Phúc Baking tự hào là đối tác chiến lược của nhiều thương hiệu lớn trong ngành bánh và pha chế' }}
+        <p class="section-subtitle">
+            {{ $partnersWebDesign?->subtitle ?? 'Vũ Phúc Baking tự hào là đối tác chiến lược của nhiều thương hiệu lớn trong ngành bánh và pha chế' }}
         </p>
     </div>
 
@@ -267,15 +267,18 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize Mobile Swiper
-        const mobileSwiper = new Swiper('.partner-mobile-swiper', {
-            slidesPerView: 2.2,
-            spaceBetween: 12,
-            centeredSlides: false,
-            loop: true,
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
-            },
+        const mobileSwiperEl = document.querySelector('.partner-mobile-swiper');
+        const mobileSlideCount = mobileSwiperEl ? mobileSwiperEl.querySelectorAll('.swiper-slide').length : 0;
+        if (mobileSwiperEl) {
+            const mobileSwiper = new Swiper('.partner-mobile-swiper', {
+                slidesPerView: 2.2,
+                spaceBetween: 12,
+                centeredSlides: false,
+                loop: mobileSlideCount > 3,
+                autoplay: mobileSlideCount > 3 ? {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                } : false,
             pagination: {
                 el: '.partner-mobile-pagination',
                 clickable: true,
@@ -285,21 +288,23 @@
                     slidesPerView: 2.5,
                     spaceBetween: 15,
                 },
-            }
-        });
+            });
+        }
 
         // Initialize Desktop Swiper if it exists
         if (document.querySelector('.partner-desktop-swiper')) {
+            const desktopSwiperEl = document.querySelector('.partner-desktop-swiper');
+            const desktopSlideCount = desktopSwiperEl.querySelectorAll('.swiper-slide').length;
             const desktopSwiper = new Swiper('.partner-desktop-swiper', {
                 effect: 'coverflow',
                 grabCursor: true,
                 centeredSlides: true,
                 slidesPerView: 'auto',
-                loop: true,
-                autoplay: {
+                loop: desktopSlideCount > 3,
+                autoplay: desktopSlideCount > 3 ? {
                     delay: 3000,
                     disableOnInteraction: false,
-                },
+                } : false,
                 coverflowEffect: {
                     rotate: 0,
                     stretch: 0,

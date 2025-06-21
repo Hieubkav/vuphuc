@@ -9,7 +9,7 @@
         try {
             $servicesData = \App\Models\Post::where('status', 'active')
                 ->where('type', 'service')
-                ->with(['category', 'images'])
+                ->with(['categories', 'images'])
                 ->orderBy('created_at', 'desc')
                 ->limit(3)
                 ->get();
@@ -24,12 +24,12 @@
 <div class="container mx-auto px-4">
     <!-- Section Header -->
     <div class="text-center mb-10 md:mb-12">
-        <span class="inline-block py-1 px-3 text-xs font-semibold bg-red-100 text-red-800 rounded-full tracking-wider">DỊCH VỤ</span>
-        <h2 class="mt-4 text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight font-montserrat">
-            {{ $servicesWebDesign->title ?? 'Dịch vụ chuyên nghiệp' }}
+        <span class="section-badge">DỊCH VỤ</span>
+        <h2 class="section-title mt-4">
+            {{ $servicesWebDesign?->title ?? 'Dịch vụ chuyên nghiệp' }}
         </h2>
-        <p class="mt-5 text-lg text-gray-600 font-open-sans max-w-3xl mx-auto">
-            {{ $servicesWebDesign->subtitle ?? 'Chúng tôi cung cấp đa dạng dịch vụ chất lượng cao để hỗ trợ khách hàng phát triển bền vững' }}
+        <p class="section-subtitle mt-5">
+            {{ $servicesWebDesign?->subtitle ?? 'Chúng tôi cung cấp đa dạng dịch vụ chất lượng cao để hỗ trợ khách hàng phát triển bền vững' }}
         </p>
     </div>
 

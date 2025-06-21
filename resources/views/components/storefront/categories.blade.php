@@ -51,8 +51,8 @@
 <section class="py-12 md:py-16 bg-white" id="categories">
     <div class="container mx-auto px-4">
         <div class="text-center mb-8 md:mb-10">
-            <span class="text-red-600 font-medium tracking-wider uppercase text-xs">Khám phá</span>
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-1">Danh Mục Sản Phẩm</h2>
+            <span class="section-badge">Khám phá</span>
+            <h2 class="section-title mt-1">Danh Mục Sản Phẩm</h2>
             <div class="w-12 h-0.5 bg-red-600 mx-auto mt-2 mb-3"></div>
             <p class="text-sm text-gray-600 max-w-2xl mx-auto">Vũ Phúc Baking cung cấp đa dạng nguyên liệu, dụng cụ và thiết bị chuyên nghiệp</p>
         </div>

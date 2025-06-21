@@ -10,6 +10,8 @@ class EditPost extends EditRecord
 {
     protected static string $resource = PostResource::class;
 
+    protected $categoriesData = null;
+
     public function getTitle(): string
     {
         return 'Chỉnh sửa Bài viết';
@@ -57,6 +59,12 @@ class EditPost extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        // Loại bỏ categories khỏi data vì nó sẽ được xử lý trong afterSave
+        if (isset($data['categories'])) {
+            $this->categoriesData = $data['categories'];
+            unset($data['categories']);
+        }
+
         // Tự động tạo content từ content_builder
         if (!empty($data['content_builder'])) {
             $data['content'] = $this->extractContentFromBuilder($data['content_builder']);
@@ -81,6 +89,14 @@ class EditPost extends EditRecord
         }
 
         return $data;
+    }
+
+    protected function afterSave(): void
+    {
+        // Đồng bộ categories sau khi lưu record
+        if ($this->categoriesData !== null) {
+            $this->getRecord()->categories()->sync($this->categoriesData);
+        }
     }
 
     /**

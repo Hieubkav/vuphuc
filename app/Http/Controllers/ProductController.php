@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\CatProduct;
+use App\Models\ProductView;
 use App\Services\SeoService;
 use Illuminate\Http\Request;
 
@@ -74,6 +75,9 @@ class ProductController extends Controller
                 'category'
             ])
             ->firstOrFail();
+
+        // Ghi lại lượt xem
+        ProductView::recordView($product->id, request()->ip());
 
         // Sản phẩm liên quan
         $relatedProducts = Product::where('category_id', $product->category_id)

@@ -1,8 +1,10 @@
 <div class="relative" x-data="{
     showResults: @entangle('showResults'),
     query: @entangle('query'),
-    results: @entangle('results')
-}">
+    results: @entangle('results'),
+    isLoaded: false,
+    userInteracted: false
+}" x-init="setTimeout(() => isLoaded = true, 100)">
     @if(!$isMobile)
         <!-- Desktop Search -->
         <div class="relative w-full">
@@ -25,6 +27,8 @@
                     placeholder="Tìm kiếm sản phẩm, bài viết..."
                     class="w-full py-3 pl-12 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 shadow-sm hover:shadow-md transition-all duration-200 text-sm"
                     autocomplete="off"
+                    @focus="userInteracted = true"
+                    @input="userInteracted = true"
                     @keydown.enter="$wire.performSearch()">
 
                 <button
@@ -44,7 +48,7 @@
                 </button>
 
                 <!-- Search Results Dropdown -->
-                <div x-show="showResults && query && query.length >= 1"
+                <div x-show="isLoaded && userInteracted && showResults && query && query.length >= 1"
                      x-transition:enter="transition ease-out duration-200"
                      x-transition:enter-start="opacity-0 scale-95"
                      x-transition:enter-end="opacity-100 scale-100"
@@ -52,6 +56,8 @@
                      x-transition:leave-start="opacity-100 scale-100"
                      x-transition:leave-end="opacity-0 scale-95"
                      class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-600 z-50 max-h-96 overflow-y-auto"
+                     style="display: none;"
+                     x-cloak
                      @click.away="showResults = false">
 
                     <!-- Loading state -->
@@ -161,6 +167,8 @@
                     placeholder="Tìm kiếm sản phẩm, bài viết..."
                     class="w-full py-2 px-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                     autocomplete="off"
+                    @focus="userInteracted = true"
+                    @input="userInteracted = true"
                     @keydown.enter="$wire.performSearch()">
 
                 <button
@@ -173,9 +181,11 @@
                 </button>
 
                 <!-- Mobile Search Results -->
-                <div x-show="showResults && results && results.length > 0"
+                <div x-show="isLoaded && userInteracted && showResults && results && results.length > 0"
                      x-transition
                      class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 z-50 max-h-64 overflow-y-auto"
+                     style="display: none;"
+                     x-cloak
                      @click.away="showResults = false">
 
                     @if(!empty($results))
@@ -240,4 +250,10 @@
             });
         });
     </script>
+
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
 </div>

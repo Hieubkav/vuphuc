@@ -98,13 +98,15 @@ class PostsFilter extends Component
     private function getQuery()
     {
         $query = Post::where('status', 'active')
-            ->with(['category', 'images' => function($query) {
+            ->with(['categories', 'images' => function($query) {
                 $query->where('status', 'active')->orderBy('order');
             }]);
 
-        // Lọc theo danh mục
+        // Lọc theo chuyên mục
         if ($this->category && $this->category !== 'all') {
-            $query->where('category_id', $this->category);
+            $query->whereHas('categories', function($q) {
+                $q->where('cat_post_id', $this->category);
+            });
         }
 
         // Lọc theo type

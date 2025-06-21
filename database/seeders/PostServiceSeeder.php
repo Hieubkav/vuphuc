@@ -15,7 +15,7 @@ class PostServiceSeeder extends Seeder
      */
     public function run(): void
     {
-        // Tạo danh mục dịch vụ nếu chưa có
+        // Tạo chuyên mục dịch vụ nếu chưa có
         $serviceCategory = CatPost::firstOrCreate([
             'slug' => 'dich-vu'
         ], [
@@ -24,7 +24,8 @@ class PostServiceSeeder extends Seeder
             'seo_title' => 'Dịch vụ - Vũ Phúc Baking',
             'seo_description' => 'Khám phá các dịch vụ chuyên nghiệp của Vũ Phúc Baking',
             'order' => 1,
-            'status' => 'active'
+            'status' => 'active',
+            'type' => 'service'
         ]);
 
         // Tạo các bài viết dịch vụ mẫu
@@ -124,13 +125,17 @@ class PostServiceSeeder extends Seeder
         ];
 
         foreach ($services as $serviceData) {
-            Post::firstOrCreate([
+            $post = Post::firstOrCreate([
                 'slug' => $serviceData['slug']
             ], array_merge($serviceData, [
-                'category_id' => $serviceCategory->id,
                 'is_featured' => true,
                 'status' => 'active'
             ]));
+
+            // Attach category nếu chưa có
+            if (!$post->categories()->where('cat_post_id', $serviceCategory->id)->exists()) {
+                $post->categories()->attach($serviceCategory->id);
+            }
         }
 
         $this->command->info('Đã tạo ' . count($services) . ' bài viết dịch vụ mẫu.');

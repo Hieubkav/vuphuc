@@ -17,6 +17,7 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use App\Models\CatPost;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -27,7 +28,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Str;
 use App\Constants\NavigationGroups;
 
@@ -91,17 +92,75 @@ class PostResource extends Resource
                                                 'course' => 'Khóa học',
                                             ])
                                             ->default('normal')
-                                            ->required(),
+                                            ->required()
+                                            ->live()
+                                            ->afterStateUpdated(function (Set $set) {
+                                                // Clear categories khi thay đổi type
+                                                $set('categories', []);
+                                            }),
 
-                                        Select::make('category_id')
-                                            ->label('Danh mục')
-                                            ->relationship('category', 'name')
-                                            ->searchable()
+                                        Select::make('categories')
+                                            ->label('Chuyên mục')
+                                            ->multiple()
+                                            ->relationship(
+                                                'categories',
+                                                'name',
+                                                fn (EloquentBuilder $query, Get $get) => $query
+                                                    ->where('status', 'active')
+                                                    ->where('type', $get('type') ?? 'normal')
+                                                    ->orderBy('order')
+                                            )
+                                            ->options(function (Get $get) {
+                                                $type = $get('type');
+                                                if (!$type) {
+                                                    return [];
+                                                }
+                                                return CatPost::where('type', $type)
+                                                    ->where('status', 'active')
+                                                    ->orderBy('order')
+                                                    ->pluck('name', 'id');
+                                            })
+                                            ->searchable(false)
                                             ->preload()
-                                            ->nullable()
+                                            ->live()
+                                            ->reactive()
+                                            ->native(false)
+                                            ->disabled(fn (Get $get) => !$get('type'))
+                                            ->helperText(function (Get $get) {
+                                                $type = $get('type');
+                                                if (!$type) {
+                                                    return '💡 Chọn loại bài viết trước để lọc chuyên mục phù hợp';
+                                                }
+                                                $typeNames = [
+                                                    'normal' => 'bài viết thường',
+                                                    'news' => 'tin tức',
+                                                    'service' => 'dịch vụ',
+                                                    'course' => 'khóa học'
+                                                ];
+                                                return "🎯 Chỉ hiển thị chuyên mục dành cho {$typeNames[$type]}";
+                                            })
+                                            ->rules([
+                                                function (Get $get) {
+                                                    return function ($attribute, $value, \Closure $fail) use ($get) {
+                                                        if (!$value) return;
+
+                                                        $postType = $get('type');
+                                                        $categoryIds = is_array($value) ? $value : [$value];
+
+                                                        $invalidCategories = CatPost::whereIn('id', $categoryIds)
+                                                            ->where('type', '!=', $postType)
+                                                            ->pluck('name')
+                                                            ->toArray();
+
+                                                        if (!empty($invalidCategories)) {
+                                                            $fail("Chuyên mục '" . implode(', ', $invalidCategories) . "' không phù hợp với loại bài viết đã chọn.");
+                                                        }
+                                                    };
+                                                }
+                                            ])
                                             ->createOptionForm([
                                                 TextInput::make('name')
-                                                    ->label('Tên danh mục')
+                                                    ->label('Tên chuyên mục')
                                                     ->required()
                                                     ->maxLength(255)
                                                     ->live(onBlur: true)
@@ -110,7 +169,38 @@ class PostResource extends Resource
                                                     ->label('Đường dẫn')
                                                     ->required()
                                                     ->maxLength(255),
-                                            ]),
+                                                Select::make('type')
+                                                    ->label('Loại chuyên mục')
+                                                    ->options([
+                                                        'normal' => 'Bài viết thường',
+                                                        'news' => 'Tin tức',
+                                                        'service' => 'Dịch vụ',
+                                                        'course' => 'Khóa học',
+                                                    ])
+                                                    ->default(function (Get $get) {
+                                                        // Tự động set type theo type của bài viết hiện tại
+                                                        return $get('../../type') ?? 'normal';
+                                                    })
+                                                    ->required(),
+                                                TextInput::make('description')
+                                                    ->label('Mô tả')
+                                                    ->maxLength(500),
+                                                Select::make('status')
+                                                    ->label('Trạng thái')
+                                                    ->options([
+                                                        'active' => 'Hiển thị',
+                                                        'inactive' => 'Ẩn',
+                                                    ])
+                                                    ->default('active')
+                                                    ->required(),
+                                            ])
+                                            ->createOptionUsing(function (array $data, Get $get) {
+                                                // Đảm bảo type được set đúng
+                                                $data['type'] = $data['type'] ?? $get('type') ?? 'normal';
+                                                $data['order'] = CatPost::max('order') + 1;
+
+                                                return CatPost::create($data)->getKey();
+                                            }),
 
                                         FileUpload::make('thumbnail')
                                             ->label('Hình đại diện')
@@ -457,8 +547,10 @@ class PostResource extends Resource
                     })
                     ->sortable(),
 
-                TextColumn::make('category.name')
-                    ->label('Danh mục')
+                TextColumn::make('categories.name')
+                    ->label('Chuyên mục')
+                    ->badge()
+                    ->separator(',')
                     ->searchable()
                     ->sortable(),
 
@@ -500,9 +592,9 @@ class PostResource extends Resource
                         'course' => 'Khóa học',
                     ]),
 
-                Tables\Filters\SelectFilter::make('category_id')
-                    ->relationship('category', 'name')
-                    ->label('Danh mục'),
+                Tables\Filters\SelectFilter::make('categories')
+                    ->relationship('categories', 'name')
+                    ->label('Chuyên mục'),
 
                 Tables\Filters\TernaryFilter::make('is_featured')
                     ->label('Nổi bật'),
@@ -532,8 +624,8 @@ class PostResource extends Resource
     public static function getEloquentQuery(): EloquentBuilder
     {
         return parent::getEloquentQuery()
-            ->with(['category:id,name'])
-            ->select(['id', 'title', 'slug', 'content', 'content_builder', 'seo_title', 'seo_description', 'og_image_link', 'thumbnail', 'category_id', 'type', 'status', 'is_featured', 'order', 'created_at', 'updated_at']);
+            ->with(['categories:id,name'])
+            ->select(['id', 'title', 'slug', 'content', 'content_builder', 'seo_title', 'seo_description', 'og_image_link', 'thumbnail', 'type', 'status', 'is_featured', 'order', 'created_at', 'updated_at']);
     }
 
     public static function getRelations(): array

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\ClearsViewCache;
 
 class CatPost extends Model
 {
-    use HasFactory;
+    use HasFactory, ClearsViewCache;
 
     protected $table = 'cat_posts';
 
@@ -22,17 +23,19 @@ class CatPost extends Model
         'parent_id',
         'order',
         'status',
+        'type',
     ];
 
     protected $casts = [
         'status' => 'string',
         'order' => 'integer',
+        'type' => 'string',
     ];
 
-    // Quan hệ với Post (one-to-many)
+    // Quan hệ với Post (many-to-many)
     public function posts()
     {
-        return $this->hasMany(Post::class, 'category_id');
+        return $this->belongsToMany(Post::class, 'post_categories', 'cat_post_id', 'post_id');
     }
 
     // Quan hệ parent-child

@@ -9,6 +9,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -22,15 +23,15 @@ class PostCategoryResource extends Resource
 {
     protected static ?string $model = CatPost::class;
 
-    protected static ?string $modelLabel = 'danh mục bài viết';
+    protected static ?string $modelLabel = 'chuyên mục';
 
-    protected static ?string $pluralModelLabel = 'danh mục bài viết';
+    protected static ?string $pluralModelLabel = 'chuyên mục';
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationGroup = NavigationGroups::CONTENT;
 
-    protected static ?string $navigationLabel = 'Danh mục bài viết';
+    protected static ?string $navigationLabel = 'Chuyên mục';
 
     protected static ?int $navigationSort = 14;
 
@@ -38,10 +39,10 @@ class PostCategoryResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Thông tin danh mục')
+                Section::make('Thông tin chuyên mục')
                     ->schema([
                         TextInput::make('name')
-                            ->label('Tên danh mục')
+                            ->label('Tên chuyên mục')
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
@@ -57,6 +58,17 @@ class PostCategoryResource extends Resource
                             ->label('Mô tả')
                             ->rows(3)
                             ->maxLength(1000),
+
+                        Select::make('type')
+                            ->label('Loại chuyên mục')
+                            ->options([
+                                'normal' => 'Bài viết thường',
+                                'news' => 'Tin tức',
+                                'service' => 'Dịch vụ',
+                                'course' => 'Khóa học',
+                            ])
+                            ->default('normal')
+                            ->required(),
                     ]),
 
                 Section::make('Cấu hình hiển thị')
@@ -84,13 +96,32 @@ class PostCategoryResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('name')
-                    ->label('Tên danh mục')
+                    ->label('Tên chuyên mục')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('slug')
                     ->label('Đường dẫn')
                     ->searchable(),
+
+                TextColumn::make('type')
+                    ->label('Loại')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'normal' => 'gray',
+                        'news' => 'info',
+                        'service' => 'success',
+                        'course' => 'warning',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'normal' => 'Bài viết thường',
+                        'news' => 'Tin tức',
+                        'service' => 'Dịch vụ',
+                        'course' => 'Khóa học',
+                        default => $state,
+                    })
+                    ->sortable(),
 
                 TextColumn::make('posts_count')
                     ->label('Số bài viết')

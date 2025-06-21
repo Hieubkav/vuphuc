@@ -88,23 +88,10 @@ Route::controller(SitemapController::class)->group(function () {
 
 // Routes tìm kiếm
 Route::controller(SearchController::class)->group(function () {
+    Route::get('/tim-kiem', 'all')->name('search.all');
     Route::get('/tim-kiem/san-pham', 'products')->name('products.search');
     Route::get('/tim-kiem/bai-viet', 'posts')->name('posts.search');
 });
-
-// Route test navbar
-Route::get('/test-navbar', function () {
-    return view('test-navbar');
-})->name('test.navbar');
-
-
-
-// Route test menu update
-Route::get('/test-menu', function () {
-    return view('test-menu');
-})->name('test.menu');
-
-
 
 // Route clear cache
 Route::post('/clear-cache', function () {
@@ -164,18 +151,5 @@ Route::get('/debug-post/{id}', function ($id) {
     }
     return response()->json(['message' => 'Post not found'], 404);
 });
-
-// Test post content component
-Route::get('/test-post-content/{id}', function ($id) {
-    $post = \App\Models\Post::find($id);
-    if ($post) {
-        return view('components.post-content', compact('post'));
-    }
-    return 'Post not found';
-});
-
-
-
-
 
 

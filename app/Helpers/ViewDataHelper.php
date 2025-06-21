@@ -48,7 +48,7 @@ class ViewDataHelper
                     ->get(),
 
                 'latestPosts' => Post::where('status', 'active')
-                    ->with(['category', 'images'])
+                    ->with(['categories', 'images'])
                     ->orderBy('created_at', 'desc')
                     ->take(6)
                     ->get(),

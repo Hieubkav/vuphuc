@@ -61,7 +61,13 @@ class ViewServiceProvider extends ServiceProvider
     {
         // Cache settings trong 1 giờ
         $settings = Cache::remember('global_settings', 3600, function () {
-            return Setting::where('status', 'active')->first();
+            return Setting::where('status', 'active')->first() ?? new Setting([
+                'site_name' => config('app.name'),
+                'seo_title' => config('app.name'),
+                'hotline' => '1900636340',
+                'email' => 'info@vuphucbaking.com',
+                'status' => 'active'
+            ]);
         });
 
         $view->with([
@@ -113,10 +119,10 @@ class ViewServiceProvider extends ServiceProvider
             'services' => Cache::remember('storefront_services', 3600, function () {
                 return Post::where('status', 'active')
                     ->where('type', 'service')
-                    ->with(['category:id,name', 'images' => function($query) {
+                    ->with(['categories:id,name', 'images' => function($query) {
                         $query->where('status', 'active')->orderBy('order')->take(1);
                     }])
-                    ->select(['id', 'title', 'slug', 'seo_description', 'thumbnail', 'category_id', 'order'])
+                    ->select(['id', 'title', 'slug', 'seo_description', 'thumbnail', 'order'])
                     ->orderBy('order')
                     ->get();
             }),
@@ -125,10 +131,10 @@ class ViewServiceProvider extends ServiceProvider
             'newsPosts' => Cache::remember('storefront_news', 1800, function () {
                 return Post::where('status', 'active')
                     ->where('type', 'news')
-                    ->with(['category:id,name', 'images' => function($query) {
+                    ->with(['categories:id,name', 'images' => function($query) {
                         $query->where('status', 'active')->orderBy('order')->take(1);
                     }])
-                    ->select(['id', 'title', 'slug', 'seo_description', 'thumbnail', 'category_id', 'order', 'created_at'])
+                    ->select(['id', 'title', 'slug', 'seo_description', 'thumbnail', 'order', 'created_at'])
                     ->orderBy('order')
                     ->orderBy('created_at', 'desc')
                     ->take(6)
@@ -139,10 +145,10 @@ class ViewServiceProvider extends ServiceProvider
             'courses' => Cache::remember('storefront_courses', 3600, function () {
                 return Post::where('status', 'active')
                     ->where('type', 'course')
-                    ->with(['category:id,name', 'images' => function($query) {
+                    ->with(['categories:id,name', 'images' => function($query) {
                         $query->where('status', 'active')->orderBy('order')->take(1);
                     }])
-                    ->select(['id', 'title', 'slug', 'seo_description', 'seo_title', 'thumbnail', 'category_id', 'order', 'created_at'])
+                    ->select(['id', 'title', 'slug', 'seo_description', 'seo_title', 'thumbnail', 'order', 'created_at'])
                     ->orderBy('order')
                     ->orderBy('created_at', 'desc')
                     ->take(6)
@@ -235,6 +241,9 @@ class ViewServiceProvider extends ServiceProvider
         Cache::forget('storefront_partners');
 
         Cache::forget('navigation_data');
+
+        // Clear posts filter cache
+        Cache::forget('posts_categories_filter');
     }
 
     /**
@@ -254,12 +263,21 @@ class ViewServiceProvider extends ServiceProvider
                 Cache::forget('storefront_news');
                 Cache::forget('storefront_courses');
                 Cache::forget('storefront_partners');
+                Cache::forget('posts_categories_filter');
                 break;
             case 'sliders':
                 Cache::forget('storefront_sliders');
+                // Force rebuild cache ngay lập tức
+                Cache::remember('storefront_sliders', 3600, function () {
+                    return \App\Models\Slider::where('status', 'active')
+                        ->orderBy('order')
+                        ->select(['id', 'title', 'description', 'image_link', 'link', 'alt_text', 'order'])
+                        ->get();
+                });
                 break;
             case 'navigation':
                 Cache::forget('navigation_data');
+                Cache::forget('posts_categories_filter');
                 break;
             case 'all':
             default:

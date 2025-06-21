@@ -81,6 +81,11 @@ class ManageWebDesign extends Page
                     // Các components khác có full content builder
                     $this->data[$key]['content_description'] = $this->getContentValue($component, 'description');
 
+                    // Quote cho About Us
+                    if ($key === 'about-us') {
+                        $this->data[$key]['content_quote'] = $this->getContentValue($component, 'quote');
+                    }
+
                     // Xử lý riêng cho About Us - 4 services cố định
                     if ($key === 'about-us') {
                         $services = $this->getContentValue($component, 'services', []);
@@ -102,11 +107,11 @@ class ManageWebDesign extends Page
                             }
                         }
                     } else {
+                        // Chỉ load content_services, content_features, content_stats cho components khác (không phải about-us)
                         $this->data[$key]['content_services'] = $this->getContentValue($component, 'services', []);
+                        $this->data[$key]['content_features'] = $this->convertFeaturesToRepeater($this->getContentValue($component, 'features', []));
+                        $this->data[$key]['content_stats'] = $this->getContentValue($component, 'stats', []);
                     }
-
-                    $this->data[$key]['content_features'] = $this->convertFeaturesToRepeater($this->getContentValue($component, 'features', []));
-                    $this->data[$key]['content_stats'] = $this->getContentValue($component, 'stats', []);
                 }
 
                 // Xử lý riêng cho Footer - 3 policies và copyright
@@ -218,7 +223,7 @@ class ManageWebDesign extends Page
                 ->description($this->getComponentDescription($key))
                 ->schema($schema)
                 ->collapsible()
-                ->collapsed($component->component_key !== 'about-us'); // Mở about-us mặc định
+                ->collapsed(true); // Đóng tất cả sections mặc định
         }
 
         return $sections;
@@ -457,6 +462,32 @@ class ManageWebDesign extends Page
             ->collapsed(false);
     }
 
+    protected function getAboutUsContentBuilder(string $key, $component)
+    {
+        return Section::make('Nội dung chi tiết')
+            ->schema([
+                // Mô tả chính
+                Textarea::make("{$key}.content_description")
+                    ->label('Mô tả chính')
+                    ->default($this->getContentValue($component, 'description'))
+                    ->rows(3)
+                    ->columnSpanFull(),
+
+                // Quote
+                Textarea::make("{$key}.content_quote")
+                    ->label('Câu trích dẫn (Quote)')
+                    ->default($this->getContentValue($component, 'quote'))
+                    ->rows(2)
+                    ->columnSpanFull()
+                    ->helperText('Câu trích dẫn nổi bật của công ty'),
+
+                // 4 Dịch vụ chính cố định
+                $this->getAboutUsServicesBuilder($key, $component),
+            ])
+            ->collapsible()
+            ->collapsed();
+    }
+
     protected function getStatsCounterBuilder(string $key, $component)
     {
         $stats = $this->getContentValue($component, 'stats', []);
@@ -618,6 +649,11 @@ class ManageWebDesign extends Page
             return $this->getFooterBuilder($key, $component);
         }
 
+        // About Us chỉ cần description, quote và 4 services
+        if ($key === 'about-us') {
+            return $this->getAboutUsContentBuilder($key, $component);
+        }
+
         return Section::make('Nội dung chi tiết')
             ->schema([
                 // Mô tả chính
@@ -627,8 +663,6 @@ class ManageWebDesign extends Page
                     ->rows(3)
                     ->columnSpanFull(),
 
-                // 4 Dịch vụ/tính năng cố định (cho About Us)
-                $key === 'about-us' ? $this->getAboutUsServicesBuilder($key, $component) :
                 // Danh sách dịch vụ/tính năng (cho components khác)
                 Repeater::make("{$key}.content_services")
                     ->label('Danh sách dịch vụ/tính năng')
@@ -706,6 +740,11 @@ class ManageWebDesign extends Page
             $content['description'] = $componentData['content_description'];
         }
 
+        // Quote cho About Us
+        if (!empty($componentData['content_quote'])) {
+            $content['quote'] = $componentData['content_quote'];
+        }
+
         // Xử lý 4 services cố định cho About Us
         if (isset($componentData['service_1_title'])) {
             $content['services'] = [];
@@ -736,8 +775,8 @@ class ManageWebDesign extends Page
             $content['services'] = $componentData['content_services'];
         }
 
-        // Tính năng đơn giản
-        if (!empty($componentData['content_features'])) {
+        // Tính năng đơn giản (chỉ cho components khác, không phải about-us)
+        if (!empty($componentData['content_features']) && !isset($componentData['service_1_title'])) {
             $features = array_map(function ($item) {
                 return $item['feature'];
             }, $componentData['content_features']);
@@ -765,8 +804,8 @@ class ManageWebDesign extends Page
                 ],
             ];
         }
-        // Thống kê cho components khác
-        elseif (!empty($componentData['content_stats'])) {
+        // Thống kê cho components khác (không phải about-us và stats-counter)
+        elseif (!empty($componentData['content_stats']) && !isset($componentData['service_1_title']) && !isset($componentData['stat_1_number'])) {
             $content['stats'] = $componentData['content_stats'];
         }
 

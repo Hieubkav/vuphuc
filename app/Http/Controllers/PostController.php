@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\CatPost;
+use App\Models\PostView;
 use App\Services\SeoService;
 use Illuminate\Http\Request;
 
@@ -25,9 +26,11 @@ class PostController extends Controller
         $category = CatPost::where('slug', $slug)->where('status', 'active')->firstOrFail();
 
         // Query builder cho bài viết
-        $query = Post::where('category_id', $category->id)
+        $query = Post::whereHas('categories', function($q) use ($category) {
+                $q->where('cat_post_id', $category->id);
+            })
             ->where('status', 'active')
-            ->with(['category', 'images' => function($query) {
+            ->with(['categories', 'images' => function($query) {
                 $query->where('status', 'active')->orderBy('order');
             }]);
 
@@ -57,7 +60,7 @@ class PostController extends Controller
     }
 
     /**
-     * Hiển thị danh sách tất cả danh mục bài viết
+     * Hiển thị danh sách tất cả chuyên mục
      */
     public function categories()
     {
@@ -86,12 +89,18 @@ class PostController extends Controller
                 'images' => function($query) {
                     $query->where('status', 'active')->orderBy('order');
                 },
-                'category'
+                'categories'
             ])
             ->firstOrFail();
 
-        // Bài viết liên quan
-        $relatedPosts = Post::where('category_id', $post->category_id)
+        // Ghi lại lượt xem
+        PostView::recordView($post->id, request()->ip());
+
+        // Bài viết liên quan - lấy từ các chuyên mục mà bài viết này thuộc về
+        $categoryIds = $post->categories->pluck('id');
+        $relatedPosts = Post::whereHas('categories', function($q) use ($categoryIds) {
+                $q->whereIn('cat_post_id', $categoryIds);
+            })
             ->where('id', '!=', $post->id)
             ->where('status', 'active')
             ->with(['images' => function($query) {
@@ -110,8 +119,8 @@ class PostController extends Controller
             'structuredData' => SeoService::getPostStructuredData($post),
             'breadcrumbs' => [
                 ['name' => 'Trang chủ', 'url' => route('storeFront')],
-                ['name' => 'Bài viết', 'url' => route('posts.categories')],
-                ['name' => $post->category->name ?? 'Danh mục', 'url' => route('posts.category', $post->category->slug ?? '#')],
+                ['name' => 'Bài viết', 'url' => route('posts.index')],
+                ['name' => $post->categories->first()->name ?? 'Danh mục', 'url' => $post->categories->first() ? route('posts.category', $post->categories->first()->slug) : '#'],
                 ['name' => $post->title, 'url' => route('posts.show', $post->slug)]
             ]
         ];

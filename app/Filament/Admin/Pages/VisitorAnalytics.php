@@ -81,4 +81,19 @@ class VisitorAnalytics extends Page
             \App\Filament\Admin\Widgets\TopContentWidget::class,
         ];
     }
+
+    public function getColumns(): int | string | array
+    {
+        return 2;
+    }
+
+    public function getWidgetData(): array
+    {
+        return [];
+    }
+
+    public function getVisibleWidgets(): array
+    {
+        return $this->getWidgets();
+    }
 }

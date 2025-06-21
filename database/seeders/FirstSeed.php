@@ -177,6 +177,7 @@ class FirstSeed extends Seeder
                 'description' => 'Tin tức và cập nhật mới nhất',
                 'order' => 1,
                 'status' => 'active',
+                'type' => 'news',
             ],
             [
                 'name' => 'Hướng Dẫn',
@@ -187,6 +188,7 @@ class FirstSeed extends Seeder
                 'description' => 'Hướng dẫn làm bánh tại nhà',
                 'order' => 2,
                 'status' => 'active',
+                'type' => 'normal',
             ],
             [
                 'name' => 'Khuyến Mãi',
@@ -197,6 +199,7 @@ class FirstSeed extends Seeder
                 'description' => 'Chương trình khuyến mãi hấp dẫn',
                 'order' => 3,
                 'status' => 'active',
+                'type' => 'normal',
             ],
         ];
 
@@ -301,7 +304,6 @@ class FirstSeed extends Seeder
                 'type' => 'news',
                 'order' => 1,
                 'status' => 'active',
-                'category_id' => $catPosts[0]->id,
             ],
             [
                 'title' => 'Hướng dẫn làm bánh mì tại nhà',
@@ -314,12 +316,24 @@ class FirstSeed extends Seeder
                 'type' => 'normal',
                 'order' => 2,
                 'status' => 'active',
-                'category_id' => $catPosts[1]->id,
             ],
         ];
 
-        foreach ($posts as $postData) {
+        foreach ($posts as $index => $postData) {
             $post = Post::create($postData);
+
+            // Attach category dựa trên type
+            $categoryToAttach = null;
+            foreach ($catPosts as $catPost) {
+                if ($catPost->type === $post->type) {
+                    $categoryToAttach = $catPost;
+                    break;
+                }
+            }
+
+            if ($categoryToAttach) {
+                $post->categories()->attach($categoryToAttach->id);
+            }
 
             // Tạo ảnh cho bài viết
             PostImage::create([

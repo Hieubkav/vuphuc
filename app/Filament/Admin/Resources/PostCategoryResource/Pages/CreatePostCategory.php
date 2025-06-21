@@ -11,7 +11,7 @@ class CreatePostCategory extends CreateRecord
 
     public function getTitle(): string
     {
-        return 'Thêm Danh mục Bài viết Mới';
+        return 'Thêm Chuyên mục Mới';
     }
 
     protected function getRedirectUrl(): string
@@ -21,6 +21,6 @@ class CreatePostCategory extends CreateRecord
 
     protected function getCreatedNotificationTitle(): ?string
     {
-        return 'Danh mục bài viết đã được thêm thành công';
+        return 'Chuyên mục đã được thêm thành công';
     }
 }

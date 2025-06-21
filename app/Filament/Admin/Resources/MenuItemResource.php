@@ -61,7 +61,7 @@ class MenuItemResource extends Resource
                             ->label('Loại menu')
                             ->options([
                                 'link' => 'Liên kết trực tiếp',
-                                'cat_post' => 'Danh mục bài viết',
+                                'cat_post' => 'Chuyên mục',
                                 'all_posts' => 'Tất cả bài viết',
                                 'post' => 'Bài viết',
                                 'cat_product' => 'Danh mục sản phẩm',
@@ -84,7 +84,7 @@ class MenuItemResource extends Resource
                             ->required(fn ($get) => $get('type') === 'link'),
 
                         Select::make('cat_post_id')
-                            ->label('Danh mục bài viết')
+                            ->label('Chuyên mục')
                             ->options(CatPost::all()->pluck('name', 'id'))
                             ->searchable()
                             ->visible(fn ($get) => $get('type') === 'cat_post')

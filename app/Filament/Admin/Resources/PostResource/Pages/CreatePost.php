@@ -9,6 +9,8 @@ class CreatePost extends CreateRecord
 {
     protected static string $resource = PostResource::class;
 
+    protected $categoriesData = null;
+
     public function getTitle(): string
     {
         return 'Thêm Bài viết Mới';
@@ -42,6 +44,12 @@ class CreatePost extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        // Loại bỏ categories khỏi data vì nó sẽ được xử lý trong afterCreate
+        if (isset($data['categories'])) {
+            $this->categoriesData = $data['categories'];
+            unset($data['categories']);
+        }
+
         // Tự động tạo content từ content_builder
         if (!empty($data['content_builder'])) {
             $data['content'] = $this->extractContentFromBuilder($data['content_builder']);
@@ -66,6 +74,14 @@ class CreatePost extends CreateRecord
         }
 
         return $data;
+    }
+
+    protected function afterCreate(): void
+    {
+        // Đồng bộ categories sau khi tạo record
+        if ($this->categoriesData !== null) {
+            $this->getRecord()->categories()->sync($this->categoriesData);
+        }
     }
 
     /**

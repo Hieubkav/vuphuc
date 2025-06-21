@@ -4,7 +4,6 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\SliderResource\Pages;
 use App\Models\Slider;
-use App\Services\ImageService;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -45,7 +44,7 @@ class SliderResource extends Resource
                     ->schema([
                         FileUpload::make('image_link')
                             ->label('Hình ảnh Hero Banner')
-                            ->helperText('Kích thước tối ưu: 1920x1080px (16:9) cho desktop, 800x450px cho mobile. Ảnh sẽ được tự động chuyển sang WebP.')
+                            ->helperText('Kích thước tối ưu: 1920x1080px (16:9). Sử dụng nút "Chỉnh ảnh thành 16:9" để tối ưu ảnh đã upload. Alt text sẽ được tự động tạo từ tiêu đề.')
                             ->required()
                             ->image()
                             ->directory('sliders/banners')
@@ -86,12 +85,6 @@ class SliderResource extends Resource
                             ->label('Mô tả')
                             ->rows(3)
                             ->maxLength(1000)
-                            ->columnSpanFull(),
-
-                        TextInput::make('alt_text')
-                            ->label('Alt text (SEO)')
-                            ->helperText('Để trống để tự động tạo từ tiêu đề. Alt text giúp tối ưu SEO và accessibility.')
-                            ->maxLength(255)
                             ->columnSpanFull(),
                     ])->columns(2),
 
@@ -144,6 +137,12 @@ class SliderResource extends Resource
                     ->limit(30)
                     ->url(fn ($record) => $record->link)
                     ->openUrlInNewTab(),
+
+                TextColumn::make('alt_text')
+                    ->label('Alt Text (SEO)')
+                    ->limit(40)
+                    ->tooltip(fn ($record) => $record->alt_text)
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 ToggleColumn::make('status')
                     ->label('Hiển thị')
