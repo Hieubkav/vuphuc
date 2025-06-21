@@ -12,7 +12,7 @@
 <div class="container mx-auto px-4">
     <!-- Section Header -->
     <div class="text-center mb-10 md:mb-12">
-        <span class="section-badge mb-4">SẢN PHẨM</span>
+        {{-- <span class="section-badge mb-4">SẢN PHẨM</span> --}}
         <h2 class="section-title mb-6">
             {{ $featuredProductsData?->title ?? 'Sản phẩm nổi bật' }}
         </h2>

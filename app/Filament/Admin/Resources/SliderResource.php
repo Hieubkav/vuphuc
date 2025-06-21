@@ -8,13 +8,14 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
+
+
 use Filament\Tables\Table;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -97,11 +98,14 @@ class SliderResource extends Resource
                             ->minValue(0)
                             ->columnSpan(1),
 
-                        Toggle::make('status')
-                            ->label('Hiển thị')
-                            ->default(true)
-                            ->onColor('success')
-                            ->offColor('danger')
+                        Select::make('status')
+                            ->label('Trạng thái')
+                            ->options([
+                                'active' => 'Hiển thị',
+                                'inactive' => 'Ẩn',
+                            ])
+                            ->default('active')
+                            ->required()
                             ->columnSpan(1),
                     ])->columns(2),
             ]);
@@ -144,8 +148,19 @@ class SliderResource extends Resource
                     ->tooltip(fn ($record) => $record->alt_text)
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                ToggleColumn::make('status')
-                    ->label('Hiển thị')
+                TextColumn::make('status')
+                    ->label('Trạng thái')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'active' => 'success',
+                        'inactive' => 'danger',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'active' => 'Hiển thị',
+                        'inactive' => 'Ẩn',
+                        default => 'Không xác định',
+                    })
                     ->sortable(),
 
                 TextColumn::make('created_at')
@@ -155,14 +170,25 @@ class SliderResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('status')
+                Tables\Filters\SelectFilter::make('status')
                     ->label('Trạng thái hiển thị')
-                    ->boolean()
-                    ->trueLabel('Đang hiển thị')
-                    ->falseLabel('Đã ẩn')
+                    ->options([
+                        'active' => 'Đang hiển thị',
+                        'inactive' => 'Đã ẩn',
+                    ])
                     ->native(false),
             ])
             ->actions([
+                Tables\Actions\Action::make('toggle_status')
+                    ->label(fn ($record) => $record->status === 'active' ? 'Ẩn' : 'Hiển thị')
+                    ->icon(fn ($record) => $record->status === 'active' ? 'heroicon-o-eye-slash' : 'heroicon-o-eye')
+                    ->color(fn ($record) => $record->status === 'active' ? 'danger' : 'success')
+                    ->action(function ($record) {
+                        $record->update([
+                            'status' => $record->status === 'active' ? 'inactive' : 'active'
+                        ]);
+                    })
+                    ->requiresConfirmation(false),
                 Tables\Actions\EditAction::make()
                     ->label('Sửa'),
                 Tables\Actions\DeleteAction::make()
@@ -170,6 +196,30 @@ class SliderResource extends Resource
             ])
             ->bulkActions([
                 BulkActionGroup::make([
+                    Tables\Actions\BulkAction::make('show_selected')
+                        ->label('Hiển thị đã chọn')
+                        ->icon('heroicon-o-eye')
+                        ->color('success')
+                        ->action(function ($records) {
+                            $records->each(function ($record) {
+                                $record->update(['status' => 'active']);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->successNotificationTitle('Đã hiển thị các slider đã chọn'),
+
+                    Tables\Actions\BulkAction::make('hide_selected')
+                        ->label('Ẩn đã chọn')
+                        ->icon('heroicon-o-eye-slash')
+                        ->color('danger')
+                        ->action(function ($records) {
+                            $records->each(function ($record) {
+                                $record->update(['status' => 'inactive']);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->successNotificationTitle('Đã ẩn các slider đã chọn'),
+
                     DeleteBulkAction::make()
                         ->label('Xóa đã chọn'),
                 ]),

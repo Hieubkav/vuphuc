@@ -71,10 +71,11 @@ class EditSlider extends EditRecord
     {
         return 'Chỉnh sửa Slider';
     }
-    
+
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index');
+        // Ở lại trang edit sau khi save
+        return $this->getResource()::getUrl('edit', ['record' => $this->getRecord()]);
     }
     
     protected function getSavedNotificationTitle(): ?string

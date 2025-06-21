@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Pages;
 
 use App\Models\WebDesign;
+use App\Models\Post;
 use App\Services\WebDesignService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Section;
@@ -13,6 +14,7 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -120,7 +122,7 @@ class ManageWebDesign extends Page
                     for ($i = 1; $i <= 3; $i++) {
                         $policyIndex = $i - 1;
                         $this->data[$key]["policy_{$i}_title"] = $policies[$policyIndex]['title'] ?? '';
-                        $this->data[$key]["policy_{$i}_url"] = $policies[$policyIndex]['url'] ?? '';
+                        $this->data[$key]["policy_{$i}_url"] = $this->getPostSlugFromUrl($policies[$policyIndex]['url'] ?? '');
                     }
                     $this->data[$key]['copyright'] = $this->getContentValue($component, 'copyright', '');
                 }
@@ -239,6 +241,8 @@ class ManageWebDesign extends Page
             'courses-overview', // Có Post model type course
             'blog-posts', // Có Post model type news
             'homepage-cta', // Chỉ cần 4 fields cơ bản
+            'slogan', // Chỉ cần title và subtitle
+            'partners', // Có Partner model riêng
         ];
 
         return !in_array($key, $componentsWithoutContentBuilder);
@@ -250,6 +254,7 @@ class ManageWebDesign extends Page
         $componentsWithoutContent = [
             'hero-banner',      // Có trong Slider
             'stats-counter',    // Chỉ cần 4 stats
+            'footer',           // Footer không cần title/subtitle
         ];
         return !in_array($key, $componentsWithoutContent);
     }
@@ -267,6 +272,9 @@ class ManageWebDesign extends Page
         $componentsWithoutButton = [
             'hero-banner',      // Có button trong Slider
             'stats-counter',    // Chỉ hiển thị số liệu
+            'slogan',           // Chỉ cần slogan đơn giản
+            'partners',         // Đối tác không cần button
+            'footer',           // Footer không cần button
         ];
         return !in_array($key, $componentsWithoutButton);
     }
@@ -277,8 +285,10 @@ class ManageWebDesign extends Page
             'hero-banner' => 'Chỉ cấu hình ẩn/hiện. Nội dung được quản lý trong Slider.',
             'featured-products' => 'Chỉ cấu hình ẩn/hiện và thứ tự. Sản phẩm được quản lý trong Products.',
             'blog-posts' => 'Chỉ cấu hình ẩn/hiện và thứ tự. Bài viết được quản lý trong Posts.',
-            'partners' => 'Chỉ cấu hình ẩn/hiện và thứ tự. Đối tác được quản lý riêng.',
+            'partners' => 'Chỉ cấu hình ẩn/hiện, thứ tự và tiêu đề. Danh sách đối tác được quản lý trong Partner model.',
             'stats-counter' => 'Cấu hình hiển thị và nội dung thống kê.',
+            'slogan' => 'Cấu hình slogan đơn giản với tiêu đề chính và tiêu đề phụ.',
+            'footer' => 'Cấu hình 3 chính sách (chọn từ bài viết) và copyright. Thông tin liên hệ từ Setting model.',
         ];
 
         return $descriptions[$key] ?? 'Cấu hình nội dung và hiển thị';
@@ -571,11 +581,26 @@ class ManageWebDesign extends Page
         $policies = $this->getContentValue($component, 'policies', []);
         $copyright = $this->getContentValue($component, 'copyright', '');
 
+        // Lấy danh sách bài viết để làm options
+        $postOptions = Post::where('status', 'active')
+            ->orderBy('title')
+            ->pluck('title', 'slug')
+            ->map(function ($title, $slug) {
+                return $title . ' (/bai-viet/' . $slug . ')';
+            })
+            ->toArray();
+
+        // Thêm option trống và custom URL
+        $urlOptions = [
+            '' => '-- Chọn bài viết --',
+            'custom' => '🔗 Nhập URL tùy chỉnh',
+        ] + $postOptions;
+
         // Đảm bảo có đủ 3 policies với default values
         $defaultPolicies = [
-            ['title' => 'CHÍNH SÁCH & ĐIỀU KHOẢN MUA BÁN HÀNG HÓA', 'url' => '/chinh-sach'],
-            ['title' => 'HỆ THỐNG ĐẠI LÝ & ĐIỂM BÁN HÀNG', 'url' => '/he-thong-dai-ly'],
-            ['title' => 'BẢO MẬT & QUYỀN RIÊNG TƯ', 'url' => '/bao-mat'],
+            ['title' => 'CHÍNH SÁCH & ĐIỀU KHOẢN MUA BÁN HÀNG HÓA', 'url' => ''],
+            ['title' => 'HỆ THỐNG ĐẠI LÝ & ĐIỂM BÁN HÀNG', 'url' => ''],
+            ['title' => 'BẢO MẬT & QUYỀN RIÊNG TƯ', 'url' => ''],
         ];
 
         for ($i = 0; $i < 3; $i++) {
@@ -595,11 +620,13 @@ class ManageWebDesign extends Page
                         ->label('Chính sách 1 - Tiêu đề')
                         ->default($policies[0]['title'] ?? '')
                         ->required(),
-                    TextInput::make("{$key}.policy_1_url")
-                        ->label('Chính sách 1 - URL')
-                        ->default($policies[0]['url'] ?? '')
-                        ->nullable()
-                        ->helperText('VD: /chinh-sach'),
+                    Select::make("{$key}.policy_1_url")
+                        ->label('Chính sách 1 - Bài viết')
+                        ->options($urlOptions)
+                        ->default($this->getPostSlugFromUrl($policies[0]['url'] ?? ''))
+                        ->searchable()
+                        ->allowHtml()
+                        ->nullable(),
                 ]),
 
                 Grid::make(2)->schema([
@@ -607,9 +634,12 @@ class ManageWebDesign extends Page
                         ->label('Chính sách 2 - Tiêu đề')
                         ->default($policies[1]['title'] ?? '')
                         ->required(),
-                    TextInput::make("{$key}.policy_2_url")
-                        ->label('Chính sách 2 - URL')
-                        ->default($policies[1]['url'] ?? '')
+                    Select::make("{$key}.policy_2_url")
+                        ->label('Chính sách 2 - Bài viết')
+                        ->options($urlOptions)
+                        ->default($this->getPostSlugFromUrl($policies[1]['url'] ?? ''))
+                        ->searchable()
+                        ->allowHtml()
                         ->nullable(),
                 ]),
 
@@ -618,9 +648,12 @@ class ManageWebDesign extends Page
                         ->label('Chính sách 3 - Tiêu đề')
                         ->default($policies[2]['title'] ?? '')
                         ->required(),
-                    TextInput::make("{$key}.policy_3_url")
-                        ->label('Chính sách 3 - URL')
-                        ->default($policies[2]['url'] ?? '')
+                    Select::make("{$key}.policy_3_url")
+                        ->label('Chính sách 3 - Bài viết')
+                        ->options($urlOptions)
+                        ->default($this->getPostSlugFromUrl($policies[2]['url'] ?? ''))
+                        ->searchable()
+                        ->allowHtml()
                         ->nullable(),
                 ]),
 
@@ -724,6 +757,42 @@ class ManageWebDesign extends Page
         return data_get($component->content, $key, $default);
     }
 
+    /**
+     * Chuyển đổi URL thành slug để hiển thị trong Select
+     */
+    protected function getPostSlugFromUrl(?string $url): ?string
+    {
+        if (empty($url)) {
+            return null;
+        }
+
+        // Nếu URL có dạng /bai-viet/{slug}, trích xuất slug
+        if (preg_match('/\/bai-viet\/(.+)$/', $url, $matches)) {
+            return $matches[1];
+        }
+
+        // Nếu không phải URL bài viết, trả về 'custom' để hiển thị option tùy chỉnh
+        return 'custom';
+    }
+
+    /**
+     * Chuyển đổi slug thành URL để lưu vào database
+     */
+    protected function convertSlugToUrl(?string $slug): ?string
+    {
+        if (empty($slug)) {
+            return null;
+        }
+
+        // Nếu là 'custom' hoặc đã là URL đầy đủ, giữ nguyên
+        if ($slug === 'custom' || str_starts_with($slug, '/') || str_starts_with($slug, 'http')) {
+            return $slug;
+        }
+
+        // Chuyển đổi slug thành URL bài viết
+        return '/bai-viet/' . $slug;
+    }
+
     protected function convertFeaturesToRepeater(array $features): array
     {
         return array_map(function ($feature) {
@@ -814,15 +883,15 @@ class ManageWebDesign extends Page
             $content['policies'] = [
                 [
                     'title' => $componentData['policy_1_title'] ?? '',
-                    'url' => $componentData['policy_1_url'] ?? '',
+                    'url' => $this->convertSlugToUrl($componentData['policy_1_url'] ?? ''),
                 ],
                 [
                     'title' => $componentData['policy_2_title'] ?? '',
-                    'url' => $componentData['policy_2_url'] ?? '',
+                    'url' => $this->convertSlugToUrl($componentData['policy_2_url'] ?? ''),
                 ],
                 [
                     'title' => $componentData['policy_3_title'] ?? '',
-                    'url' => $componentData['policy_3_url'] ?? '',
+                    'url' => $this->convertSlugToUrl($componentData['policy_3_url'] ?? ''),
                 ],
             ];
         }

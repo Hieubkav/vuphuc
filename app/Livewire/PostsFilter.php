@@ -18,7 +18,7 @@ class PostsFilter extends Component
     public $hasMorePosts = true;
 
     public $typeNames = [
-        'normal' => 'Bài viết',
+        'normal' => 'Bài viết thường',
         'news' => 'Tin tức',
         'service' => 'Dịch vụ',
         'course' => 'Khóa học'
@@ -52,6 +52,17 @@ class PostsFilter extends Component
 
     public function updatedType()
     {
+        // Reset category nếu category hiện tại không thuộc type mới
+        if ($this->category && $this->type) {
+            $selectedCategory = CatPost::find($this->category);
+            if ($selectedCategory && $selectedCategory->type !== $this->type) {
+                $this->category = '';
+            }
+        }
+
+        // Clear cache để load lại categories theo type mới
+        $this->clearCategoriesCache();
+
         $this->resetPosts();
     }
 
@@ -66,7 +77,20 @@ class PostsFilter extends Component
         $this->category = '';
         $this->type = '';
         $this->sort = 'newest';
+
+        // Clear cache để load lại tất cả categories
+        $this->clearCategoriesCache();
+
         $this->resetPosts();
+    }
+
+    private function clearCategoriesCache()
+    {
+        // Clear cache cho tất cả các type
+        $types = ['all', 'normal', 'news', 'service', 'course'];
+        foreach ($types as $type) {
+            Cache::forget('posts_categories_filter_' . $type);
+        }
     }
 
     public function loadMore()
@@ -141,11 +165,24 @@ class PostsFilter extends Component
 
     public function getCategoriesProperty()
     {
-        return Cache::remember('posts_categories_filter', 1800, function () {
-            return CatPost::where('status', 'active')
-                ->whereNull('parent_id')
-                ->withCount(['posts' => function($query) {
+        // Tạo cache key dựa trên type để cache riêng biệt cho từng type
+        $cacheKey = 'posts_categories_filter_' . ($this->type ?: 'all');
+
+        return Cache::remember($cacheKey, 1800, function () {
+            $query = CatPost::where('status', 'active')
+                ->whereNull('parent_id');
+
+            // Lọc theo type nếu có chọn nhóm nội dung cụ thể
+            if ($this->type && in_array($this->type, ['normal', 'news', 'service', 'course'])) {
+                $query->where('type', $this->type);
+            }
+
+            return $query->withCount(['posts' => function($query) {
                     $query->where('status', 'active');
+                    // Nếu có type được chọn, chỉ đếm posts có cùng type
+                    if ($this->type && in_array($this->type, ['normal', 'news', 'service', 'course'])) {
+                        $query->where('type', $this->type);
+                    }
                 }])
                 ->orderBy('order')
                 ->get();

@@ -43,7 +43,7 @@
 
                 <!-- Type Filter -->
                 <div class="filter-card rounded-xl p-5">
-                    <h3 class="text-base font-semibold text-gray-900 mb-3 font-montserrat">Loại nội dung</h3>
+                    <h3 class="text-base font-semibold text-gray-900 mb-3 font-montserrat">Nhóm nội dung</h3>
                     <div class="space-y-1.5">
                         <button wire:click="$set('type', '')"
                                class="filter-btn block w-full text-left px-3 py-2 rounded-lg font-open-sans text-sm {{ !$type ? 'active' : '' }}">
@@ -153,7 +153,7 @@
             <!-- Posts Grid -->
             <div wire:loading.remove>
                 @if($posts->count() > 0)
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
                         @foreach($posts as $post)
                             <article class="group">
                                 <a href="{{ route('posts.show', $post->slug) }}" class="block">

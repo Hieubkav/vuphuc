@@ -65,7 +65,7 @@ class SearchController extends Controller
                 })
                 ->with(['images' => function($q) {
                     $q->where('status', 'active')->orderBy('order');
-                }, 'category'])
+                }, 'categories'])
                 ->orderBy('created_at', 'desc')
                 ->paginate(12);
 
@@ -130,7 +130,7 @@ class SearchController extends Controller
                 })
                 ->with(['images' => function($q) {
                     $q->where('status', 'active')->orderBy('order');
-                }, 'category'])
+                }, 'categories'])
                 ->orderBy('created_at', 'desc')
                 ->take(6)
                 ->get();

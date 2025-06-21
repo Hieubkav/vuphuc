@@ -24,7 +24,7 @@
 <div class="container mx-auto px-4">
     <!-- Section Header -->
     <div class="text-center mb-10 md:mb-12">
-        <span class="section-badge">DỊCH VỤ</span>
+        {{-- <span class="section-badge">DỊCH VỤ</span> --}}
         <h2 class="section-title mt-4">
             {{ $servicesWebDesign?->title ?? 'Dịch vụ chuyên nghiệp' }}
         </h2>

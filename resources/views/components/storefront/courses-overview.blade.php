@@ -22,7 +22,7 @@
 @if($isVisible && $courses->count() > 0)
 <div class="container mx-auto px-4">
     <div class="flex flex-col items-center text-center mb-10">
-        <span class="section-badge mb-2">KHÓA HỌC</span>
+        {{-- <span class="section-badge mb-2">KHÓA HỌC</span> --}}
         <h2 class="section-title mb-4">
             {{ $coursesWebDesign?->title ?? 'Khám Phá Nghệ Thuật Làm Bánh' }}
         </h2>

@@ -277,7 +277,7 @@
 
                 <!-- Posts Grid -->
                 @if($posts->count() > 0)
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
                         @foreach($posts as $post)
                             <article class="group">
                                 <a href="{{ route('posts.show', $post->slug) }}" class="block">

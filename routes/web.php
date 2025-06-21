@@ -152,4 +152,35 @@ Route::get('/debug-post/{id}', function ($id) {
     return response()->json(['message' => 'Post not found'], 404);
 });
 
+// Debug partners route
+Route::get('/debug-partners', function() {
+    $partners = \App\Models\Partner::all();
+    $activePartners = \App\Models\Partner::where('status', 'active')->orderBy('order')->get();
+
+    return response()->json([
+        'total_partners' => $partners->count(),
+        'active_partners' => $activePartners->count(),
+        'all_partners' => $partners->map(function($p) {
+            return [
+                'id' => $p->id,
+                'name' => $p->name,
+                'status' => $p->status,
+                'order' => $p->order,
+                'logo_link' => $p->logo_link
+            ];
+        }),
+        'active_partners_data' => $activePartners->map(function($p) {
+            return [
+                'id' => $p->id,
+                'name' => $p->name,
+                'status' => $p->status,
+                'order' => $p->order,
+                'logo_link' => $p->logo_link
+            ];
+        })
+    ], 200, [], JSON_PRETTY_PRINT);
+});
+
+
+
 

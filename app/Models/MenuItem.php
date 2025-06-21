@@ -74,7 +74,7 @@ class MenuItem extends Model
             case 'post':
                 return $this->post ? route('posts.show', $this->post->slug) : '#';
             case 'cat_product':
-                return $this->catProduct ? route('products.category', $this->catProduct->slug) : '#';
+                return $this->catProduct ? route('products.categories', ['category' => $this->catProduct->id]) : '#';
             case 'all_products':
                 return route('products.categories');
             case 'product':

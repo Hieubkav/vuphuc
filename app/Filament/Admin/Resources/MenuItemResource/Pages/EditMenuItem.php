@@ -25,7 +25,8 @@ class EditMenuItem extends EditRecord
     
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index');
+        // Ở lại trang edit thay vì chuyển về list
+        return $this->getResource()::getUrl('edit', ['record' => $this->getRecord()]);
     }
     
     protected function getSavedNotificationTitle(): ?string

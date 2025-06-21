@@ -32,22 +32,26 @@ class PostView extends Model
     /**
      * Ghi lại lượt xem bài viết
      */
-    public static function recordView(int $postId, string $ipAddress): void
+    public static function recordView(int $postId, string $ipAddress, bool $skipDuplicateCheck = false): void
     {
-        // Kiểm tra xem IP này đã xem bài viết này trong 24h qua chưa
-        $existingView = static::where('post_id', $postId)
-            ->where('ip_address', $ipAddress)
-            ->where('viewed_at', '>=', Carbon::now()->subDay())
-            ->first();
+        // Nếu không skip duplicate check, kiểm tra xem IP này đã xem bài viết này trong 5 giây qua chưa
+        if (!$skipDuplicateCheck) {
+            $existingView = static::where('post_id', $postId)
+                ->where('ip_address', $ipAddress)
+                ->where('viewed_at', '>=', Carbon::now()->subSeconds(5))
+                ->first();
 
-        if (!$existingView) {
-            static::create([
-                'post_id' => $postId,
-                'ip_address' => $ipAddress,
-                'session_id' => session()->getId(),
-                'viewed_at' => now(),
-            ]);
+            if ($existingView) {
+                return; // Đã xem trong 5 giây qua, không ghi lại
+            }
         }
+
+        static::create([
+            'post_id' => $postId,
+            'ip_address' => $ipAddress,
+            'session_id' => session()->getId(),
+            'viewed_at' => now(),
+        ]);
     }
 
     /**
