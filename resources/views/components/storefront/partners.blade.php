@@ -188,8 +188,6 @@
                     </div>
                     @endforeach
                 </div>
-                <!-- Add Pagination -->
-                <div class="swiper-pagination partner-mobile-pagination"></div>
             </div>
         </div>
         @endif
@@ -203,15 +201,7 @@
     /* Mobile Swiper Styles */
     .partner-mobile-swiper {
         width: 100%;
-        padding-bottom: 35px;
-    }
-
-    .partner-mobile-swiper .swiper-pagination {
-        bottom: 0;
-    }
-
-    .partner-mobile-swiper .swiper-pagination-bullet-active {
-        background-color: #dc2626;
+        padding-bottom: 10px;
     }
 
     /* Desktop Swiper Styles */
@@ -280,10 +270,6 @@
                     delay: 3000,
                     disableOnInteraction: false,
                 } : false,
-                pagination: {
-                    el: '.partner-mobile-pagination',
-                    clickable: true,
-                },
                 breakpoints: {
                     400: {
                         slidesPerView: 2.5,

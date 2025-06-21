@@ -52,12 +52,12 @@ class ImageService
             // Chuyển đổi sang WebP và tối ưu hóa
             $encodedImage = $img->toWebp($quality);
 
-            // Lưu vào storage với đường dẫn public/{directory}/{filename}
-            $path = 'public/' . $directory . '/' . $filename;
-            Storage::put($path, $encodedImage);
+            // Lưu vào storage disk 'public'
+            $filePath = $directory . '/' . $filename;
+            Storage::disk('public')->put($filePath, $encodedImage);
 
-            // Trả về đường dẫn tương đối trong storage/app/public
-            return $directory . '/' . $filename;
+            // Trả về đường dẫn tương đối
+            return $filePath;
         }
 
         // Nếu là đường dẫn file tuyệt đối (để resize ảnh đã tồn tại)
@@ -80,16 +80,16 @@ class ImageService
             // Chuyển đổi sang WebP và tối ưu hóa
             $encodedImage = $img->toWebp($quality);
 
-            // Lưu vào storage với đường dẫn public/{directory}/{filename}
-            $path = 'public/' . $directory . '/' . $filename;
-            Storage::put($path, $encodedImage);
+            // Lưu vào storage disk 'public'
+            $filePath = $directory . '/' . $filename;
+            Storage::disk('public')->put($filePath, $encodedImage);
 
-            // Trả về đường dẫn tương đối trong storage/app/public
-            return $directory . '/' . $filename;
+            // Trả về đường dẫn tương đối
+            return $filePath;
         }
 
         // Nếu là đường dẫn chuỗi (đã lưu trước đó trong storage)
-        elseif (is_string($image) && Storage::exists('public/' . $image)) {
+        elseif (is_string($image) && Storage::disk('public')->exists($image)) {
             return $image; // Giữ nguyên nếu đã tồn tại
         }
 
@@ -108,9 +108,8 @@ class ImageService
             return false;
         }
 
-        $fullPath = 'public/' . $imagePath;
-        if (Storage::exists($fullPath)) {
-            return Storage::delete($fullPath);
+        if (Storage::disk('public')->exists($imagePath)) {
+            return Storage::disk('public')->delete($imagePath);
         }
 
         return false;
@@ -164,12 +163,12 @@ class ImageService
             // Chuyển đổi sang WebP và tối ưu hóa
             $encodedImage = $img->toWebp($quality);
 
-            // Lưu vào storage với đường dẫn public/{directory}/{filename}
-            $path = 'public/' . $directory . '/' . $filename;
-            Storage::put($path, $encodedImage);
+            // Lưu vào storage disk 'public'
+            $filePath = $directory . '/' . $filename;
+            Storage::disk('public')->put($filePath, $encodedImage);
 
-            // Trả về đường dẫn tương đối trong storage/app/public
-            return $directory . '/' . $filename;
+            // Trả về đường dẫn tương đối
+            return $filePath;
         }
 
         // Nếu là đường dẫn file tuyệt đối (để resize ảnh đã tồn tại)
@@ -199,16 +198,16 @@ class ImageService
             // Chuyển đổi sang WebP và tối ưu hóa
             $encodedImage = $img->toWebp($quality);
 
-            // Lưu vào storage với đường dẫn public/{directory}/{filename}
-            $path = 'public/' . $directory . '/' . $filename;
-            Storage::put($path, $encodedImage);
+            // Lưu vào storage disk 'public'
+            $filePath = $directory . '/' . $filename;
+            Storage::disk('public')->put($filePath, $encodedImage);
 
-            // Trả về đường dẫn tương đối trong storage/app/public
-            return $directory . '/' . $filename;
+            // Trả về đường dẫn tương đối
+            return $filePath;
         }
 
         // Nếu là đường dẫn chuỗi (đã lưu trước đó trong storage)
-        elseif (is_string($image) && Storage::exists('public/' . $image)) {
+        elseif (is_string($image) && Storage::disk('public')->exists($image)) {
             return $image; // Giữ nguyên nếu đã tồn tại
         }
 
@@ -251,16 +250,15 @@ class ImageService
         // Giữ nguyên GIF để bảo toàn animation
         if ($originalExtension === 'gif' || $mimeType === 'image/gif') {
             $filename = $this->generateFilename($customName) . '.gif';
-            $path = 'public/' . $directory . '/' . $filename;
+            $filePath = $directory . '/' . $filename;
 
-            Log::info('Saving GIF file', ['path' => $path, 'filename' => $filename]);
+            Log::info('Saving GIF file', ['path' => $filePath, 'filename' => $filename]);
 
             // Lưu trực tiếp file GIF mà không xử lý
-            Storage::put($path, file_get_contents($file->getRealPath()));
+            Storage::disk('public')->put($filePath, file_get_contents($file->getRealPath()));
 
-            $result = $directory . '/' . $filename;
-            Log::info('GIF saved successfully', ['result' => $result]);
-            return $result;
+            Log::info('GIF saved successfully', ['result' => $filePath]);
+            return $filePath;
         }
 
         // Với các format khác, chuyển thành WebP để tối ưu
@@ -282,23 +280,21 @@ class ImageService
             $encodedImage = $img->toWebp($quality);
 
             // Lưu vào storage
-            $path = 'public/' . $directory . '/' . $filename;
-            Storage::put($path, $encodedImage);
+            $filePath = $directory . '/' . $filename;
+            Storage::disk('public')->put($filePath, $encodedImage);
 
-            $result = $directory . '/' . $filename;
-            Log::info('WebP saved successfully', ['result' => $result]);
-            return $result;
+            Log::info('WebP saved successfully', ['result' => $filePath]);
+            return $filePath;
         } catch (\Exception $e) {
             Log::error('Error processing image', ['error' => $e->getMessage()]);
 
             // Nếu có lỗi, lưu file gốc
             $originalFilename = $this->generateFilename($customName) . '.' . $originalExtension;
-            $path = 'public/' . $directory . '/' . $originalFilename;
-            Storage::put($path, file_get_contents($file->getRealPath()));
+            $filePath = $directory . '/' . $originalFilename;
+            Storage::disk('public')->put($filePath, file_get_contents($file->getRealPath()));
 
-            $result = $directory . '/' . $originalFilename;
-            Log::info('Original file saved as fallback', ['result' => $result]);
-            return $result;
+            Log::info('Original file saved as fallback', ['result' => $filePath]);
+            return $filePath;
         }
     }
 
@@ -311,7 +307,7 @@ class ImageService
      */
     public function resizeToSixteenNine(string $imagePath, ?string $customName = null): ?string
     {
-        if (!Storage::exists('public/' . $imagePath)) {
+        if (!Storage::disk('public')->exists($imagePath)) {
             return null;
         }
 
@@ -319,7 +315,7 @@ class ImageService
 
         try {
             // Đọc ảnh từ storage
-            $fullPath = Storage::path('public/' . $imagePath);
+            $fullPath = Storage::disk('public')->path($imagePath);
             $img = $manager->read($fullPath);
 
             // Kích thước mục tiêu 16:9
@@ -337,16 +333,16 @@ class ImageService
 
             // Lưu vào cùng thư mục
             $directory = dirname($imagePath);
-            $newPath = 'public/' . $directory . '/' . $filename;
-            Storage::put($newPath, $encodedImage);
+            $newFilePath = $directory . '/' . $filename;
+            Storage::disk('public')->put($newFilePath, $encodedImage);
 
             // Xóa ảnh cũ nếu khác tên
             $oldFilename = basename($imagePath);
             if ($oldFilename !== $filename) {
-                Storage::delete('public/' . $imagePath);
+                Storage::disk('public')->delete($imagePath);
             }
 
-            return $directory . '/' . $filename;
+            return $newFilePath;
         } catch (\Exception $e) {
             Log::error('Error resizing image to 16:9', [
                 'image_path' => $imagePath,

@@ -2,6 +2,7 @@
 - User prefers no fade-in animations on homepage components, wants immediate display because website users are older people.
 - User does not want favorites/wishlist functionality in the application and wants it completely removed from customer dropdown and codebase.
 - User wants posts filter component to have category filtering functionality similar to the products filter component for consistency.
+- User prefers posts filter component to automatically filter categories by matching content type when a specific content group is selected (excluding 'all' option).
 - User prefers to redirect to edit page after creating posts instead of redirecting to list page.
 - User prefers smooth swiper/carousel implementations with mouse drag and touch swipe functionality over basic scrollbars for better UX/UI in horizontal scrolling components.
 - User prefers minimal, simple interfaces without unnecessary icons/decorations and requires good text readability in dark mode.
@@ -14,6 +15,25 @@
 - User prefers minimizing code lines in blade.php, CSS, and JS files by replacing custom CSS with Tailwind CSS classes while strictly maintaining the exact current UI appearance and functionality.
 - User prefers carousel/slider components to not have automatic looping behavior and wants them to work like the original implementation.
 - User prefers better-looking icons for empty states/no results found scenarios and wants test files to be cleaned up after use.
+- User prefers hero-banner images to maintain full aspect ratio without cropping, adjusting height based on the tallest image rather than cropping images vertically.
+- User prefers all section titles and subtitles on homepage to have consistent font sizes and wants a general Tailwind CSS class created in tailwind.config.js for reusable heading styles across sections.
+- User prefers category/dropdown fields to show all available options immediately without requiring typing to search, wants preloaded options visible by default.
+- User prefers automatic cache clearing when Slider model data is updated in database to ensure cache consistency.
+- User prefers automatic cache clearing when database models (Post, CatPost) are updated and wants comprehensive review of all related UI interfaces including detail pages and homepage sections for consistency.
+- User prefers slider banner height to be calculated as full viewport height minus navbar height minus subnav height to prevent image cropping and maintain visual appeal.
+- User prefers slider components without visual effects/animations as they cause image cropping problems and affect display quality.
+- User prefers slider banner images to have padding/margins on sides when screen width is above 1000px to prevent image cropping, while keeping full width below 1000px.
+- User prefers optimized colors for slider banner padding areas (dè 2 bên) that are suitable for their specific project design.
+- User prefers red-white brand theme and wants slider banner padding areas to use red colors or colors that blend with each slider image.
+- User prefers dynamic color schemes over static colors and wants code optimized with minimal lines using Tailwind CSS for cleaner implementation.
+- User prefers extremely concise code and emphasizes that code optimization should never break functionality, UI, or cause errors.
+- User prefers hero-banner component code to be optimized/shortened while strictly maintaining existing functionality and UI appearance.
+- User prefers simple error pages (404, etc.) with only basic navigation options (home/back) without complex layouts or additional design elements.
+- User prefers partners component to use adaptive layout: grid for small numbers (≤12 items) and beautiful Swiper 3D coverflow for larger numbers, with mobile swiper view and proper fallback handling for missing logos.
+- User prefers to stay on edit page after saving slider changes instead of redirecting to list page.
+- User prefers to stay on edit page after saving menu items instead of redirecting to list page, and wants blog post grid to show 3 columns on desktop instead of 2 for better layout.
+- User wants blog post grid to show 3 columns on desktop instead of 2 for better layout.
+- User prefers menu items with product category type to generate filter URLs (e.g., /danh-muc?category=2) instead of direct category URLs (e.g., /danh-muc/banh-ngot) while maintaining normal display text.
 
 # Filament Customization
 - User prefers Filament navigationGroup organization using 5 detailed groups (Phương án 2) and wants settings functionality at /admin/manage-settings to be included in the organization structure.
@@ -27,6 +47,13 @@
 - User prefers removing redundant UI elements (preview links, stats, guides) from admin interfaces and wants content builders instead of raw JSON editing for non-technical business users.
 - User prefers error messages in Vietnamese language and wants them to clearly identify which component has the validation error for better UX in admin interfaces.
 - User prefers all sections in admin interfaces to be collapsed by default for a cleaner look, rather than having specific sections like 'about-us' open by default.
+- User prefers better text readability in dark mode interfaces.
+- User prefers Vietnamese term 'chuyên mục' instead of 'danh mục bài viết' for post categories in Filament panel interface.
+- User prefers post categories (chuyên mục) to have many-to-many relationship with posts, include a type field matching post types, and filter categories by type when selecting in post forms so posts and categories can only relate if they have the same type.
+- In admin post edit form, category selection should show suggestions filtered by the same type as the current post (many-to-many relationship with type filtering).
+- User prefers category selection fields to strictly filter and prevent selection of categories with different types than the current post/content type, not just hide them.
+- User prefers Filament admin interfaces to have image aspect ratio adjustment buttons (16:9 optimization) and automatic alt text generation when creating/editing records if the field is empty.
+- User prefers ToggleColumn over Action buttons in admin tables because it enables bulk hide/show operations for sliders and similar content management.
 
 # Web Design Configuration
 - User prefers WebDesign model for dynamic show/hide configuration of storefront and shop interface elements, managed through Filament pages for flexible website customization.
@@ -36,8 +63,23 @@
 - Hero Banner component in WebDesign should only control visibility (show/hide) because its content is managed by the Slider model, making detailed content editing redundant.
 - User prefers About Us component to have exactly 4 fixed service/feature items with corresponding images (no add/remove functionality to maintain UI consistency) and wants to remove features list and statistics from about-us section in WebDesign because they are redundant/unnecessary.
 - User prefers footer components to use Setting model for main content but WebDesign only for policy texts/links and copyright content, avoiding complex content builders.
+- User prefers footer component in WebDesign to remove title, subtitle, and button fields, and wants URL fields (1,2,3) to use post selection dropdowns instead of manual link input for better content management.
+- User prefers slogan component in WebDesign to have simplified fields by removing button text, button URL, and detailed content sections for a clean and elegant design.
+- User prefers partners component in WebDesign admin to have simplified fields by removing button text, button URL, and detailed content builder fields for cleaner interface design.
 
 # Analytics and Reporting
 - User wants dashboard widgets for website visitor analytics (today + total visits, unique visitors) with Visitor model for tracking, reset functionality for testing, and top 3 most viewed posts/products with view counts and unique viewer statistics.
 - User prefers very frequent data updates (every 5 seconds) for visitor analytics and view count widgets instead of the default 30-60 second intervals.
+- User prefers very short duplicate check intervals (5 seconds instead of 5 minutes) for view tracking to allow more frequent view counting.
 - User wants reset buttons in dashboard to clear all view counts and visitor tracking data to zero for testing purposes.
+- User prefers visitor analytics widgets to be removed from main dashboard to avoid clutter.
+- User prefers top content widgets (products/posts) to have navigation links to individual items and wants improved widget UI design for better user experience.
+
+# Agent Mode
+- User wants audio notifications when agent mode completes tasks, created play-notification.ps1 script that plays system sounds via PowerShell command "[System.Media.SystemSounds]::Asterisk.Play()" to notify task completion.
+
+# Database Management
+- NEVER run `migrate:fresh` or `migrate:reset` as it will delete all user data. Only run `migrate` to add new migrations.
+
+# Testing Documentation
+- User prefers comprehensive .md testing documentation that covers all website interfaces and functionality with detailed test cases for each feature, including risk assessment and potential error notes for proactive testing.

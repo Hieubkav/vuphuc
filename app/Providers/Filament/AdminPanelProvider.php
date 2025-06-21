@@ -61,7 +61,7 @@ class AdminPanelProvider extends PanelProvider
 
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
-                fn (): string => Blade::render('
+                fn(): string => Blade::render('
                     <style>
                         /* Tối ưu hiển thị RichEditor */
                         .fi-fo-rich-editor .ProseMirror img {
@@ -77,7 +77,7 @@ class AdminPanelProvider extends PanelProvider
             )
             ->renderHook(
                 PanelsRenderHook::TOPBAR_START,
-                fn (): string => Blade::render('
+                fn(): string => Blade::render('
                     <div class="flex items-center ml-4">
                         <a
                             href="{{ route(\'storeFront\') }}"
@@ -100,7 +100,7 @@ class AdminPanelProvider extends PanelProvider
             )
             ->renderHook(
                 PanelsRenderHook::BODY_END,
-                fn (): string => Blade::render('
+                fn(): string => Blade::render('
                     <script>
                         // Đơn giản - chỉ ẩn text chứa thông tin file
                         document.addEventListener("DOMContentLoaded", function() {
@@ -124,7 +124,7 @@ class AdminPanelProvider extends PanelProvider
 
                             const observer = new MutationObserver(() => setTimeout(hideFileInfo, 100));
                             observer.observe(document.body, { childList: true, subtree: true });
-
+                        });
                     </script>
                 ')
             )

@@ -255,3 +255,4 @@ class SliderResource extends Resource
     //     return 'success';
     // }
 }
+
